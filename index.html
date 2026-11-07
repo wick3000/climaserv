@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Climaserv - El Paraíso</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 pb-24">
+<div id="login" class="fixed inset-0 bg-blue-600 z-50 flex flex-col items-center justify-center p-6 text-white">
+<h1 class="text-3xl font-bold">❄️ Climaserv</h1>
+<p class="text-xs">El Paraíso • Privado</p>
+<input id="claveInput" type="password" placeholder="Tu clave" class="mt-6 w-full max-w-xs p-3 rounded-xl text-black text-center">
+<button onclick="entrar()" class="mt-3 w-full max-w-xs bg-white text-blue-600 py-3 rounded-xl font-bold">Entrar</button>
+<p id="errorClave" class="text-xs mt-2 text-yellow-200"></p>
+<p class="text-[11px] mt-4 opacity-70">Si sos trabajador, usá tu clave de trabajador</p>
+</div>
+<div id="app" class="hidden">
+<header class="bg-blue-600 text-white p-4 sticky top-0 z-10">
+<div class="flex justify-between items-center">
+<div>
+<h1 class="text-xl font-bold">❄️ Control A/C</h1>
+<p class="text-xs opacity-80">Climaserv • El Paraíso • Privado</p>
+</div>
+<button onclick="exportar()" class="bg-white text-blue-600 text-xs px-3 py-2 rounded-full font-bold">📤 Copia</button>
+</div>
+<input id="buscador" oninput="render()" placeholder="🔍 Buscar todo: cliente, serie, teléfono, aire..." class="w-full mt-3 p-3 rounded-xl text-black">
+<div class="flex gap-2 mt-3 overflow-x-auto">
+<button onclick="setFiltro('todos')" class="bg-white text-blue-600 px-3 py-1 rounded-full text-xs font-bold">Todos</button>
+<button onclick="setFiltro('pendiente')" class="bg-yellow-400 px-3 py-1 rounded-full text-xs font-bold">⏳ Pendientes</button>
+<button onclick="setFiltro('pagado')" class="bg-green-400 px-3 py-1 rounded-full text-xs font-bold">✅ Pagados</button>
+<button onclick="buscarSerie()" class="bg-black text-white px-3 py-1 rounded-full text-xs font-bold">🔎 Por Serie</button>
+<button onclick="buscarTelefono()" class="bg-white px-3 py-1 rounded-full text-xs font-bold">📞 Por Teléfono</button>
+</div>
+</header>
+<div class="grid grid-cols-3 gap-2 p-3">
+<div class="bg-white rounded-xl p-3 text-center">
+<p class="text-xs">Total</p>
+<p id="statTotal" class="font-bold text-blue-600">$0</p>
+</div>
+<div class="bg-white rounded-xl p-3 text-center">
+<p class="text-xs">Pendiente</p>
+<p id="statPend" class="font-bold text-yellow-600">$0</p>
+</div>
+<div class="bg-white rounded-xl p-3 text-center">
+<p class="text-xs">Cobrado</p>
+<p id="statCob" class="font-bold text-green-600">$0</p>
+</div>
+</div>
+<div class="mx-3 bg-yellow-50 border rounded-xl p-3 text-xs">
+<b>🔔 Alertas:</b> <span id="alertas"></span>
+</div>
+<div class="mx-3 mt-2 bg-blue-50 border rounded-xl p-3 text-xs">
+<b>🎂 Cumpleaños y Mantenimientos:</b> <span id="alertasCumple"></span>
+</div>
+<div class="flex gap-2 p-3 overflow-x-auto">
+<button onclick="showTab('trabajos')" class="bg-blue-600 text-white px-4 py-2 rounded-full text-xs font-bold">Trabajos</button>
+<button onclick="showTab('inventario')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Inventario</button>
+<button onclick="showTab('gastos')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Gastos</button>
+<button onclick="showTab('calendario')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Calendario</button>
+<button onclick="showTab('reportes')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Reportes</button>
+<button onclick="showTab('precios')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Precios / PDF</button>
+<button onclick="showTab('trabajadores')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Trabajadores</button>
+</div>
+<div id="tab-trabajos" class="tab">
+<div class="mx-3 bg-white rounded-2xl p-4 shadow">
+<h2 class="font-bold mb-2">Registrar Producto / Trabajo</h2>
+<input id="fCliente" placeholder="Cliente" class="w-full border p-3 rounded-xl mb-2">
+<input id="fTelefono" placeholder="Teléfono WhatsApp Ej: 70001234" class="w-full border p-3 rounded-xl mb-2">
+<input id="fCumple" type="date" class="w-full border p-3 rounded-xl mb-2">
+<label class="text-xs text-gray-500">Fecha cumpleaños del cliente</label>
+<input id="fAire" placeholder="Aire Ej: Mini Split 12000 BTU" class="w-full border p-3 rounded-xl mb-2">
+<input id="fSerie" placeholder="Serie" class="w-full border p-3 rounded-xl mb-2">
+<input id="fLote" placeholder="Lote" class="w-full border p-3 rounded-xl mb-2">
+<input id="fFlete" type="number" placeholder="Flete $" class="w-full border p-3 rounded-xl mb-2">
+<input id="fMonto" type="number" placeholder="Monto $" class="w-full border p-3 rounded-xl mb-2">
+<input id="fTrabajador" placeholder="Trabajador que lo hizo" class="w-full border p-3 rounded-xl mb-2">
+<select id="fFrecuencia" class="w-full border p-3 rounded-xl mb-2">
+<option value="2">Cada 2 meses</option>
+<option value="3" selected>Cada 3 meses</option>
+<option value="4">Cada 4 meses</option>
+<option value="6">Cada 6 meses</option>
+</select>
+<select id="fEstado" class="w-full border p-3 rounded-xl mb-2">
+<option value="pendiente">⏳ Pendiente</option>
+<option value="pagado">✅ Pagado</option>
+</select>
+<label class="text-xs text-gray-500">Garantía Proveedor hasta:</label>
+<input id="fGarantiaProv" type="date" class="w-full border p-3 rounded-xl mb-3">
+<button onclick="guardar()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Guardar Trabajo</button>
+<p class="text-[11px] text-gray-400 text-center mt-2">Con Serie, Lote, Flete, Cumpleaños, Trabajador y Garantía Proveedor. Funciona sin internet.</p>
+</div>
+<div id="lista" class="p-3 space-y-3"></div>
+</div>
+<div id="tab-inventario" class="tab hidden mx-3 bg-white rounded-2xl p-4">
+<h2 class="font-bold">📦 Inventario</h2>
+<p class="text-xs text-gray-500">Gas, controles, tubería, etc.</p>
+<input id="invNombre" placeholder="Producto Ej: Gas R410" class="w-full border p-3 rounded-xl my-2">
+<input id="invCant" type="number" placeholder="Cantidad" class="w-full border p-3 rounded-xl mb-2">
+<input id="invPrecio" type="number" placeholder="Precio $" class="w-full border p-3 rounded-xl mb-2">
+<button onclick="guardarInventario()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Agregar</button>
+<div id="listaInv" class="mt-3 space-y-2"></div>
+</div>
+<div id="tab-gastos" class="tab hidden mx-3 bg-white rounded-2xl p-4">
+<h2 class="font-bold">💰 Gastos + Cierre del Día</h2>
+<input id="gDesc" placeholder="Ej: Gasolina, Comida, Repuesto" class="w-full border p-3 rounded-xl my-2">
+<input id="gMonto" type="number" placeholder="Monto $" class="w-full border p-3 rounded-xl mb-2">
+<select id="gTipo" class="w-full border p-3 rounded-xl mb-2">
+<option value="negocio">Negocio</option>
+<option value="casa">Casa</option>
+</select>
+<button onclick="guardarGasto()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Guardar Gasto</button>
+<div class="mt-4 bg-gray-50 p-3 rounded-xl text-sm">
+<b>Cierre del día:</b>
+<p id="cierre">Entró: $0 - Salió: $0 - Quedó: $0</p>
+<button onclick="cierreDia()" class="mt-2 bg-green-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Hacer Cierre</button>
+</div>
+<div id="listaGastos" class="mt-3 space-y-2"></div>
+</div>
+<div id="tab-calendario" class="tab hidden mx-3 bg-white rounded-2xl p-4">
+<h2 class="font-bold">📅 Calendario Día / Semana / Mes</h2>
+<div class="flex gap-2 my-2">
+<button onclick="vistaCal='dia';renderCal()" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Día</button>
+<button onclick="vistaCal='semana';renderCal()" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Semana</button>
+<button onclick="vistaCal='mes';renderCal()" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Mes</button>
+</div>
+<input type="date" id="fechaCal" onchange="renderCal()" class="w-full border p-3 rounded-xl">
+<div id="listaCal" class="mt-3"></div>
+<p class="text-xs text-gray-400 mt-2">Te avisa qué toca hoy, esta semana y este mes.</p>
+</div>
+<div id="tab-reportes" class="tab hidden mx-3 bg-white rounded-2xl p-4">
+<h2 class="font-bold">📊 Reportes</h2>
+<p class="text-xs text-gray-500">Diario, Semanal, Mensual, Anual + Comparar + Temporadas</p>
+<div class="flex gap-2 my-2">
+<button onclick="generarReporte('dia')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Día</button>
+<button onclick="generarReporte('semana')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Semana</button>
+<button onclick="generarReporte('mes')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Mes</button>
+<button onclick="generarReporte('anio')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Año</button>
+</div>
+<div id="reporteBox" class="mt-3 bg-blue-50 p-3 rounded-xl text-sm">Tocá un botón para ver el reporte</div>
+<div class="mt-4 bg-yellow-50 p-3 rounded-xl text-xs">
+<b>🔥 Temporada:</b> En calor suben los mantenimientos. En frío bajan. Mandá WhatsApp a clientes con más de 3 meses sin mantenimiento.
+</div>
+<button onclick="compararMeses()" class="mt-3 w-full bg-black text-white py-3 rounded-xl font-bold">Comparar Mes Anterior vs Este Mes</button>
+</div>
+<div id="tab-precios" class="tab hidden mx-3 bg-white rounded-2xl p-4">
+<h2 class="font-bold">🧾 Cotización + PDF / Factura / Garantía</h2>
+<p class="text-xs">Precios Fijos: Mantenimiento $25 • Instalación $80 • Reparación $40 • Gas $60</p>
+<input id="cCliente" placeholder="Cliente cotización" class="w-full border p-3 rounded-xl my-2">
+<input id="cDetalle" placeholder="Detalle Ej: Instalación" class="w-full border p-3 rounded-xl mb-2">
+<input id="cMonto" type="number" placeholder="Monto $" class="w-full border p-3 rounded-xl mb-2">
+<button onclick="cotizar()" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold">Cotización por WhatsApp</button>
+<button onclick="factura()" class="w-full mt-2 bg-blue-600 text-white py-3 rounded-xl font-bold">Generar Factura / Garantía</button>
+<button onclick="window.print()" class="w-full mt-2 bg-black text-white py-3 rounded-xl font-bold">Imprimir PDF</button>
+</div>
+<div id="tab-trabajadores" class="tab hidden mx-3 bg-white rounded-2xl p-4">
+<h2 class="font-bold">👷 Trabajadores</h2>
+<p class="text-xs text-gray-500">Cada trabajador ve solo sus trabajos. Vos ves todo.</p>
+<input id="tNombre" placeholder="Nombre trabajador" class="w-full border p-3 rounded-xl my-2">
+<input id="tClave" placeholder="Clave trabajador Ej: juan123" class="w-full border p-3 rounded-xl mb-2">
+<button onclick="guardarTrabajador()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Agregar Trabajador</button>
+<div id="listaTrab" class="mt-3 space-y-2"></div>
+</div>
+</div>
+<nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 text-xs font-bold">
+<button onclick="showTab('trabajos')">👥 Clientes</button>
+<button onclick="showTab('inventario')">📦 Inventario</button>
+<button onclick="showTab('gastos')">💰 Gastos</button>
+<button onclick="showTab('reportes')">📊 Reportes</button>
+</nav>
+<script>
+const CLAVE="Friosreina";
+function entrar(){
+let v=document.getElementById('claveInput').value;
+let trabs=JSON.parse(localStorage.getItem('climaserv_trabs')||'[]');
+let esTrab=trabs.find(t=>t.clave===v);
+if(v===CLAVE || esTrab){
+localStorage.setItem('climaserv_login','ok');
+localStorage.setItem('climaserv_user', esTrab ? esTrab.nombre : 'Jefe');
+document.getElementById('login').style.display='none';
+document.getElementById('app').classList.remove('hidden');
+render();
+}else{document.getElementById('errorClave').innerText='Clave incorrecta';}
+}
+if(localStorage.getItem('climaserv_login')==='ok'){
+document.getElementById('login').style.display='none';
+document.getElementById('app').classList.remove('hidden');
+}
+let datos=JSON.parse(localStorage.getItem('climaserv_trabajos')||'[]');
+let inventario=JSON.parse(localStorage.getItem('climaserv_inv')||'[]');
+let gastos=JSON.parse(localStorage.getItem('climaserv_gastos')||'[]');
+let trabajadores=JSON.parse(localStorage.getItem('climaserv_trabs')||'[]');
+let filtro='todos',vistaCal='dia';
+function save(){
+localStorage.setItem('climaserv_trabajos',JSON.stringify(datos));
+localStorage.setItem('climaserv_inv',JSON.stringify(inventario));
+localStorage.setItem('climaserv_gastos',JSON.stringify(gastos));
+localStorage.setItem('climaserv_trabs',JSON.stringify(trabajadores));
+render();renderCal();
+}
+function setFiltro(f){filtro=f;render();}
+function showTab(t){
+document.querySelectorAll('.tab').forEach(e=>e.classList.add('hidden'));
+document.getElementById('tab-'+t).classList.remove('hidden');
+}
+function guardar(){
+const d={cliente:fCliente.value,telefono:fTelefono.value,cumple:fCumple.value,aire:fAire.value,serie:fSerie.value,lote:fLote.value,flete:parseFloat(fFlete.value||0),monto:parseFloat(fMonto.value||0),trabajador:fTrabajador.value,frecuencia:fFrecuencia.value,estado:fEstado.value,garantiaProv:fGarantiaProv.value,fecha:new Date().toISOString()};
+if(!d.cliente)return alert('Poné el cliente');
+datos.unshift(d);save();alert('Guardado');
+fCliente.value='';fAire.value='';fSerie.value='';fMonto.value='';
+}
+function guardarInventario(){inventario.unshift({nombre:invNombre.value,cant:invCant.value,precio:invPrecio.value});save();}
+function guardarGasto(){gastos.unshift({desc:gDesc.value,monto:parseFloat(gMonto.value||0),tipo:gTipo.value,fecha:new Date().toISOString()});save();}
+function guardarTrabajador(){trabajadores.unshift({nombre:tNombre.value,clave:tClave.value});save();alert('Trabajador agregado, su clave es: '+tClave.value);}
+function cierreDia(){
+const hoy=new Date().toDateString();
+const entr=datos.filter(d=>new Date(d.fecha).toDateString()===hoy&&d.estado==='pagado').reduce((s,d)=>s+d.monto,0);
+const sal=gastos.filter(g=>new Date(g.fecha).toDateString()===hoy).reduce((s,g)=>s+g.monto,0);
+document.getElementById('cierre').innerText=`Entró: $${entr} - Salió: $${sal} - Quedó: $${entr-sal}`;
+alert(`Cierre\nEntró: $${entr}\nSalió: $${sal}\nQuedó: $${entr-sal}`);
+}
+function buscarSerie(){
+const s=prompt('Escribí la Serie:');if(!s)return;
+const r=datos.filter(d=>(d.serie||'').toLowerCase().includes(s.toLowerCase()));
+alert(r.length?r.map(x=>`${x.cliente} - ${x.aire} - $${x.monto} - ${x.estado} - Tel: ${x.telefono}`).join('\n'):'No se encontró esa serie');
+}
+function buscarTelefono(){
+const s=prompt('Escribí el teléfono:');if(!s)return;
+const r=datos.filter(d=>(d.telefono||'').includes(s));
+alert(r.length?r.map(x=>`${x.cliente} - ${x.aire} - $${x.monto}`).join('\n'):'No se encontró');
+}
+function exportar(){
+const blob=new Blob([JSON.stringify({trabajos:datos,inventario,gastos,trabajadores},null,2)],{type:'application/json'});
+const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='copia-climaserv.json';a.click();
+}
+function cotizar(){
+const msg=`Hola ${cCliente.value}, te mando cotización Climaserv El Paraíso:\n${cDetalle.value} - $${cMonto.value}\nGarantía incluida. Precios: Mant $25, Inst $80, Rep $40, Gas $60`;
+window.open('https://wa.me/?text='+encodeURIComponent(msg));
+}
+function factura(){
+const msg=`FACTURA CLIMASERV EL PARAÍSO\nCliente: ${cCliente.value}\nDetalle: ${cDetalle.value}\nMonto: $${cMonto.value}\nGarantía: 30 días servicio, Garantía Proveedor según equipo.`;
+alert(msg);
+}
+function generarReporte(tipo){
+const total=datos.reduce((s,d)=>s+d.monto,0);
+const pend=datos.filter(d=>d.estado==='pendiente').reduce((s,d)=>s+d.monto,0);
+document.getElementById('reporteBox').innerHTML=`Reporte ${tipo}<br>Total: $${total}<br>Pendiente: $${pend}<br>Cobrado: $${total-pend}<br>Trabajos: ${datos.length}`;
+}
+function compararMeses(){alert('Comparar: Este mes vs mes anterior - Revisá el total en Reportes. Si este mes es mayor, vas subiendo.');generarReporte('comparar');}
+function renderCal(){
+const f=document.getElementById('fechaCal').value||new Date().toISOString().slice(0,10);
+const lista=datos.filter(d=>d.fecha.slice(0,10)===f);
+document.getElementById('listaCal').innerHTML=lista.length?lista.map(d=>`<div class="border p-2 rounded-xl text-sm">${d.cliente} - ${d.aire} - $${d.monto}</div>`).join(''):'Sin trabajos ese día. Vista: '+vistaCal;
+}
+function render(){
+const user=localStorage.getItem('climaserv_user')||'Jefe';
+const q=document.getElementById('buscador').value.toLowerCase();
+let lista=datos.filter(d=>(d.cliente||'').toLowerCase().includes(q)||(d.aire||'').toLowerCase().includes(q)||(d.serie||'').toLowerCase().includes(q)||(d.telefono||'').includes(q));
+if(user!=='Jefe') lista=lista.filter(d=>(d.trabajador||'').toLowerCase()===user.toLowerCase());
+if(filtro==='pendiente')lista=lista.filter(d=>d.estado==='pendiente');
+if(filtro==='pagado')lista=lista.filter(d=>d.estado==='pagado');
+const total=datos.reduce((s,d)=>s+(d.monto||0),0);
+const pend=datos.filter(d=>d.estado==='pendiente').reduce((s,d)=>s+(d.monto||0),0);
+document.getElementById('statTotal').innerText='$'+total;
+document.getElementById('statPend').innerText='$'+pend;
+document.getElementById('statCob').innerText='$'+(total-pend);
+const hoy=new Date().toISOString().slice(5,10);
+const cumples=datos.filter(d=>d.cumple&&d.cumple.slice(5,10)===hoy);
+document.getElementById('alertas').innerText=(pend>0?`${datos.filter(d=>d.estado==='pendiente').length} pendientes • `:'Todo al día • ')+`Usuario: ${user}`;
+document.getElementById('alertasCumple').innerText=cumples.length?`🎂 Hoy cumple: ${cumples.map(c=>c.cliente).join(', ')} - Mandale WhatsApp`:'Sin cumpleaños hoy. Revisá mantenimientos de hace 3 meses.';
+document.getElementById('lista').innerHTML=lista.map((d)=>{
+let idx=datos.indexOf(d);
+return `<div class="bg-white p-4 rounded-2xl shadow"><p class="font-bold">${d.cliente} ${d.cumple? '🎂 '+d.cumple : ''}</p><p class="text-xs text-gray-500">${d.aire} • Serie: ${d.serie||'-'} • Lote: ${d.lote||'-'} • Flete: $${d.flete||0} • Tel: ${d.telefono||''} • Trabajador: ${d.trabajador||'-'}</p><p class="font-bold text-blue-600">$${d.monto} • Cada ${d.frecuencia} meses • Garantía Prov: ${d.garantiaProv||'-'} • ${d.estado}</p><div class="flex gap-2 mt-2 flex-wrap"><button onclick="datos[${idx}].estado='pagado';save()" class="bg-green-100 px-3 py-1 rounded-full text-xs font-bold">Pagado</button><button onclick="verHistorial('${d.cliente}')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Historial</button><button onclick="window.open('https://wa.me/${(d.telefono||'').replace(/[^0-9]/g,'')}?text='+encodeURIComponent('Hola ${d.cliente}, soy Climaserv El Paraíso, ya toca tu mantenimiento'))" class="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-bold">WhatsApp</button><button onclick="datos.splice(${idx},1);save()" class="text-red-500 text-xs font-bold">Borrar</button></div></div>`;
+}).join('')||'<p class="text-center text-gray-400 py-6">Sin registros</p>';
+document.getElementById('listaInv').innerHTML=inventario.map(x=>`<div class="border p-2 rounded-xl text-sm">${x.nombre} - ${x.cant} - $${x.precio}</div>`).join('');
+document.getElementById('listaGastos').innerHTML=gastos.map(x=>`<div class="border p-2 rounded-xl text-sm">${x.desc} - $${x.monto} - ${x.tipo}</div>`).join('');
+document.getElementById('listaTrab').innerHTML=trabajadores.map(x=>`<div class="border p-2 rounded-xl text-sm">${x.nombre} - clave: ${x.clave}</div>`).join('');
+}
+function verHistorial(cliente){
+const h=datos.filter(x=>x.cliente===cliente);
+alert('Historial '+cliente+'\n'+h.map(x=>`${x.aire} - $${x.monto} - ${x.estado} - Serie ${x.serie}`).join('\n'));
+}
+render();renderCal();
+</script>
+</body>
+</html>
