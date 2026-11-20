@@ -19,16 +19,8 @@
 <div id="app" class="hidden">
 <header class="bg-blue-600 text-white p-4 sticky top-0 z-10">
   <div class="flex justify-between items-center">
-    <div>
-      <h1 class="text-xl font-bold">❄️ Control A/C</h1>
-      <p class="text-xs opacity-80">Climaserv • El Paraíso</p>
-    </div>
-    <div class="flex gap-1">
-      <button onclick="exportar()" class="bg-white text-blue-600 text-xs px-3 py-2 rounded-full font-bold">📤 Copia</button>
-      <label class="bg-yellow-400 text-black text-xs px-3 py-2 rounded-full font-bold cursor-pointer">📥 Importar
-        <input type="file" accept=".json" onchange="importar(event)" class="hidden">
-      </label>
-    </div>
+    <div><h1 class="text-xl font-bold">❄️ Control A/C</h1><p class="text-xs opacity-80">Climaserv • El Paraíso</p></div>
+    <div class="flex gap-1"><button onclick="exportar()" class="bg-white text-blue-600 text-xs px-3 py-2 rounded-full font-bold">📤 Copia</button></div>
   </div>
   <input id="buscador" oninput="render()" placeholder="🔍 Buscar todo: cliente, serie, teléfono, aire, marca..." class="w-full mt-3 p-3 rounded-xl text-black">
   <div class="flex gap-2 mt-3 overflow-x-auto">
@@ -97,70 +89,59 @@
   <div id="lista" class="p-3 space-y-3"></div>
 </div>
 
+<!-- ===== INVENTARIO ADAPTADO - SOLO 5 ===== -->
 <div id="tab-inventario" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">📦 Inventario Dinámico</h2>
-  <p class="text-xs text-gray-500">Si vendés 1, baja solito. Ej: 10 -> 9 disponibles</p>
-  <select id="invCategoria" class="w-full border p-3 rounded-xl my-2 bg-blue-50 font-bold">
-    <option value="Aire">❄️ Aire</option>
-    <option value="Gas">⛽ Gas</option>
-    <option value="Repuesto">🔧 Repuesto</option>
-    <option value="Otro">📦 Otro</option>
-  </select>
-  <input id="invNombre" placeholder="Ej: Mini Split 12000 BTU" class="w-full border p-3 rounded-xl mb-2">
-  <label class="text-xs font-bold">Marca:</label>
-  <select id="invMarca" class="w-full border p-3 rounded-xl mb-2">
-    <option value="Midea">Midea</option>
-    <option value="LG">LG</option>
-    <option value="Samsung">Samsung</option>
-    <option value="Daikin">Daikin</option>
-    <option value="Carrier">Carrier</option>
-    <option value="Panasonic">Panasonic</option>
-    <option value="Hisense">Hisense</option>
-    <option value="TCL">TCL</option>
-    <option value="Otra">Otra / Sin Marca</option>
-  </select>
-  <label class="text-xs font-bold">Voltaje:</label>
-  <select id="invVoltaje" class="w-full border p-3 rounded-xl mb-2 bg-yellow-50 font-bold">
-    <option value="110v">⚡ 110v</option>
-    <option value="220v">⚡ 220v</option>
-    <option value="110v/220v">⚡ 110v / 220v</option>
-    <option value="No aplica">No aplica</option>
-  </select>
-  <input id="invCant" type="number" placeholder="Cantidad que entró Ej: 10" class="w-full border p-3 rounded-xl mb-2">
-  <input id="invPrecio" type="number" placeholder="Precio $" class="w-full border p-3 rounded-xl mb-2">
-  <button onclick="guardarInventario()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Agregar al Inventario</button>
+  <h2 class="font-bold">📦 Inventario - Solo 5</h2>
+  <p class="text-xs text-gray-500">Desde Modelo hasta Marca son 5. Fecha, Factura y Sucursal quedan en Factura, no en Inventario.</p>
 
-  <div class="mt-4">
-    <p class="text-xs font-bold">Filtrar por:</p>
-    <div class="flex gap-2 mt-1 overflow-x-auto">
-      <button onclick="filtroInv='Todos';filtroMarca='Todos';filtroVoltaje='Todos';render()" class="bg-black text-white px-3 py-1 rounded-full text-xs font-bold">Todos</button>
-      <button onclick="filtroInv='Aire';render()" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">❄️ Aires</button>
-      <button onclick="filtroInv='Gas';render()" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-bold">⛽ Gas</button>
-      <button onclick="filtroInv='Repuesto';render()" class="bg-green-100 px-3 py-1 rounded-full text-xs font-bold">🔧 Repuestos</button>
-    </div>
-    <div class="flex gap-2 mt-2">
-      <select id="filtroMarcaSelect" onchange="filtroMarca=this.value;render()" class="border p-2 rounded-xl text-xs flex-1">
-        <option value="Todos">Todas las Marcas</option>
-        <option value="Midea">Midea</option>
-        <option value="LG">LG</option>
-        <option value="Samsung">Samsung</option>
-        <option value="Daikin">Daikin</option>
-        <option value="Carrier">Carrier</option>
-        <option value="Panasonic">Panasonic</option>
-        <option value="Hisense">Hisense</option>
-        <option value="TCL">TCL</option>
-        <option value="Otra">Otra</option>
-      </select>
-      <select id="filtroVoltajeSelect" onchange="filtroVoltaje=this.value;render()" class="border p-2 rounded-xl text-xs flex-1">
-        <option value="Todos">Todos los Voltajes</option>
-        <option value="110v">⚡ 110v</option>
-        <option value="220v">⚡ 220v</option>
-        <option value="110v/220v">⚡ 110v / 220v</option>
-        <option value="No aplica">No aplica</option>
-      </select>
+  <!-- APARTADO FACTURA -->
+  <div class="mt-3 bg-blue-50 border border-blue-200 rounded-xl p-3">
+    <p class="text-xs font-bold text-blue-700">🧾 APARTADO FACTURA - Se guarda pero no se muestra en Inventario</p>
+    <div class="grid grid-cols-2 gap-2 mt-2">
+      <input id="invFecha" type="date" value="2024-04-11" class="border p-3 rounded-xl">
+      <input id="invTipoFactura" placeholder="Tipo Factura: 03CCF" value="03CCF" class="border p-3 rounded-xl">
+      <input id="invFactura" placeholder="N° Factura: 20240103-C0001638" value="20240103-C0001638" class="border p-3 rounded-xl">
+      <input id="invGarantia" placeholder="N° Garantía: 81761" value="81761" class="border p-3 rounded-xl">
+      <input id="invSucursal" placeholder="Sucursal: Constitución" value="Constitución" class="border p-3 rounded-xl col-span-2">
     </div>
   </div>
-  <div id="listaInv" class="mt-3 space-y-2"></div>
+
+  <!-- CATALOGO + UNA BARRA POR EQUIPO -->
+  <div class="mt-3">
+    <label class="text-xs font-bold">1. Modelo - UNA SOLA BARRA POR EQUIPO ▼</label>
+    <select id="invModelo" onchange="autollenarCatalogo()" class="w-full border-2 border-blue-400 p-3 rounded-xl my-2 bg-blue-50 font-bold"></select>
+
+    <label class="text-xs font-bold">2. Descripción (auto)</label>
+    <input id="invDesc" readonly placeholder="Se auto-rellena" class="w-full border p-3 rounded-xl mb-2 bg-gray-100">
+
+    <label class="text-xs font-bold">3. Serie - Vos escribís los 6 dígitos</label>
+    <input id="invSerie" placeholder="Ej: 370581" maxlength="6" inputmode="numeric" class="w-full border p-3 rounded-xl mb-2 font-mono font-bold">
+
+    <label class="text-xs font-bold">4. Capacidad (auto)</label>
+    <input id="invCap" readonly placeholder="Se auto-rellena" class="w-full border p-3 rounded-xl mb-2 bg-gray-100">
+
+    <label class="text-xs font-bold">5. Marca (auto)</label>
+    <input id="invMarca2" readonly placeholder="Se auto-rellena" class="w-full border p-3 rounded-xl mb-2 bg-gray-100">
+
+    <button onclick="guardarInventarioNuevo()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">✅ Agregar a Inventario - Solo 5</button>
+    <p class="text-[11px] text-gray-500 mt-1">Vos solo elegís Modelo y escribís Serie. Descripción, Capacidad y Marca se llenan solas.</p>
+  </div>
+
+  <!-- LISTA INVENTARIO - TABLA 5 COLUMNAS -->
+  <div class="mt-4">
+    <p class="text-xs font-bold">Inventario actual: <span id="totalInv5"></span></p>
+    <div class="overflow-x-auto mt-2">
+      <table class="w-full text-[11px] border">
+        <tr class="bg-gray-100"><th class="p-2 text-left border">Modelo</th><th class="p-2 text-left border">Descripción</th><th class="p-2 text-left border">Serie</th><th class="p-2 text-left border">Capacidad</th><th class="p-2 text-left border">Marca</th><th class="p-2 border"></th></tr>
+        <tbody id="listaInv"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="mt-3 bg-gray-50 p-3 rounded-xl text-xs">
+    <b>📋 Catálogo (para las barras):</b>
+    <div id="listaCatalogo"></div>
+  </div>
 </div>
 
 <div id="tab-gastos" class="tab hidden mx-3 bg-white rounded-2xl p-4">
@@ -232,16 +213,69 @@ function entrar(){
   } else { document.getElementById('errorClave').innerText='Clave incorrecta'; }
 }
 if(localStorage.getItem('climaserv_login')==='ok'){ document.getElementById('login').style.display='none'; document.getElementById('app').classList.remove('hidden'); }
+
+// ===== NUEVO: CATALOGO - Para las barras =====
+const CATALOGO=[
+{modelo:"CSA12CD(I)-R",desc:"MANEJADORA MINI 12,000 BTU ON-OFF 230/180 410A SEER 13",cap:"12,000 BTU",marca:"COMFORTSTAR"},
+{modelo:"CSA12CD(O)-R",desc:"CONDENSADOR MINI 12,000 BTU ON-OFF 230/180 410A SEER 13",cap:"12,000 BTU",marca:"COMFORTSTAR"},
+{modelo:"CSA09CD(I)-R",desc:"MANEJADORA MINI 9,000 BTU ON-OFF 230/180 410A SEER 13",cap:"9,000 BTU",marca:"COMFORTSTAR"},
+{modelo:"CSA09CD(O)-R",desc:"CONDENSADOR MINI 9,000 BTU ON-OFF 230/180 410A SEER 13",cap:"9,000 BTU",marca:"COMFORTSTAR"},
+{modelo:"CSA18CD(I)-R",desc:"MANEJADORA MINI 18,000 BTU ON-OFF 230/180 410A SEER 13",cap:"18,000 BTU",marca:"COMFORTSTAR"},
+{modelo:"CSA18CD(O)-R",desc:"CONDENSADOR MINI 18,000 BTU ON-OFF 230/180 410A SEER 13",cap:"18,000 BTU",marca:"COMFORTSTAR"},
+{modelo:"CSA24CD(I)-R",desc:"MANEJADORA MINI 24,000 BTU ON-OFF 230/180 410A SEER 13",cap:"24,000 BTU",marca:"COMFORTSTAR"},
+{modelo:"CSA24CD(O)-R",desc:"CONDENSADOR MINI 24,000 BTU ON-OFF 230/180 410A SEER 13",cap:"24,000 BTU",marca:"COMFORTSTAR"},
+];
+
 let datos=JSON.parse(localStorage.getItem('climaserv_trabajos')||'[]');
-let inventario=JSON.parse(localStorage.getItem('climaserv_inv')||'[]');
+// Inventario nuevo: solo 5 + datos de factura guardados aparte
+let inventario=JSON.parse(localStorage.getItem('climaserv_inv_5')||'[]');
 let gastos=JSON.parse(localStorage.getItem('climaserv_gastos')||'[]');
 let trabajadores=JSON.parse(localStorage.getItem('climaserv_trabs')||'[]');
-let filtro='todos',filtroInv='Todos',filtroMarca='Todos',filtroVoltaje='Todos';
+let filtro='todos';
 let datosTemp=null;
 const AIRES_BASE=['Mini Split 12000 BTU','Mini Split 18000 BTU','Mini Split 24000 BTU','Mini Split 36000 BTU','Mini Split 60000 BTU'];
-function save(){ localStorage.setItem('climaserv_trabajos',JSON.stringify(datos)); localStorage.setItem('climaserv_inv',JSON.stringify(inventario)); localStorage.setItem('climaserv_gastos',JSON.stringify(gastos)); localStorage.setItem('climaserv_trabs',JSON.stringify(trabajadores)); render(); renderCal(); }
+function save(){ localStorage.setItem('climaserv_trabajos',JSON.stringify(datos)); localStorage.setItem('climaserv_inv_5',JSON.stringify(inventario)); localStorage.setItem('climaserv_gastos',JSON.stringify(gastos)); localStorage.setItem('climaserv_trabs',JSON.stringify(trabajadores)); render(); renderCal(); }
 function setFiltro(f){filtro=f;render();}
 function showTab(t){ document.querySelectorAll('.tab').forEach(e=>e.classList.add('hidden')); document.getElementById('tab-'+t).classList.remove('hidden'); }
+
+// ===== NUEVO: Llenar barra de Modelo + auto-rellenar =====
+function cargarCatalogo(){
+  let sel=document.getElementById('invModelo');
+  if(!sel) return;
+  sel.innerHTML=CATALOGO.map(c=>`<option value="${c.modelo}">${c.modelo} - ${c.cap}</option>`).join('');
+  document.getElementById('listaCatalogo').innerHTML=CATALOGO.map(c=>`<div class="border-b py-1"><b>${c.modelo}</b> - ${c.desc} - ${c.cap} - ${c.marca}</div>`).join('');
+  autollenarCatalogo();
+}
+function autollenarCatalogo(){
+  let modelo=document.getElementById('invModelo').value;
+  let c=CATALOGO.find(x=>x.modelo===modelo);
+  if(!c) return;
+  document.getElementById('invDesc').value=c.desc;
+  document.getElementById('invCap').value=c.cap;
+  document.getElementById('invMarca2').value=c.marca;
+}
+function guardarInventarioNuevo(){
+  let serie=document.getElementById('invSerie').value.trim();
+  if(!serie) return alert('⚠️ Te faltó la Serie - es lo más delicado');
+  if(inventario.some(i=>i.serie===serie)) return alert('Esa serie ya está en inventario');
+  inventario.unshift({
+    modelo: document.getElementById('invModelo').value,
+    descripcion: document.getElementById('invDesc').value,
+    serie: serie,
+    capacidad: document.getElementById('invCap').value,
+    marca: document.getElementById('invMarca2').value,
+    // Factura guardada aparte, NO se muestra en Inventario
+    fecha: document.getElementById('invFecha').value,
+    tipoFactura: document.getElementById('invTipoFactura').value,
+    factura: document.getElementById('invFactura').value,
+    garantia: document.getElementById('invGarantia').value,
+    sucursal: document.getElementById('invSucursal').value
+  });
+  save();
+  document.getElementById('invSerie').value='';
+  alert('✅ Agregado: '+document.getElementById('invModelo').value+' - Serie '+serie);
+}
+
 function generarVista(){
   const d={ cliente:fCliente.value.trim(), telefono:fTelefono.value.trim(), cumple:fCumple.value, aire:fAire.value, serie:fSerie.value.trim(), lote:fLote.value.trim(), flete:parseFloat(fFlete.value||0), monto:parseFloat(fMonto.value||0), trabajador:fTrabajador.value.trim(), frecuencia:fFrecuencia.value, estado:fEstado.value, garantiaProv:fGarantiaProv.value, fecha:new Date().toISOString() };
   if(!d.cliente) return alert('⚠️ Te faltó el Cliente');
@@ -260,41 +294,17 @@ function confirmarGuardar(){
   document.getElementById('vistaPrevia').classList.add('hidden');
   fCliente.value=''; fTelefono.value=''; fCumple.value=''; fAire.selectedIndex=0; fSerie.value=''; fLote.value=''; fFlete.value=''; fMonto.value=''; fTrabajador.value=''; fFrecuencia.value='3'; fEstado.value='pendiente'; fGarantiaProv.value='';
 }
-function guardarInventario(){
-  if(!invNombre.value) return alert('Poné el nombre');
-  if(!invCant.value) return alert('Poné cuántos entraron');
-  inventario.unshift({nombre:invNombre.value, categoria:invCategoria.value, marca:invMarca.value, voltaje:invVoltaje.value, cant:parseInt(invCant.value), disponibles:parseInt(invCant.value), precio:invPrecio.value});
-  save(); invNombre.value=''; invCant.value=''; invPrecio.value=''; alert('Agregado: '+invMarca.value+' '+invVoltaje.value);
-}
-function venderUno(idx){
-  let item=inventario[idx];
-  let disp = item.disponibles !== undefined ? item.disponibles : item.cant;
-  if(disp <= 0) return alert('⚠️ Ya no hay disponibles de este producto, está agotado');
-  item.disponibles = disp - 1;
-  save();
-  alert(`✅ Vendiste 1 ${item.nombre}\nQuedan ${item.disponibles} disponibles`);
-}
-function sumarStock(idx){
-  let n=parseInt(prompt('¿Cuántos entraron nuevos?', '1')||'0');
-  if(!n || n<=0) return;
-  let item=inventario[idx];
-  if(item.disponibles===undefined) item.disponibles=item.cant;
-  item.disponibles += n;
-  item.cant = (parseInt(item.cant)||0) + n;
-  save();
-}
 function guardarGasto(){ gastos.unshift({desc:gDesc.value,monto:parseFloat(gMonto.value||0),tipo:gTipo.value,fecha:new Date().toISOString()}); save(); gDesc.value=''; gMonto.value=''; }
 function guardarTrabajador(){ trabajadores.unshift({nombre:tNombre.value,clave:tClave.value}); save(); alert('Trabajador agregado: '+tClave.value); }
 function cierreDia(){ const hoy=new Date().toDateString(); const entr=datos.filter(d=>new Date(d.fecha).toDateString()===hoy&&d.estado==='pagado').reduce((s,d)=>s+d.monto,0); const sal=gastos.filter(g=>new Date(g.fecha).toDateString()===hoy).reduce((s,g)=>s+g.monto,0); document.getElementById('cierre').innerText=`Entró: $${entr} - Salió: $${sal} - Quedó: $${entr-sal}`; alert(`Cierre\nEntró: $${entr}\nSalió: $${sal}\nQuedó: $${entr-sal}`); }
-function buscarSerie(){ const s=prompt('Escribí la Serie:'); if(!s)return; const r=datos.filter(d=>(d.serie||'').toLowerCase().includes(s.toLowerCase())); alert(r.length?r.map(x=>`${x.cliente} - ${x.aire} - $${x.monto}`).join('\n'):'No se encontró'); }
+function buscarSerie(){ const s=prompt('Escribí la Serie:'); if(!s)return; const r=datos.filter(d=>(d.serie||'').toLowerCase().includes(s.toLowerCase())); const r2=inventario.filter(d=>(d.serie||'').toLowerCase().includes(s.toLowerCase())); alert(r.length?r.map(x=>`${x.cliente} - ${x.aire} - $${x.monto}`).join('\n'):(r2.length?r2.map(x=>`${x.modelo} - Serie ${x.serie} - ${x.marca}`).join('\n'):'No se encontró')); }
 function buscarTelefono(){ const s=prompt('Escribí el teléfono:'); if(!s)return; const r=datos.filter(d=>(d.telefono||'').includes(s)); alert(r.length?r.map(x=>`${x.cliente} - ${x.aire} - $${x.monto}`).join('\n'):'No se encontró'); }
 function exportar(){ const blob=new Blob([JSON.stringify({trabajos:datos,inventario,gastos,trabajadores},null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='copia-climaserv.json'; a.click(); }
-function importar(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=function(){ try{ const j=JSON.parse(r.result); datos=j.trabajos||[]; inventario=j.inventario||[]; gastos=j.gastos||[]; trabajadores=j.trabajadores||[]; save(); alert('Recuperado! '+datos.length+' trabajos'); }catch(err){ alert('Archivo no válido'); } }; r.readAsText(f); }
 function cotizar(){ const msg=`Hola ${cCliente.value}, cotización Climaserv El Paraíso:\n${cDetalle.value} - $${cMonto.value}`; window.open('https://wa.me/?text='+encodeURIComponent(msg)); }
 function factura(){ alert(`FACTURA CLIMASERV\nCliente: ${cCliente.value}\nDetalle: ${cDetalle.value}\nMonto: $${cMonto.value}\nGarantía 30 días`); }
-function generarReporte(tipo){ const total=datos.reduce((s,d)=>s+d.monto,0); const pend=datos.filter(d=>d.estado==='pendiente').reduce((s,d)=>s+d.monto,0); document.getElementById('reporteBox').innerHTML=`Reporte ${tipo}<br>Total: $${total}<br>Pendiente: $${pend}<br>Cobrado: $${total-pend}<br>Trabajos: ${datos.length}`; }
+function generarReporte(tipo){ const total=datos.reduce((s,d)=>s+d.monto,0); const pend=datos.filter(d=>d.estado==='pendiente').reduce((s,d)=>s+d.monto,0); document.getElementById('reporteBox').innerHTML=`Reporte ${tipo}<br>Total: $${total}<br>Pendiente: $${pend}<br>Cobrado: $${total-pend}<br>Trabajos: ${datos.length}<br>Inventario (5): ${inventario.length} equipos`; }
 function renderCal(){ const f=document.getElementById('fechaCal').value||new Date().toISOString().slice(0,10); const lista=datos.filter(d=>d.fecha.slice(0,10)===f); document.getElementById('listaCal').innerHTML=lista.length?lista.map(d=>`<div class="border p-2 rounded-xl text-sm">${d.cliente} - ${d.aire} - $${d.monto}</div>`).join(''):'Sin trabajos ese día.'; }
-function actualizarAires(){ let airesDeInventario=inventario.filter(x=>(x.categoria||'Aire')==='Aire').map(x=>`${x.nombre} - ${x.marca||''} - ${x.voltaje||''}`); let todos=[...AIRES_BASE]; airesDeInventario.forEach(a=>{if(!todos.includes(a)) todos.push(a);}); document.getElementById('fAire').innerHTML=todos.map(a=>`<option value="${a}">${a}</option>`).join(''); }
+function actualizarAires(){ let todos=[...AIRES_BASE]; CATALOGO.forEach(c=>{let a=`${c.desc} - ${c.marca}`; if(!todos.includes(a)) todos.push(a);}); document.getElementById('fAire').innerHTML=todos.map(a=>`<option value="${a}">${a}</option>`).join(''); }
 function editar(idx){
   const d=datos[idx];
   fCliente.value=d.cliente||''; fTelefono.value=d.telefono||''; fCumple.value=d.cumple||''; fAire.value=d.aire||'Mini Split 12000 BTU'; fSerie.value=d.serie||''; fLote.value=d.lote||''; fFlete.value=d.flete||''; fMonto.value=d.monto||''; fTrabajador.value=d.trabajador||''; fFrecuencia.value=d.frecuencia||'3'; fEstado.value=d.estado||'pendiente'; fGarantiaProv.value=d.garantiaProv||'';
@@ -318,21 +328,18 @@ function render(){
   document.getElementById('alertas').innerText=(pend>0?`${datos.filter(d=>d.estado==='pendiente').length} pendientes • `:'Todo al día • ')+`Usuario: ${user}`;
   document.getElementById('alertasCumple').innerText=cumples.length?`🎂 Hoy cumple: ${cumples.map(c=>c.cliente).join(', ')}`:'Sin cumpleaños hoy.';
   document.getElementById('lista').innerHTML=lista.map((d)=>{ let idx=datos.indexOf(d); return `<div class="bg-white p-4 rounded-2xl shadow"><p class="font-bold">${d.cliente} ${d.cumple? '🎂 '+d.cumple : ''}</p><p class="text-xs text-gray-500">${d.aire} • Serie: ${d.serie||'-'} • Lote: ${d.lote||'-'} • Flete: $${d.flete||0} • Tel: ${d.telefono||''} • Trabajador: ${d.trabajador||'-'}</p><p class="font-bold text-blue-600">$${d.monto} • Cada ${d.frecuencia} meses • Garantía Prov: ${d.garantiaProv||'-'} • ${d.estado}</p><div class="flex gap-2 mt-2 flex-wrap"><button onclick="editar(${idx})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-bold">✏️ Editar</button><button onclick="datos[${idx}].estado='pagado';save()" class="bg-green-100 px-3 py-1 rounded-full text-xs font-bold">Pagado</button><button onclick="verHistorial('${d.cliente}')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Historial</button><button onclick="window.open('https://wa.me/${(d.telefono||'').replace(/[^0-9]/g,'')}?text='+encodeURIComponent('Hola ${d.cliente}, soy Climaserv, ya toca tu mantenimiento'))" class="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-bold">WhatsApp</button><button onclick="datos.splice(${idx},1);save()" class="text-red-500 text-xs font-bold">Borrar</button></div></div>`; }).join('')||'<p class="text-center text-gray-400 py-6">Sin registros</p>';
-  let invFiltrado=inventario;
-  if(filtroInv!=='Todos') invFiltrado=invFiltrado.filter(x=>(x.categoria||'Aire')===filtroInv);
-  if(filtroMarca!=='Todos') invFiltrado=invFiltrado.filter(x=>(x.marca||'Otra')===filtroMarca);
-  if(filtroVoltaje!=='Todos') invFiltrado=invFiltrado.filter(x=>(x.voltaje||'No aplica')===filtroVoltaje);
-  let iconos={Aire:'❄️',Gas:'⛽',Repuesto:'🔧',Otro:'📦'};
+  // INVENTARIO - SOLO 5 COLUMNAS
+  let invFiltrado=inventario.filter(x=>(x.modelo||'').toLowerCase().includes(q)||(x.serie||'').toLowerCase().includes(q)||(x.descripcion||'').toLowerCase().includes(q)||(x.marca||'').toLowerCase().includes(q));
+  document.getElementById('totalInv5').innerText=inventario.length+' equipos';
   document.getElementById('listaInv').innerHTML=invFiltrado.map((x)=>{
     let idx=inventario.indexOf(x);
-    let disp = x.disponibles !== undefined ? x.disponibles : x.cant;
-    let agotado = disp<=0;
-    return `<div class="border ${agotado?'border-red-400 bg-red-50':'border-gray-200'} p-3 rounded-xl text-sm"><p class="font-bold">${iconos[x.categoria||'Aire']||'📦'} ${x.nombre}</p><p class="text-xs text-gray-600">🏷️ Marca: <b>${x.marca||'Sin marca'}</b> • ⚡ Voltaje: <b>${x.voltaje||'No aplica'}</b> • 📦 Categoría: ${x.categoria||'Aire'}</p><p class="font-bold ${agotado?'text-red-600':'text-green-700'}">${agotado?'⛔ AGOTADO':'✅ Disponibles: '+disp+' de '+x.cant} • Precio: $${x.precio||0}</p><div class="flex gap-2 mt-2"><button onclick="venderUno(${idx})" class="bg-red-100 px-3 py-1 rounded-full text-xs font-bold">➖ Vender 1</button><button onclick="sumarStock(${idx})" class="bg-green-100 px-3 py-1 rounded-full text-xs font-bold">➕ Sumar Stock</button><button onclick="inventario.splice(${idx},1);save()" class="text-red-500 text-xs font-bold">Borrar</button></div></div>`;
-  }).join('')||'Sin inventario en este filtro';
+    return `<tr class="border-b"><td class="p-2 border font-bold">${x.modelo}</td><td class="p-2 border text-[10px]">${x.descripcion}</td><td class="p-2 border font-mono font-bold">${x.serie}</td><td class="p-2 border">${x.capacidad}</td><td class="p-2 border">${x.marca}</td><td class="p-2 border"><button onclick="inventario.splice(${idx},1);save()" class="text-red-500 text-xs font-bold">Borrar</button></td></tr>`;
+  }).join('')||'<tr><td colspan="6" class="p-2 text-center text-gray-400">Sin inventario. Agregá desde arriba.</td></tr>';
   document.getElementById('listaGastos').innerHTML=gastos.map(x=>`<div class="border p-2 rounded-xl text-sm">${x.desc} - $${x.monto} - ${x.tipo}</div>`).join('');
   document.getElementById('listaTrab').innerHTML=trabajadores.map(x=>`<div class="border p-2 rounded-xl text-sm">${x.nombre} - clave: ${x.clave}</div>`).join('');
 }
 function verHistorial(cliente){ const h=datos.filter(x=>x.cliente===cliente); alert('Historial '+cliente+'\n'+h.map(x=>`${x.aire} - $${x.monto} - ${x.estado} - Serie ${x.serie}`).join('\n')); }
+cargarCatalogo();
 render(); renderCal();
 </script>
 </body>
