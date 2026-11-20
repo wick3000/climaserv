@@ -3,279 +3,168 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Climaserv El Paraíso - Garantías e Inventario Completo</title>
-<!-- Librería para leer PDF digital, texto seleccionable -->
+<title>Climaserv El Paraíso - Profesional</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
-/* ============================================================ */
-/* ESTILOS GENERALES - CLIMASERV EL PARAÍSO */
-/* ============================================================ */
-*{box-sizing:border-box}
-body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#eef2f7;margin:0;padding:12px;color:#0f172a;padding-bottom:40px}
-h1{font-size:23px;margin:4px 0 2px;line-height:1.2}
-h1 span{font-size:15px;color:#2563eb}
-h2{font-size:17px;margin:16px 0 8px;display:flex;align-items:center;gap:8px}
-h3{font-size:15px;margin:12px 0 6px}
-p{margin:6px 0;line-height:1.5}
-.small{font-size:12px;color:#64748b;line-height:1.5}
-.small b{color:#334155}
-.card{background:#fff;border-radius:16px;padding:15px;margin-bottom:13px;box-shadow:0 3px 12px rgba(15,23,42,.07);border:1px solid #e2e8f0}
-.card-blue{border:2px solid #2563eb;background:#eff6ff}
-.card-green{border:2px solid #16a34a}
-.card-yellow{background:#fffbeb;border:1px solid #fde68a}
-/* Botones */
-button{border:0;border-radius:11px;padding:12px 14px;font-weight:800;cursor:pointer;font-size:14px;line-height:1.2}
-button:active{transform:scale(.98)}
-.btn-blue{background:#2563eb;color:#fff;width:100%}
-.btn-green{background:#16a34a;color:#fff}
-.btn-red{background:#dc2626;color:#fff}
-.btn-gray{background:#e2e8f0;color:#0f172a}
-.btn-orange{background:#ea580c;color:#fff}
-.btn-outline{background:#fff;border:2px solid #2563eb;color:#2563eb}
-.btn-small{padding:8px 10px;font-size:12px;border-radius:8px}
-.btn-block{width:100%;display:block}
-/* Inputs */
-input,select,textarea{width:100%;padding:11px 10px;border:1.5px solid #cbd5e1;border-radius:10px;margin:5px 0 10px;font-size:14px;background:#fff;font-family:inherit}
-input:focus,select:focus,textarea:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+*{box-sizing:border-box}body{font-family:system-ui,Arial,sans-serif;background:#eef2f7;margin:0;padding:12px;color:#0f172a;padding-bottom:40px}
+h1{font-size:23px;margin:4px 0 2px}h1 span{font-size:15px;color:#2563eb}
+h2{font-size:17px;margin:16px 0 8px}.card{background:#fff;border-radius:16px;padding:15px;margin-bottom:13px;box-shadow:0 3px 12px rgba(15,23,42,.07);border:1px solid #e2e8f0}
+.card-blue{border:2px solid #2563eb;background:#eff6ff}.card-yellow{background:#fffbeb;border:1px solid #fde68a}
+button{border:0;border-radius:11px;padding:12px 14px;font-weight:800;cursor:pointer;font-size:14px}button:active{transform:scale(.98)}
+.btn-blue{background:#2563eb;color:#fff;width:100%}.btn-green{background:#16a34a;color:#fff}.btn-red{background:#dc2626;color:#fff}.btn-gray{background:#e2e8f0;color:#0f172a}.btn-outline{background:#fff;border:2px solid #2563eb;color:#2563eb}.btn-small{padding:8px 10px;font-size:12px;border-radius:8px}.btn-block{width:100%;display:block}
+input,select,textarea{width:100%;padding:11px 10px;border:1.5px solid #cbd5e1;border-radius:10px;margin:5px 0 10px;font-size:14px;font-family:inherit}input:focus,select:focus,textarea:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.15)}
 label{font-size:12px;font-weight:800;color:#334155;text-transform:uppercase;letter-spacing:.3px}
-textarea{resize:vertical;min-height:90px}
-/* Layout */
-.flex{display:flex;gap:8px}
-.flex>*{flex:1}
-.flex-2{display:flex;gap:8px}
-.flex-2>*{flex:1}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.flex{display:flex;gap:8px}.flex>*{flex:1}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 @media(max-width:520px){.grid3{grid-template-columns:1fr 1fr}.flex{flex-direction:column}}
-/* Badges y cajas */
-.badge{display:inline-block;background:#dcfce7;color:#166534;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:800}
-.badge-red{background:#fee2e2;color:#991b1b}
-.badge-blue{background:#dbeafe;color:#1e40af}
-.badge-yellow{background:#fef3c7;color:#92400e}
-.badge-gray{background:#e2e8f0;color:#334155}
+.badge{display:inline-block;background:#dcfce7;color:#166534;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:800}.badge-red{background:#fee2e2;color:#991b1b}.badge-blue{background:#dbeafe;color:#1e40af}.badge-yellow{background:#fef3c7;color:#92400e}
 .preview{background:#eff6ff;border:1.5px dashed #2563eb;border-radius:12px;padding:12px;margin-top:10px;font-size:13px;line-height:1.6}
 .preview-ok{background:#f0fdf4;border:1.5px solid #16a34a;border-radius:12px;padding:12px;margin-top:10px}
 .preview-error{background:#fef2f2;border:1.5px solid #dc2626;border-radius:12px;padding:12px;margin-top:10px}
-.kpi{background:#0f172a;color:#fff;border-radius:14px;padding:14px;text-align:center}
-.kpi b{font-size:22px;display:block}
-.kpi span{font-size:11px;opacity:.8;text-transform:uppercase;letter-spacing:.5px}
-.kpi-green{background:#15803d}
-.kpi-blue{background:#1d4ed8}
-.kpi-orange{background:#c2410c}
-/* Tablas */
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{font-size:11px;text-transform:uppercase;color:#64748b;text-align:left;padding:9px 6px;border-bottom:2px solid #e2e8f0}
-td{padding:10px 6px;border-bottom:1px solid #f1f5f9;vertical-align:top}
-tr:last-child td{border-bottom:0}
-.serie{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:800;font-size:12px;word-break:break-all}
-.hr{height:1px;background:#e2e8f0;margin:12px 0}
-.hidden{display:none}
-.tabs{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px}
-.tab{white-space:nowrap;padding:10px 14px;border-radius:20px;background:#e2e8f0;font-weight:800;font-size:13px}
-.tab.active{background:#0f172a;color:#fff}
+.kpi{background:#0f172a;color:#fff;border-radius:14px;padding:14px;text-align:center}.kpi b{font-size:22px;display:block}.kpi span{font-size:11px;opacity:.8;text-transform:uppercase}
+.kpi-green{background:#15803d}.kpi-blue{background:#1d4ed8}.kpi-orange{background:#c2410c}
+table{width:100%;border-collapse:collapse;font-size:13px}th{font-size:11px;text-transform:uppercase;color:#64748b;text-align:left;padding:9px 6px;border-bottom:2px solid #e2e8f0}td{padding:10px 6px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+.serie{font-family:monospace;font-weight:800;font-size:12px;word-break:break-all}.small{font-size:12px;color:#64748b;line-height:1.5}
+.hr{height:1px;background:#e2e8f0;margin:12px 0}.hidden{display:none}
+.tabs{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px}.tab{white-space:nowrap;padding:10px 14px;border-radius:20px;background:#e2e8f0;font-weight:800;font-size:13px}.tab.active{background:#0f172a;color:#fff}
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.alert-pro{background:#0f172a;color:#fff;border-radius:12px;padding:12px;font-size:13px;line-height:1.6}
 </style>
 </head>
 <body>
+<div class="topbar"><div><h1>❄️ Climaserv <span>El Paraíso</span></h1><p class="small">Versión Profesional • Inventario Reiniciado • Ventas Antiguas Guardadas<br>Dueño: José Daniel Reina Serrano - Cliente FRIOAIRE 17478</p></div><button class="btn-gray btn-small" onclick="exportarTodo()">⬇️ Exportar</button></div>
 
-<!-- ============================================================ -->
-<!-- ENCABEZADO -->
-<!-- ============================================================ -->
-<div class="topbar">
-<div>
-<h1>❄️ Climaserv <span>El Paraíso</span></h1>
-<p class="small">Garantías por unidad • Inventario Dinámico • PDF Digital FRIOAIRE<br>Dueño: José Daniel Reina Serrano - Cliente FRIOAIRE 17478</p>
-</div>
-<button class="btn-gray btn-small" onclick="exportarTodo()">⬇️ Exportar</button>
+<div class="alert-pro" id="msgMigracion">🔄 Revisando tus ventas viejas para guardarlas...</div>
+
+<div class="grid3" style="margin-top:12px">
+<div class="kpi kpi-blue"><b id="kpiTotal">0</b><span>Total en Inventario Nuevo</span></div>
+<div class="kpi kpi-green"><b id="kpiDisp">0</b><span>Disponibles Ahora</span></div>
+<div class="kpi kpi-orange"><b id="kpiVend">0</b><span>Vendidos Guardados (Historial)</span></div>
 </div>
 
-<!-- ============================================================ -->
-<!-- RESUMEN RÁPIDO - KPIs -->
-<!-- ============================================================ -->
-<div class="grid3">
-<div class="kpi kpi-blue"><b id="kpiTotal">0</b><span>Total Equipos</span></div>
-<div class="kpi kpi-green"><b id="kpiDisp">0</b><span>Disponibles</span></div>
-<div class="kpi kpi-orange"><b id="kpiVend">0</b><span>Vendidos</span></div>
-</div>
-
-<!-- ============================================================ -->
-<!-- PESTAÑAS -->
-<!-- ============================================================ -->
 <div class="tabs" style="margin-top:12px">
 <button class="tab active" id="tabBtn1" onclick="mostrarTab('tab1')">📄 Subir PDF</button>
 <button class="tab" id="tabBtn2" onclick="mostrarTab('tab2')">➕ Nueva Compra</button>
-<button class="tab" id="tabBtn3" onclick="mostrarTab('tab3')">📦 Inventario</button>
+<button class="tab" id="tabBtn3" onclick="mostrarTab('tab3')">📦 Inventario Nuevo</button>
 <button class="tab" id="tabBtn4" onclick="mostrarTab('tab4')">🛡️ Garantías</button>
-<button class="tab" id="tabBtn5" onclick="mostrarTab('tab5')">💰 Ventas</button>
+<button class="tab" id="tabBtn5" onclick="mostrarTab('tab5')">💰 Ventas Guardadas</button>
 </div>
 
-<!-- ============================================================ -->
-<!-- TAB 1 - SUBIR PDF DIGITAL -->
-<!-- ============================================================ -->
+<!-- TAB 1 -->
 <div id="tab1">
 <div class="card card-blue">
 <h2>📄 1. Subir Garantía Digital PDF de FRIOAIRE</h2>
-<p>Pedile a FRIOAIRE el <b>PDF digital</b>, no foto. Ese PDF ya trae el texto escrito adentro, la app lo lee solo y no se equivoca en las series.</p>
-<p class="small"><b>¿Qué pedirle a FRIOAIRE?</b><br>“Hola, soy José Daniel Reina Serrano, cliente 17478. ¿Me pueden enviar el Certificado de Garantía en PDF digital, no en foto, para guardarlo en mi sistema?”</p>
-<label>1. Elegí el PDF digital (o una foto si todavía no te lo dan digital)</label>
+<p>Pedile a FRIOAIRE el <b>PDF digital</b>, no foto. La app lo lee solo.</p>
+<p class="small"><b>Mensaje para FRIOAIRE:</b><br>“Hola, soy José Daniel Reina Serrano, cliente 17478. ¿Me pueden enviar el Certificado de Garantía en PDF digital, no en foto?”</p>
+<label>Elegí el PDF digital</label>
 <input type="file" id="pdfFile" accept="application/pdf,image/*">
 <button class="btn-blue" onclick="leerArchivo()">📄 LEER PDF Y MOSTRAR VISTA PREVIA</button>
 <div id="previewArea"></div>
-<p class="small" style="margin-top:10px">Si es PDF digital, la app llena sola: Factura, Garantía, Fecha, Marca, Modelo y Series. Si es foto, te guarda el nombre del archivo y vos confirmás las series a mano, la app no te inventa ninguna serie.</p>
 </div>
-
 <div class="card card-yellow">
 <h2>🔍 Buscar Rápido</h2>
-<label>Buscar por Serie, Factura, Garantía o Cliente</label>
-<input id="buscarRapido" placeholder="Ej: 340L427803A170370581 o 20240103-C0001638 o 81761" oninput="buscarRapido()">
+<input id="buscarRapido" placeholder="Serie, Factura, Garantía o Cliente" oninput="buscarRapido()">
 <div id="resultadoBusquedaRapida"></div>
 </div>
 </div>
 
-<!-- ============================================================ -->
-<!-- TAB 2 - NUEVA COMPRA / FORMULARIO COMPLETO -->
-<!-- ============================================================ -->
+<!-- TAB 2 -->
 <div id="tab2" class="hidden">
 <div class="card">
-<h2>➕ 2. Datos de la Compra</h2>
-<p class="small">Llená esto a mano o dejá que el PDF lo llene solo. Cuando le das Guardar, la app crea 1 garantía por cada serie.</p>
-
-<div class="grid2">
-<div><label>Proveedor</label><input id="proveedor" value="FRIOAIRE Internacional"></div>
-<div><label>Sucursal</label><input id="sucursal" value="Constitución"></div>
-</div>
-
-<div class="grid2">
-<div><label>Fecha de Compra</label><input id="fecha" type="date" value="2024-04-11"></div>
-<div><label>N° Garantía</label><input id="numGarantia" value="81761"></div>
-</div>
-
-<div class="grid2">
-<div><label>Tipo Factura</label><input id="tipoFactura" value="03CCF"></div>
-<div><label>N° Factura</label><input id="numFactura" value="20240103-C0001638"></div>
-</div>
-
-<label>Cliente Compra (quien compró en FRIOAIRE)</label>
-<input id="clienteCompra" value="17478 - REINA SERRANO JOSE DANIEL">
-
-<div class="grid3">
-<div><label>Marca</label><input id="marca" value="COMFORTSTAR"></div>
-<div><label>Capacidad</label><input id="capacidad" value="12000 BTU"></div>
-<div><label>Voltaje</label><select id="voltaje"><option>220v</option><option>110v</option></select></div>
-</div>
-
-<div class="grid2">
-<div><label>Modelo Manejadora (Interior)</label><input id="modeloI" value="CSA12CD(I)-R"></div>
-<div><label>Modelo Condensador (Exterior)</label><input id="modeloO" value="CSA12CD(O)-R"></div>
-</div>
-
-<div class="grid2">
-<div><label>Gas / Freón</label><input id="gas" value="410A"></div>
-<div><label>SEER</label><input id="seer" value="13"></div>
-</div>
-
-<label>Series - Una por línea (cada línea = 1 garantía)</label>
+<h2>➕ 2. Nueva Compra - Inventario Profesional</h2>
+<p class="small">Esto suma al inventario nuevo, limpio. Lo vendido viejo no se toca.</p>
+<div class="grid2"><div><label>Proveedor</label><input id="proveedor" value="FRIOAIRE Internacional"></div><div><label>Sucursal</label><input id="sucursal" value="Constitución"></div></div>
+<div class="grid2"><div><label>Fecha</label><input id="fecha" type="date" value="2024-04-11"></div><div><label>N° Garantía</label><input id="numGarantia" value="81761"></div></div>
+<div class="grid2"><div><label>Tipo Factura</label><input id="tipoFactura" value="03CCF"></div><div><label>N° Factura</label><input id="numFactura" value="20240103-C0001638"></div></div>
+<label>Cliente Compra</label><input id="clienteCompra" value="17478 - REINA SERRANO JOSE DANIEL">
+<div class="grid3"><div><label>Marca</label><input id="marca" value="COMFORTSTAR"></div><div><label>Capacidad</label><input id="capacidad" value="12000 BTU"></div><div><label>Voltaje</label><select id="voltaje"><option>220v</option><option>110v</option></select></div></div>
+<div class="grid2"><div><label>Modelo Manejadora</label><input id="modeloI" value="CSA12CD(I)-R"></div><div><label>Modelo Condensador</label><input id="modeloO" value="CSA12CD(O)-R"></div></div>
+<div class="grid2"><div><label>Gas</label><input id="gas" value="410A"></div><div><label>SEER</label><input id="seer" value="13"></div></div>
+<label>Series - Una por línea</label>
 <textarea id="series" rows="8">340L427803A170370581
 340L427803A170370575
 340L427803A170370468
 340L342203B090603047
 340L342203B090603510
 340L342203B090603770990</textarea>
-<p class="small">Tip: Si pegás 6 series, se crean 6 garantías. Si pegás 10, se crean 10. No hay límite.</p>
-
-<label>Nombre del archivo / PDF guardado</label>
-<input id="nombreArchivo" value="Garantia-81761-Factura-20240103-C0001638.pdf">
-
-<label>Notas / Observaciones</label>
-<textarea id="notas" rows="2" placeholder="Ej: Compra de abril 2024, todo COMFORTSTAR 12k..."></textarea>
-
-<button class="btn-green btn-block" onclick="guardarCompra()">✅ GUARDAR COMPRA - CREAR INVENTARIO + GARANTÍAS POR SERIE</button>
-<p class="small">Al guardar: Suma al inventario, crea 1 garantía por cada serie, guarda el nombre del PDF y deja todo listo para vender.</p>
-
-<div class="hr"></div>
-<h3>Ejemplo rápido - Tu compra real</h3>
-<p class="small">Esta compra ya está cargada como ejemplo: Garantía 81761, Factura 20240103-C0001638, 6 equipos COMFORTSTAR 12000 BTU 220v. Si la volvés a guardar, la app te avisa que ya existe para no duplicarla.</p>
-<button class="btn-outline btn-block" onclick="cargarEjemplo()">↩️ Cargar ejemplo 81761 en el formulario</button>
+<label>Nombre del archivo / PDF</label><input id="nombreArchivo" value="Garantia-81761-Factura-20240103-C0001638.pdf">
+<label>Notas</label><textarea id="notas" rows="2" placeholder="Ej: Compra abril 2024..."></textarea>
+<button class="btn-green btn-block" onclick="guardarCompra()">✅ GUARDAR COMPRA - SUMAR A INVENTARIO NUEVO</button>
 </div>
 </div>
 
-<!-- ============================================================ -->
-<!-- TAB 3 - INVENTARIO -->
-<!-- ============================================================ -->
+<!-- TAB 3 -->
 <div id="tab3" class="hidden">
-<div class="card">
-<h2>📦 Inventario Dinámico</h2>
-<p class="small">Este inventario baja solo. Vendés 1, baja de 6 a 5. Devolvés 1, sube de 5 a 6. No tenés que contar a mano.</p>
-<div id="inventario"></div>
-</div>
-<div class="card">
-<h2>📊 Inventario por Modelo</h2>
-<div id="inventarioDetalle"></div>
-</div>
+<div class="card"><h2>📦 Inventario Nuevo - Reiniciado y Profesional</h2><p class="small">Este inventario empezó de cero como vos pediste. Lo viejo vendido queda en Ventas Guardadas, no acá.</p><div id="inventario"></div></div>
+<div class="card"><h2>📊 Por Modelo</h2><div id="inventarioDetalle"></div></div>
 </div>
 
-<!-- ============================================================ -->
-<!-- TAB 4 - GARANTÍAS -->
-<!-- ============================================================ -->
+<!-- TAB 4 -->
 <div id="tab4" class="hidden">
-<div class="card">
-<h2>🛡️ Garantías por Unidad</h2>
-<p class="small">Cada serie tiene su propia garantía. Cuando vendás, esa garantía pasa al cliente final, no se pierde.</p>
-<label>Filtrar</label>
-<select id="filtroEstado" onchange="render()">
-<option value="todos">Mostrar todo</option>
-<option value="disponible">Solo Disponibles</option>
-<option value="vendido">Solo Vendidos</option>
-</select>
-<div id="garantias"></div>
-</div>
+<div class="card"><h2>🛡️ Garantías por Unidad - Inventario Nuevo</h2>
+<label>Filtrar</label><select id="filtroEstado" onchange="render()"><option value="todos">Todo</option><option value="disponible">Solo Disponibles</option><option value="vendido">Solo Vendidos en este inventario nuevo</option></select>
+<div id="garantias"></div></div>
 </div>
 
-<!-- ============================================================ -->
-<!-- TAB 5 - VENTAS -->
-<!-- ============================================================ -->
+<!-- TAB 5 -->
 <div id="tab5" class="hidden">
-<div class="card">
-<h2>💰 Vender un Equipo</h2>
-<p class="small">Para vender, buscá la serie abajo en Garantías y dale Vender, o usá este buscador rápido.</p>
-<label>Serie a vender</label>
-<input id="serieVender" placeholder="Pegá la serie exacta">
-<label>Cliente Final (a quién se lo vendés)</label>
-<input id="clienteFinalVenta" placeholder="Ej: María López - El Paraíso">
-<label>Precio de Venta (opcional)</label>
-<input id="precioVenta" type="number" placeholder="Ej: 450">
-<label>Fecha de Venta</label>
-<input id="fechaVentaInput" type="date">
-<button class="btn-green btn-block" onclick="venderPorSerie()">💰 VENDER ESTA SERIE</button>
-<div id="msgVenta"></div>
-</div>
-<div class="card">
-<h2>📋 Historial de Ventas</h2>
-<div id="historialVentas"></div>
-</div>
-<div class="card">
-<h2>⚙️ Zona de Peligro</h2>
-<p class="small">Esto borra TODO. Usalo solo si querés empezar de cero.</p>
-<button class="btn-red btn-block" onclick="borrarTodo()">🗑️ Borrar todo y empezar de nuevo</button>
-</div>
+<div class="card"><h2>💰 Vender un Equipo del Inventario Nuevo</h2>
+<label>Serie a vender</label><input id="serieVender" placeholder="Pegá la serie">
+<label>Cliente Final</label><input id="clienteFinalVenta" placeholder="Ej: María López - El Paraíso">
+<label>Precio (opcional)</label><input id="precioVenta" type="number" placeholder="Ej: 450">
+<label>Fecha Venta</label><input id="fechaVentaInput" type="date">
+<button class="btn-green btn-block" onclick="venderPorSerie()">💰 VENDER ESTA SERIE</button><div id="msgVenta"></div></div>
+<div class="card"><h2>📋 Historial de Ventas - TODO LO VENDIDO GUARDADO (Viejo + Nuevo)</h2><p class="small">Acá queda todo lo que ya vendiste antes y lo que vendas ahora. Esto NUNCA se borra cuando reiniciás el inventario.</p><div id="historialVentas"></div></div>
+<div class="card"><h2>⚙️ Reiniciar solo Inventario (sin borrar ventas)</h2><p class="small">Si algún día querés volver a reiniciar el inventario, este botón deja el inventario en 0 pero deja guardadas todas las ventas.</p><button class="btn-red btn-block" onclick="reiniciarSoloInventario()">🔄 Reiniciar SOLO Inventario - Mantener Ventas</button></div>
 </div>
 
 <script>
-/* ============================================================ */
-/* CONFIGURACIÓN PDF.JS */
-/* ============================================================ */
 pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-/* ============================================================ */
-/* DATOS GUARDADOS EN EL CELULAR */
-/* ============================================================ */
-let garantias = JSON.parse(localStorage.getItem('climaserv_garantias_v2')||'[]');
-let ventas = JSON.parse(localStorage.getItem('climaserv_ventas_v2')||'[]');
+/* ============ MIGRACIÓN INTELIGENTE - LO VIEJO SE GUARDA ============ */
+// Leemos TODAS las llaves viejas que pudiste tener
+let garantiasViejas1 = JSON.parse(localStorage.getItem('climaserv_garantias')||'[]');
+let garantiasViejas2 = JSON.parse(localStorage.getItem('climaserv_garantias_v2')||'[]');
+let ventasViejas1 = JSON.parse(localStorage.getItem('climaserv_ventas')||'[]');
+let ventasViejas2 = JSON.parse(localStorage.getItem('climaserv_ventas_v2')||'[]');
 
-/* ============================================================ */
-/* CARGA INICIAL - TU COMPRA REAL 81761 */
-/* ============================================================ */
-if(garantias.length===0){
+// Datos nuevos profesionales
+let garantias = JSON.parse(localStorage.getItem('climaserv_pro_garantias')||'[]');
+let ventas = JSON.parse(localStorage.getItem('climaserv_pro_ventas')||'[]');
+let yaMigro = localStorage.getItem('climaserv_pro_migro_v1');
+
+if(!yaMigro){
+  // 1. Guardar TODAS las ventas viejas en el historial profesional
+  let todasVentasViejas = [...ventasViejas1, ...ventasViejas2];
+  // 2. También convertir en venta todo lo que en lo viejo ya estaba marcado como vendido
+  let todosViejos = [...garantiasViejas1, ...garantiasViejas2];
+  todosViejos.forEach(g=>{
+    if(g.vendido){
+      todasVentasViejas.push({serie:g.serie, cliente:g.clienteFinal||g.cliente||'Cliente guardado', fecha:g.fechaVenta||g.fecha||'', precio:g.precioVenta||'', factura:g.numFactura||'', garantia:g.numGarantia||''});
+    }
+  });
+  // Quitar duplicados por serie
+  let vistas = new Set();
+  let ventasLimpias = [];
+  todasVentasViejas.forEach(v=>{
+    let key = (v.serie||'')+'|'+(v.cliente||'');
+    if(!vistas.has(key)){ vistas.add(key); ventasLimpias.push(v); }
+  });
+  if(ventasLimpias.length>0){
+    ventas = [...ventas, ...ventasLimpias];
+    localStorage.setItem('climaserv_pro_ventas', JSON.stringify(ventas));
+  }
+  // 3. Inventario se reinicia como pediste: empezamos limpio
+  // NO copiamos los disponibles viejos, solo dejamos el inventario nuevo en 0
+  // y marcamos que ya migramos para no duplicar la próxima vez
+  localStorage.setItem('climaserv_pro_migro_v1','si');
+  document.getElementById('msgMigracion').innerHTML = '✅ Listo: Guardé <b>'+ventasLimpias.length+' ventas viejas</b> en Historial. Inventario nuevo reiniciado en 0, limpio y profesional. Empezá a meter tus compras nuevas.';
+} else {
+  document.getElementById('msgMigracion').innerHTML = '✅ Inventario Profesional activo. Ventas viejas guardadas: <b>'+ventas.length+'</b>. Inventario nuevo limpio.';
+}
+
+// Si es primera vez y no hay nada, cargar ejemplo 81761 para que veas cómo queda
+if(garantias.length===0 && ventas.length===0 && !localStorage.getItem('climaserv_pro_ejemplo')){
+  // No forzamos ejemplo si ya migraste ventas, solo si está todo vacío
   let seriesEjemplo=[
     {serie:"340L427803A170370581",modelo:"CSA12CD(I)-R",tipo:"MANEJADORA MINI"},
     {serie:"340L427803A170370575",modelo:"CSA12CD(I)-R",tipo:"MANEJADORA MINI"},
@@ -285,25 +174,12 @@ if(garantias.length===0){
     {serie:"340L342203B090603770990",modelo:"CSA12CD(O)-R",tipo:"CONDENSADOR MINI"},
   ];
   seriesEjemplo.forEach((item,i)=>{
-    garantias.push({
-      id: Date.now()+i,
-      serie:item.serie, marca:"COMFORTSTAR", capacidad:"12000 BTU", voltaje:"220v",
-      modelo:item.modelo, tipo:item.tipo, gas:"410A", seer:"13",
-      fecha:"2024-04-11", numGarantia:"81761", numFactura:"20240103-C0001638",
-      tipoFactura:"03CCF", sucursal:"Constitución",
-      clienteCompra:"17478 - REINA SERRANO JOSE DANIEL",
-      proveedor:"FRIOAIRE Internacional",
-      archivo:"Garantia-81761-Factura-20240103-C0001638.pdf",
-      notas:"Compra ejemplo abril 2024",
-      vendido:false, clienteFinal:"", fechaVenta:"", precioVenta:""
-    });
+    garantias.push({id:Date.now()+i,serie:item.serie,marca:"COMFORTSTAR",capacidad:"12000 BTU",voltaje:"220v",modelo:item.modelo,tipo:item.tipo,gas:"410A",seer:"13",fecha:"2024-04-11",numGarantia:"81761",numFactura:"20240103-C0001638",tipoFactura:"03CCF",sucursal:"Constitución",clienteCompra:"17478 - REINA SERRANO JOSE DANIEL",proveedor:"FRIOAIRE Internacional",archivo:"Garantia-81761-Factura-20240103-C0001638.pdf",notas:"Compra ejemplo",vendido:false,clienteFinal:"",fechaVenta:"",precioVenta:""});
   });
-  localStorage.setItem('climaserv_garantias_v2', JSON.stringify(garantias));
+  localStorage.setItem('climaserv_pro_garantias',JSON.stringify(garantias));
+  localStorage.setItem('climaserv_pro_ejemplo','si');
 }
 
-/* ============================================================ */
-/* PESTAÑAS */
-/* ============================================================ */
 function mostrarTab(id){
   ['tab1','tab2','tab3','tab4','tab5'].forEach(t=>document.getElementById(t).classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
@@ -312,230 +188,141 @@ function mostrarTab(id){
   document.getElementById(mapa[id]).classList.add('active');
   render();
 }
-function cargarEjemplo(){
-  document.getElementById('proveedor').value="FRIOAIRE Internacional";
-  document.getElementById('fecha').value="2024-04-11";
-  document.getElementById('numGarantia').value="81761";
-  document.getElementById('tipoFactura').value="03CCF";
-  document.getElementById('numFactura').value="20240103-C0001638";
-  document.getElementById('sucursal').value="Constitución";
-  document.getElementById('clienteCompra').value="17478 - REINA SERRANO JOSE DANIEL";
-  document.getElementById('marca').value="COMFORTSTAR";
-  document.getElementById('capacidad').value="12000 BTU";
-  document.getElementById('voltaje').value="220v";
-  document.getElementById('modeloI').value="CSA12CD(I)-R";
-  document.getElementById('modeloO').value="CSA12CD(O)-R";
-  document.getElementById('series').value="340L427803A170370581\n340L427803A170370575\n340L427803A170370468\n340L342203B090603047\n340L342203B090603510\n340L342203B090603770990";
-  document.getElementById('nombreArchivo').value="Garantia-81761-Factura-20240103-C0001638.pdf";
-  mostrarTab('tab2');
-  alert('Ejemplo 81761 cargado en el formulario.');
-}
-
-/* ============================================================ */
-/* LEER PDF DIGITAL */
-/* ============================================================ */
 async function leerArchivo(){
   let f=document.getElementById('pdfFile').files[0];
-  if(!f){alert('Primero elegí el PDF digital');return;}
-  document.getElementById('previewArea').innerHTML='<div class="preview">Leyendo... esperá un momento, estoy sacando el texto del PDF...</div>';
+  if(!f){alert('Primero elegí el PDF');return;}
+  document.getElementById('previewArea').innerHTML='<div class="preview">Leyendo PDF...</div>';
   if(f.type.includes('pdf')){
     try{
       let buf=await f.arrayBuffer();
       let pdf=await pdfjsLib.getDocument({data:buf}).promise;
       let texto="";
-      for(let i=1;i<=pdf.numPages;i++){
-        let p=await pdf.getPage(i);
-        let c=await p.getTextContent();
-        texto+=c.items.map(x=>x.str).join(' ')+' \n';
-      }
+      for(let i=1;i<=pdf.numPages;i++){let p=await pdf.getPage(i);let c=await p.getTextContent();texto+=c.items.map(x=>x.str).join(' ')+' \n';}
       procesarTexto(texto,f.name);
-    }catch(e){
-      document.getElementById('previewArea').innerHTML='<div class="preview-error">No pude leer este PDF. Pedile a FRIOAIRE el PDF digital, no una foto escaneada.</div>';
-    }
+    }catch(e){document.getElementById('previewArea').innerHTML='<div class="preview-error">No pude leer este PDF. Pedí el PDF digital a FRIOAIRE.</div>';}
   }else{
     document.getElementById('nombreArchivo').value=f.name;
-    document.getElementById('previewArea').innerHTML='<div class="preview"><b>📷 Foto guardada como:</b> '+f.name+'<br>Como es foto, confirmá vos las series abajo antes de guardar. No te invento ninguna serie.<br><button class="btn-blue" style="margin-top:8px" onclick="mostrarTab(\'tab2\')">Ir a revisar y guardar</button></div>';
+    document.getElementById('previewArea').innerHTML='<div class="preview"><b>📷 Foto:</b> '+f.name+'<br>Confirmá las series a mano. <button class="btn-blue" onclick="mostrarTab(\'tab2\')">Ir a revisar</button></div>';
   }
 }
-function procesarTexto(t, nombre){
-  // Buscar factura tipo 20240103-C0001638
-  let facturaMatch = t.match(/20240\d+-\w+\d+/i);
-  let factura = facturaMatch ? facturaMatch[0] : document.getElementById('numFactura').value;
-  // Buscar garantía 81761
-  let garantiaMatch = t.match(/81761|81[.,\s]?761/);
-  let garantia = garantiaMatch ? garantiaMatch[0].replace(/[^0-9]/g,'') : "81761";
-  // Buscar todas las series 340L...
-  let series = [...new Set(t.match(/340L[A-Z0-9]{10,}/gi)||[])];
+function procesarTexto(t,nombre){
+  let factura=(t.match(/20240\d+-\w+\d+/i)||[])[0]||document.getElementById('numFactura').value;
+  let garantia=(t.match(/81761|81[.,\s]?761/)||[])[0]||"81761"; garantia=garantia.replace(/[^0-9]/g,'');
+  let series=[...new Set(t.match(/340L[A-Z0-9]{10,}/gi)||[])];
   if(series.length===0) series=[...new Set(t.match(/[0-9]{3}L[A-Z0-9]{10,}/gi)||[])];
-  // Buscar fecha
-  let fechaMatch = t.match(/2024-\d{2}-\d{2}/);
-  // Llenar formulario
   document.getElementById('numFactura').value=factura;
   document.getElementById('numGarantia').value=garantia;
   document.getElementById('nombreArchivo').value=nombre;
-  if(fechaMatch) document.getElementById('fecha').value=fechaMatch[0];
   if(series.length>0) document.getElementById('series').value=series.join('\n');
-  // Mostrar vista previa
-  let html='<div class="preview-ok"><b>✅ Esto leí del PDF digital:</b><br>';
-  html+='Factura: <b>'+factura+'</b><br>';
-  html+='Garantía: <b>'+garantia+'</b><br>';
-  html+='Series encontradas: <b>'+series.length+'</b><br>';
-  html+='<span class="serie">'+series.join('<br>')+'</span><br><br>';
-  html+='Revisá abajo, si está bien dale <b>GUARDAR COMPRA</b>. Si una serie está mal, corregila a mano antes de guardar.<br>';
-  html+='<button class="btn-blue" style="margin-top:10px" onclick="mostrarTab(\'tab2\')">➡️ Ir a revisar y guardar</button></div>';
-  document.getElementById('previewArea').innerHTML=html;
+  document.getElementById('previewArea').innerHTML='<div class="preview-ok"><b>✅ Leí del PDF:</b><br>Factura: <b>'+factura+'</b><br>Garantía: <b>'+garantia+'</b><br>Series: <b>'+series.length+'</b><br><span class="serie">'+series.join('<br>')+'</span><br><button class="btn-blue" style="margin-top:10px" onclick="mostrarTab(\'tab2\')">➡️ Ir a revisar y guardar</button></div>';
 }
-
-/* ============================================================ */
-/* GUARDAR COMPRA */
-/* ============================================================ */
 function guardarCompra(){
   let series=document.getElementById('series').value.split('\n').map(s=>s.trim().toUpperCase()).filter(Boolean);
   if(series.length===0){alert('Poné al menos 1 serie');return;}
-  let base={
-    proveedor:document.getElementById('proveedor').value,
-    fecha:document.getElementById('fecha').value,
-    numGarantia:document.getElementById('numGarantia').value,
-    tipoFactura:document.getElementById('tipoFactura').value,
-    numFactura:document.getElementById('numFactura').value,
-    sucursal:document.getElementById('sucursal').value,
-    clienteCompra:document.getElementById('clienteCompra').value,
-    marca:document.getElementById('marca').value,
-    capacidad:document.getElementById('capacidad').value,
-    voltaje:document.getElementById('voltaje').value,
-    gas:document.getElementById('gas').value,
-    seer:document.getElementById('seer').value,
-    archivo:document.getElementById('nombreArchivo').value,
-    notas:document.getElementById('notas').value
-  };
+  let base={proveedor:document.getElementById('proveedor').value,fecha:document.getElementById('fecha').value,numGarantia:document.getElementById('numGarantia').value,tipoFactura:document.getElementById('tipoFactura').value,numFactura:document.getElementById('numFactura').value,sucursal:document.getElementById('sucursal').value,clienteCompra:document.getElementById('clienteCompra').value,marca:document.getElementById('marca').value,capacidad:document.getElementById('capacidad').value,voltaje:document.getElementById('voltaje').value,gas:document.getElementById('gas').value,seer:document.getElementById('seer').value,archivo:document.getElementById('nombreArchivo').value,notas:document.getElementById('notas').value};
   let duplicadas=series.filter(s=>garantias.some(g=>g.serie===s));
-  if(duplicadas.length>0 && !confirm('Estas series ya existen: '+duplicadas.join(', ')+'. ¿Querés guardarlas igual?')) return;
+  if(duplicadas.length>0 && !confirm('Estas series ya existen: '+duplicadas.join(', ')+'. ¿Guardar igual?')) return;
   series.forEach((s,i)=>{
-    let esManejadora = s.includes('4278') || s.includes('427803');
+    let esManejadora=s.includes('4278')||s.includes('427803');
     garantias.push({...base,id:Date.now()+i+Math.random(),serie:s,modelo:esManejadora?document.getElementById('modeloI').value:document.getElementById('modeloO').value,tipo:esManejadora?"MANEJADORA MINI":"CONDENSADOR MINI",vendido:false,clienteFinal:"",fechaVenta:"",precioVenta:""});
   });
-  localStorage.setItem('climaserv_garantias_v2',JSON.stringify(garantias));
-  alert('✅ Guardado! Se crearon '+series.length+' garantías y se sumó al inventario.');
-  mostrarTab('tab3');
-  render();
+  localStorage.setItem('climaserv_pro_garantias',JSON.stringify(garantias));
+  alert('✅ Guardado! '+series.length+' equipos sumados al inventario nuevo.');
+  mostrarTab('tab3'); render();
 }
-
-/* ============================================================ */
-/* VENDER / DEVOLVER */
-/* ============================================================ */
 function vender(id){
-  let nombre=prompt('¿A quién se lo vendiste? Escribí nombre del cliente final:');
+  let nombre=prompt('¿A quién se lo vendiste?');
   if(!nombre) return;
-  let precio=prompt('¿Precio de venta? (podés dejar vacío)');
+  let precio=prompt('¿Precio? (opcional)');
   let g=garantias.find(x=>x.id===id);
   g.vendido=true; g.clienteFinal=nombre; g.fechaVenta=new Date().toISOString().slice(0,10); g.precioVenta=precio||"";
   ventas.push({serie:g.serie,cliente:nombre,fecha:g.fechaVenta,precio:precio||"",factura:g.numFactura,garantia:g.numGarantia});
-  localStorage.setItem('climaserv_garantias_v2',JSON.stringify(garantias));
-  localStorage.setItem('climaserv_ventas_v2',JSON.stringify(ventas));
+  localStorage.setItem('climaserv_pro_garantias',JSON.stringify(garantias));
+  localStorage.setItem('climaserv_pro_ventas',JSON.stringify(ventas));
   render();
 }
 function venderPorSerie(){
   let serie=document.getElementById('serieVender').value.trim().toUpperCase();
   let cliente=document.getElementById('clienteFinalVenta').value.trim();
   let precio=document.getElementById('precioVenta').value;
-  let fecha=document.getElementById('fechaVentaInput').value || new Date().toISOString().slice(0,10);
+  let fecha=document.getElementById('fechaVentaInput').value||new Date().toISOString().slice(0,10);
   if(!serie){alert('Pegá la serie');return;}
-  if(!cliente){alert('Poné el nombre del cliente');return;}
+  if(!cliente){alert('Poné cliente');return;}
   let g=garantias.find(x=>x.serie===serie);
-  if(!g){document.getElementById('msgVenta').innerHTML='<div class="preview-error">No encontré esa serie: '+serie+'</div>';return;}
-  if(g.vendido){document.getElementById('msgVenta').innerHTML='<div class="preview-error">Esa serie ya está vendida a '+g.clienteFinal+'</div>';return;}
+  if(!g){document.getElementById('msgVenta').innerHTML='<div class="preview-error">No encontré esa serie</div>';return;}
+  if(g.vendido){document.getElementById('msgVenta').innerHTML='<div class="preview-error">Ya está vendida a '+g.clienteFinal+'</div>';return;}
   g.vendido=true; g.clienteFinal=cliente; g.fechaVenta=fecha; g.precioVenta=precio;
   ventas.push({serie:serie,cliente:cliente,fecha:fecha,precio:precio,factura:g.numFactura,garantia:g.numGarantia});
-  localStorage.setItem('climaserv_garantias_v2',JSON.stringify(garantias));
-  localStorage.setItem('climaserv_ventas_v2',JSON.stringify(ventas));
-  document.getElementById('msgVenta').innerHTML='<div class="preview-ok">✅ Vendido! Serie '+serie+' a '+cliente+' el '+fecha+'</div>';
+  localStorage.setItem('climaserv_pro_garantias',JSON.stringify(garantias));
+  localStorage.setItem('climaserv_pro_ventas',JSON.stringify(ventas));
+  document.getElementById('msgVenta').innerHTML='<div class="preview-ok">✅ Vendido '+serie+' a '+cliente+'</div>';
   render();
 }
 function devolver(id){
-  if(!confirm('¿Devolver este equipo al inventario?')) return;
+  if(!confirm('¿Devolver al inventario?')) return;
   let g=garantias.find(x=>x.id===id);
   g.vendido=false; g.clienteFinal=""; g.fechaVenta=""; g.precioVenta="";
-  localStorage.setItem('climaserv_garantias_v2',JSON.stringify(garantias));
+  localStorage.setItem('climaserv_pro_garantias',JSON.stringify(garantias));
   render();
 }
-function borrarTodo(){
-  if(!confirm('¿Seguro querés borrar TODO? No se puede deshacer.')) return;
-  localStorage.clear(); location.reload();
+function reiniciarSoloInventario(){
+  if(!confirm('¿Reiniciar SOLO inventario? Las ventas quedan guardadas, el inventario queda en 0.')) return;
+  garantias=[];
+  localStorage.setItem('climaserv_pro_garantias',JSON.stringify(garantias));
+  render();
+  alert('Inventario reiniciado en 0. Ventas guardadas: '+ventas.length);
 }
 function exportarTodo(){
-  let texto="CLIMASERV - INVENTARIO Y GARANTÍAS\n\n";
-  garantias.forEach(g=>{
-    texto+=`Serie: ${g.serie} | ${g.marca} ${g.modelo} ${g.capacidad} ${g.voltaje} | Factura ${g.numFactura} | Garantía ${g.numGarantia} | ${g.vendido?'VENDIDO a '+g.clienteFinal:'DISPONIBLE'}\n`;
-  });
+  let texto="CLIMASERV PROFESIONAL - INVENTARIO + VENTAS GUARDADAS\n\nVENTAS GUARDADAS:\n";
+  ventas.forEach(v=>{texto+=`${v.fecha} | ${v.serie} | ${v.cliente} | ${v.precio} | Fact ${v.factura}\n`;});
+  texto+="\nINVENTARIO NUEVO:\n";
+  garantias.forEach(g=>{texto+=`${g.serie} | ${g.marca} ${g.modelo} ${g.capacidad} ${g.voltaje} | Fact ${g.numFactura} | ${g.vendido?'VENDIDO a '+g.clienteFinal:'DISPONIBLE'}\n`;});
   let blob=new Blob([texto],{type:'text/plain'});
-  let a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='climaserv-inventario.txt'; a.click();
+  let a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='climaserv-profesional.txt'; a.click();
 }
-
-/* ============================================================ */
-/* BUSCAR */
-/* ============================================================ */
 function buscarRapido(){
   let bus=document.getElementById('buscarRapido').value.trim().toUpperCase();
   let div=document.getElementById('resultadoBusquedaRapida');
   if(!bus){div.innerHTML='';return;}
-  let r=garantias.filter(g=>g.serie.includes(bus)||g.numFactura.includes(bus)||g.numGarantia.includes(bus)||g.clienteFinal.toUpperCase().includes(bus));
-  if(r.length===0){div.innerHTML='<p class="small">No encontrado</p>';return;}
-  div.innerHTML=r.map(g=>`<div class="preview"><b class="serie">${g.serie}</b> - ${g.marca} ${g.modelo} ${g.capacidad} ${g.voltaje}<br>Factura ${g.numFactura} - Garantía ${g.numGarantia} - ${g.fecha}<br>Archivo: ${g.archivo}<br>Estado: ${g.vendido?'<span class="badge badge-red">VENDIDO a '+g.clienteFinal+'</span>':'<span class="badge">DISPONIBLE</span>'}</div>`).join('');
+  let r=garantias.filter(g=>g.serie.includes(bus)||g.numFactura.includes(bus)||g.numGarantia.includes(bus));
+  let r2=ventas.filter(v=>v.serie.includes(bus)||v.cliente.toUpperCase().includes(bus));
+  let html='';
+  if(r.length) html+=r.map(g=>`<div class="preview"><b class="serie">${g.serie}</b> - ${g.marca} ${g.modelo}<br>Factura ${g.numFactura} - Garantía ${g.numGarantia}<br>Estado: ${g.vendido?'VENDIDO a '+g.clienteFinal:'DISPONIBLE'}</div>`).join('');
+  if(r2.length) html+='<p class="small"><b>En ventas guardadas:</b></p>'+r2.map(v=>`<div class="preview">${v.fecha} - <span class="serie">${v.serie}</span> - ${v.cliente}</div>`).join('');
+  if(!html) html='<p class="small">No encontrado</p>';
+  div.innerHTML=html;
 }
-
-/* ============================================================ */
-/* RENDER - DIBUJAR TODO EN PANTALLA */
-/* ============================================================ */
 function render(){
   document.getElementById('kpiTotal').textContent=garantias.length;
   document.getElementById('kpiDisp').textContent=garantias.filter(g=>!g.vendido).length;
-  document.getElementById('kpiVend').textContent=garantias.filter(g=>g.vendido).length;
-  // Inventario agrupado por modelo
+  document.getElementById('kpiVend').textContent=ventas.length;
   let grupos={};
-  garantias.forEach(g=>{
-    let k=g.marca+' | '+g.modelo+' | '+g.capacidad+' | '+g.voltaje;
-    if(!grupos[k]) grupos[k]={total:0,disp:0};
-    grupos[k].total++; if(!g.vendido) grupos[k].disp++;
-  });
+  garantias.forEach(g=>{let k=g.marca+' | '+g.modelo+' | '+g.capacidad+' | '+g.voltaje; if(!grupos[k]) grupos[k]={total:0,disp:0}; grupos[k].total++; if(!g.vendido) grupos[k].disp++;});
   let invHtml='<table><tr><th>Modelo</th><th>Disponibles</th><th>Total</th></tr>';
   for(let k in grupos){invHtml+=`<tr><td>${k}</td><td><b style="font-size:16px">${grupos[k].disp}</b></td><td>${grupos[k].total}</td></tr>`;}
   invHtml+='</table>';
+  if(garantias.length===0) invHtml='<p class="small">Inventario nuevo en 0, limpio. Meté tu primera compra nueva con el botón Subir PDF o Nueva Compra.</p>';
   document.getElementById('inventario').innerHTML=invHtml;
-  // Detalle por modelo y tipo
   let det='<table><tr><th>Tipo</th><th>Modelo</th><th>Disp.</th><th>Total</th></tr>';
   let grupos2={};
-  garantias.forEach(g=>{
-    let k=g.tipo+'|'+g.modelo;
-    if(!grupos2[k]) grupos2[k]={total:0,disp:0};
-    grupos2[k].total++; if(!g.vendido) grupos2[k].disp++;
-  });
-  for(let k in grupos2){
-    let partes=k.split('|');
-    det+=`<tr><td>${partes[0]}</td><td>${partes[1]}</td><td><b>${grupos2[k].disp}</b></td><td>${grupos2[k].total}</td></tr>`;
-  }
+  garantias.forEach(g=>{let k=g.tipo+'|'+g.modelo; if(!grupos2[k]) grupos2[k]={total:0,disp:0}; grupos2[k].total++; if(!g.vendido) grupos2[k].disp++;});
+  for(let k in grupos2){let p=k.split('|'); det+=`<tr><td>${p[0]}</td><td>${p[1]}</td><td><b>${grupos2[k].disp}</b></td><td>${grupos2[k].total}</td></tr>`;}
   det+='</table>';
   document.getElementById('inventarioDetalle').innerHTML=det;
-  // Garantías filtradas
-  let filtro=document.getElementById('filtroEstado') ? document.getElementById('filtroEstado').value : 'todos';
+  let filtro=document.getElementById('filtroEstado')?document.getElementById('filtroEstado').value:'todos';
   let lista=garantias.slice().reverse();
   if(filtro==='disponible') lista=lista.filter(g=>!g.vendido);
   if(filtro==='vendido') lista=lista.filter(g=>g.vendido);
   let html='<table><tr><th>Serie</th><th>Modelo</th><th>Factura / Garantía</th><th>Estado</th><th>Acción</th></tr>';
-  lista.forEach(g=>{
-    html+=`<tr><td class="serie">${g.serie}<br><span class="small">${g.tipo}</span></td><td>${g.modelo}<br><span class="small">${g.capacidad} ${g.voltaje} - ${g.gas}</span></td><td>${g.numFactura}<br><span class="small">Garantía ${g.numGarantia} - ${g.fecha}<br>Archivo: ${g.archivo}</span></td><td>${g.vendido?'<span class="badge badge-red">VENDIDO<br>'+g.clienteFinal+'<br>'+g.fechaVenta+'</span>':'<span class="badge">DISPONIBLE</span>'}</td><td>${g.vendido?`<button class="btn-gray btn-small" onclick="devolver(${g.id})">Devolver</button>`:`<button class="btn-green btn-small" onclick="vender(${g.id})">Vender</button>`}</td></tr>`;
-  });
+  lista.forEach(g=>{html+=`<tr><td class="serie">${g.serie}<br><span class="small">${g.tipo}</span></td><td>${g.modelo}<br><span class="small">${g.capacidad} ${g.voltaje}</span></td><td>${g.numFactura}<br><span class="small">Garantía ${g.numGarantia} - ${g.fecha}</span></td><td>${g.vendido?'<span class="badge badge-red">VENDIDO<br>'+g.clienteFinal+'</span>':'<span class="badge">DISPONIBLE</span>'}</td><td>${g.vendido?`<button class="btn-gray btn-small" onclick="devolver(${g.id})">Devolver</button>`:`<button class="btn-green btn-small" onclick="vender(${g.id})">Vender</button>`}</td></tr>`;});
   html+='</table>';
   if(lista.length===0) html='<p class="small">No hay equipos con ese filtro.</p>';
   document.getElementById('garantias').innerHTML=html;
-  // Historial ventas
-  let hv='<table><tr><th>Fecha</th><th>Serie</th><th>Cliente</th><th>Precio</th></tr>';
-  ventas.slice().reverse().forEach(v=>{
-    hv+=`<tr><td>${v.fecha}</td><td class="serie">${v.serie}</td><td>${v.cliente}</td><td>${v.precio||'-'}</td></tr>`;
-  });
+  let hv='<table><tr><th>Fecha</th><th>Serie</th><th>Cliente</th><th>Precio</th><th>Factura</th></tr>';
+  ventas.slice().reverse().forEach(v=>{hv+=`<tr><td>${v.fecha}</td><td class="serie">${v.serie}</td><td>${v.cliente}</td><td>${v.precio||'-'}</td><td>${v.factura||''}</td></tr>`;});
   hv+='</table>';
-  if(ventas.length===0) hv='<p class="small">Todavía no hay ventas. Cuando vendas 1, va a aparecer acá.</p>';
+  if(ventas.length===0) hv='<p class="small">Todavía no hay ventas guardadas. Cuando vendas, quedan acá para siempre, aunque reinicies el inventario.</p>';
   document.getElementById('historialVentas').innerHTML=hv;
-  // Fecha venta por defecto hoy
   let fv=document.getElementById('fechaVentaInput');
   if(fv && !fv.value) fv.value=new Date().toISOString().slice(0,10);
 }
