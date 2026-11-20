@@ -2,302 +2,338 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Control A/C - Climaserv El Paraíso</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f1f5f9;color:#0f172a;padding-bottom:90px}
-.header{background:#2563eb;color:#fff;padding:14px 12px 12px;border-radius:0 0 14px 14px}
-.header-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.logo{display:flex;align-items:center;gap:6px}
-.logo h1{margin:0;font-size:22px;line-height:1}
-.logo p{margin:2px 0 0;font-size:12px;opacity:.9}
-.btn-copia{background:#fff;color:#2563eb;border:0;padding:9px 12px;border-radius:20px;font-weight:800;font-size:13px;white-space:nowrap}
-.search{margin-top:12px;background:#fff;border-radius:12px;display:flex;align-items:center;padding:12px 12px;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,.1)}
-.search input{border:0;outline:none;width:100%;font-size:15px}
-.filters{display:flex;gap:8px;margin-top:12px;overflow-x:auto;padding-bottom:2px}
-.pill{border:0;padding:11px 18px;border-radius:25px;font-weight:800;font-size:14px;white-space:nowrap;cursor:pointer}
-.pill-todos{background:#fff;color:#2563eb}.pill-pend{background:#facc15;color:#fff}.pill-pag{background:#22c55e;color:#fff}.pill-serie{background:#111;color:#fff}.pill-phone{background:#fff;color:#111}
-.card{background:#fff;margin:12px;border-radius:14px;padding:14px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
-.card h2{margin:0 0 12px;font-size:18px}
-label{font-size:12px;color:#64748b;display:block;margin:6px 0 2px}
-input,select,textarea{width:100%;padding:13px 12px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:15px;background:#fff;outline:none;margin-bottom:6px}
-input:focus,select:focus{border-color:#2563eb}
-input[readonly]{background:#e2e8f0;color:#111;text-align:center;font-weight:600}
-.btn-blue{background:#2563eb;color:#fff;border:0;width:100%;padding:13px;border-radius:12px;font-weight:800;font-size:15px;margin-top:8px}
-.btn-green{background:#16a34a;color:#fff;border:0;width:100%;padding:13px;border-radius:12px;font-weight:800;font-size:15px;margin-top:8px}
-.btn-yellow{background:#facc15;color:#111;border:0;width:100%;padding:13px;border-radius:12px;font-weight:800;font-size:15px;margin-top:8px}
-.btn-gray{background:#e2e8f0;color:#111;border:0;padding:9px 12px;border-radius:10px;font-weight:700;font-size:13px}
-.small{font-size:12px;color:#64748b;line-height:1.5}
-.badge{display:inline-block;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:800}
-.badge-green{background:#dcfce7;color:#166534}.badge-red{background:#fee2e2;color:#991b1b}.badge-yellow{background:#fef3c7;color:#92400e}.badge-blue{background:#dbeafe;color:#1e40af}.badge-purple{background:#ede9fe;color:#6d28d9}
-table{width:100%;border-collapse:collapse;font-size:13px}th{font-size:11px;text-transform:uppercase;color:#64748b;text-align:left;padding:8px 4px;border-bottom:2px solid #e2e8f0}td{padding:9px 4px;border-bottom:1px solid #f1f5f9;vertical-align:top}
-.serie{font-family:monospace;font-weight:800;font-size:12px;word-break:break-all}
-.kpi{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:12px}
-.kpi div{background:#0f172a;color:#fff;border-radius:12px;padding:12px;text-align:center}.kpi b{font-size:20px;display:block}.kpi span{font-size:11px;opacity:.8}
-.kpi div:nth-child(2){background:#15803d}.kpi div:nth-child(3){background:#c2410c}
-.preview{background:#eff6ff;border:1.5px dashed #2563eb;border-radius:12px;padding:12px;margin-top:10px;font-size:13px;line-height:1.6}
-.preview-ok{background:#f0fdf4;border:1.5px solid #16a34a;border-radius:12px;padding:12px;margin-top:10px}
-.hidden{display:none}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e2e8f0;display:flex;justify-content:space-around;padding:12px 6px 14px;z-index:99}
-.bottom button{border:0;background:none;font-weight:800;font-size:14px;cursor:pointer;padding:8px 6px}
-.bottom button.active{color:#2563eb}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-</style>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Climaserv - El Paraíso</title>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-100 pb-24">
 
-<div class="header">
-<div class="header-top">
-<div class="logo"><span style="font-size:26px">❄️</span><div><h1>Control A/C</h1><p>Climaserv • El Paraíso</p></div></div>
-<div style="display:flex;gap:6px"><button class="btn-copia" onclick="copiarResumen()">📋 Copia</button></div>
-</div>
-<div class="search"><span>🔍</span><input id="buscarTodo" placeholder="Buscar todo: cliente, serie, teléfono, aire..." oninput="buscarTodo()"></div>
-<div class="filters">
-<button class="pill pill-todos" onclick="filtrar('todos')">Todos</button>
-<button class="pill pill-pend" onclick="filtrar('pendientes')">⏳ Pendientes</button>
-<button class="pill pill-pag" onclick="filtrar('pagados')">✅ Pagados</button>
-<button class="pill pill-serie" onclick="filtrar('serie')">🔍 Por Serie</button>
-<button class="pill pill-phone" onclick="filtrar('telefono')">📞</button>
-</div>
-<div id="resultadoBusqueda"></div>
-<div id="previewArea"></div>
+<div id="login" class="fixed inset-0 bg-blue-600 z-50 flex flex-col items-center justify-center p-6 text-white">
+  <h1 class="text-3xl font-bold">❄️ Climaserv</h1>
+  <p class="text-xs">El Paraíso • Privado</p>
+  <input id="claveInput" type="password" placeholder="Tu clave" class="mt-6 w-full max-w-xs p-3 rounded-xl text-black text-center">
+  <button onclick="entrar()" class="mt-3 w-full max-w-xs bg-white text-blue-600 py-3 rounded-xl font-bold">Entrar</button>
+  <p id="errorClave" class="text-xs mt-2 text-yellow-200"></p>
 </div>
 
-<div id="msgMigracion" style="margin:12px;background:#0f172a;color:#fff;border-radius:12px;padding:12px;font-size:13px;line-height:1.6">✅ Diseño original. Ventas viejas guardadas. Inventario por serie suelta.</div>
-<div class="kpi"><div><b id="kpiDisp">0</b><span>Disponibles</span></div><div><b id="kpiVend">0</b><span>Vendidos Guardados</span></div><div><b id="kpiTotal">0</b><span>En Inventario</span></div></div>
+<div id="app" class="hidden">
+<header class="bg-blue-600 text-white p-4 sticky top-0 z-10">
+  <div class="flex justify-between items-center">
+    <div>
+      <h1 class="text-xl font-bold">❄️ Control A/C</h1>
+      <p class="text-xs opacity-80">Climaserv • El Paraíso</p>
+    </div>
+    <div class="flex gap-1">
+      <button onclick="exportar()" class="bg-white text-blue-600 text-xs px-3 py-2 rounded-full font-bold">📤 Copia</button>
+      <label class="bg-yellow-400 text-black text-xs px-3 py-2 rounded-full font-bold cursor-pointer">📥 Importar
+        <input type="file" accept=".json" onchange="importar(event)" class="hidden">
+      </label>
+    </div>
+  </div>
+  <input id="buscador" oninput="render()" placeholder="🔍 Buscar todo: cliente, serie, teléfono, aire, marca..." class="w-full mt-3 p-3 rounded-xl text-black">
+  <div class="flex gap-2 mt-3 overflow-x-auto">
+    <button onclick="setFiltro('todos')" class="bg-white text-blue-600 px-3 py-1 rounded-full text-xs font-bold">Todos</button>
+    <button onclick="setFiltro('pendiente')" class="bg-yellow-400 px-3 py-1 rounded-full text-xs font-bold">⏳ Pendientes</button>
+    <button onclick="setFiltro('pagado')" class="bg-green-400 px-3 py-1 rounded-full text-xs font-bold">✅ Pagados</button>
+    <button onclick="buscarSerie()" class="bg-black text-white px-3 py-1 rounded-full text-xs font-bold">🔎 Por Serie</button>
+    <button onclick="buscarTelefono()" class="bg-white px-3 py-1 rounded-full text-xs font-bold">📞 Por Teléfono</button>
+  </div>
+</header>
 
-<div id="vistaClientes">
-<div class="card">
-<h2>Registrar Producto / Trabajo</h2>
-<label>Cliente</label><input id="cliente" placeholder="Cliente">
-<label>Teléfono</label><input id="telefono" placeholder="77459590" value="77459590">
-<label>Fecha</label><input type="text" id="fecha" readonly value="20 nov 2026">
-<label>Fecha cumpleaños del cliente</label><input id="cumple" type="date">
-<label>❄️ Aire - Elegí de la lista:</label>
-<select id="aire"><option>Mini Split 12000 BTU</option><option>Mini Split 9000 BTU</option><option>Mini Split 18000 BTU</option><option>Mini Split 24000 BTU</option><option>Mini Split 36000 BTU</option></select>
-
-<div class="row2">
-<div><label>🧊 Tipo de Equipo</label>
-<select id="tipoEquipo"><option value="Manejadora">🧊 Manejadora (Interior)</option><option value="Condensador">🔥 Condensador (Exterior)</option></select></div>
-<div><label>⚡ Voltaje</label>
-<select id="voltaje"><option value="220v">220v</option><option value="110v">110v</option></select></div>
-</div>
-
-<label>Serie</label><input id="serieInput" placeholder="Serie">
-<label>Distribuidor</label><input id="distribuidor" value="Distribuidor granada" placeholder="Distribuidor granada">
-<label>Flete $</label><input id="flete" type="number" placeholder="Flete $">
-<label>Precio Venta $ (opcional)</label><input id="precio" type="number" placeholder="Ej: 450">
-<label>Estado</label><select id="estado"><option value="pendiente">⏳ Pendiente</option><option value="pagado">✅ Pagado</option></select>
-<label>Notas / Garantía / Factura</label><input id="notas" placeholder="Ej: Garantía 81761 - Factura 20240103-C0001638">
-<button class="btn-blue" onclick="guardarRegistro()">✅ Guardar Registro</button>
-<button class="btn-green" onclick="generarFacturaPDF()">🧾 Generar Factura PDF - Manejadoras / Condensadores</button>
-<button class="btn-yellow" onclick="mostrarVista('inventario')">📦 Ver Inventario Profesional</button>
-</div>
-<div class="card"><h2>📋 Lista de Registros</h2><div id="listaRegistros"></div></div>
+<div class="grid grid-cols-3 gap-2 p-3">
+  <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs">Total</p><p id="statTotal" class="font-bold text-blue-600">$0</p></div>
+  <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs">Pendiente</p><p id="statPend" class="font-bold text-yellow-600">$0</p></div>
+  <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs">Cobrado</p><p id="statCob" class="font-bold text-green-600">$0</p></div>
 </div>
 
-<div id="vistaInventario" class="hidden">
-<div class="card"><h2>📦 Inventario - Por Serie Suelta</h2><p class="small">1 serie = 1 equipo. Sin pares. Manejadora y Condensador se cuentan por separado.</p>
-<div style="display:flex;gap:8px"><button class="btn-blue" onclick="cargarEjemplo81761()">↩️ Cargar Ejemplo 81761 (6 equipos)</button><button class="btn-gray" onclick="reiniciarSoloInventario()">🔄 Reiniciar Solo Inventario</button></div>
-<div style="display:flex;gap:8px;margin-top:8px"><button class="btn-gray" onclick="filtrarInventario('todos')">Todos</button><button class="btn-gray" onclick="filtrarInventario('Manejadora')">🧊 Solo Manejadoras</button><button class="btn-gray" onclick="filtrarInventario('Condensador')">🔥 Solo Condensadores</button></div>
-<div id="inventarioLista" style="margin-top:12px"></div></div>
-<div class="card"><h2>🧾 Factura Rápida</h2><p class="small">Genera la factura de lo que tenés en inventario o de un cliente, ya separada por tipo y voltaje.</p><button class="btn-green" onclick="generarFacturaPDF()">🧾 Generar Factura PDF</button><div id="previewFactura"></div></div>
-<div class="card"><h2>💰 Ventas Guardadas - Nunca se borra</h2><div id="ventasGuardadas"></div></div>
+<div class="mx-3 bg-yellow-50 border rounded-xl p-3 text-xs"><b>🔔 Alertas:</b> <span id="alertas"></span></div>
+<div class="mx-3 mt-2 bg-blue-50 border rounded-xl p-3 text-xs"><b>🎂 Cumpleaños:</b> <span id="alertasCumple"></span></div>
+
+<div class="flex gap-2 p-3 overflow-x-auto">
+  <button onclick="showTab('trabajos')" class="bg-blue-600 text-white px-4 py-2 rounded-full text-xs font-bold">Trabajos</button>
+  <button onclick="showTab('inventario')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Inventario</button>
+  <button onclick="showTab('gastos')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Gastos</button>
+  <button onclick="showTab('calendario')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Calendario</button>
+  <button onclick="showTab('reportes')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Reportes</button>
+  <button onclick="showTab('precios')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Precios / PDF</button>
+  <button onclick="showTab('trabajadores')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Trabajadores</button>
 </div>
 
-<div id="vistaGastos" class="hidden">
-<div class="card"><h2>💸 Gastos</h2><label>Concepto</label><input id="gastoConcepto" placeholder="Ej: Flete, Gasolina..."><label>Monto $</label><input id="gastoMonto" type="number" placeholder="0"><button class="btn-blue" onclick="guardarGasto()">Guardar Gasto</button><div id="listaGastos" style="margin-top:10px"></div></div>
-</div>
-<div id="vistaReportes" class="hidden">
-<div class="card"><h2>📊 Reportes</h2><div id="reporteResumen"></div><button class="btn-blue" onclick="exportarTodo()">⬇️ Exportar Todo</button></div>
+<div id="tab-trabajos" class="tab">
+  <div class="mx-3 bg-white rounded-2xl p-4 shadow">
+    <h2 class="font-bold mb-2">Registrar Producto / Trabajo</h2>
+    <input id="fCliente" placeholder="Cliente" class="w-full border p-3 rounded-xl mb-2">
+    <input id="fTelefono" placeholder="Teléfono WhatsApp Ej: 70001234" class="w-full border p-3 rounded-xl mb-2">
+    <input id="fCumple" type="date" class="w-full border p-3 rounded-xl mb-2">
+    <label class="text-xs text-gray-500">Fecha cumpleaños del cliente</label>
+    <label class="text-xs font-bold mt-2 block">❄️ Aire - Elegí de la lista:</label>
+    <select id="fAire" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-bold">
+      <option>Mini Split 12000 BTU</option>
+      <option>Mini Split 18000 BTU</option>
+      <option>Mini Split 24000 BTU</option>
+      <option>Mini Split 36000 BTU</option>
+      <option>Mini Split 60000 BTU</option>
+    </select>
+    <input id="fSerie" placeholder="Serie" class="w-full border p-3 rounded-xl mb-2">
+    <input id="fLote" placeholder="Lote" class="w-full border p-3 rounded-xl mb-2">
+    <input id="fFlete" type="number" placeholder="Flete $" class="w-full border p-3 rounded-xl mb-2">
+    <input id="fMonto" type="number" placeholder="Monto $" class="w-full border p-3 rounded-xl mb-2">
+    <input id="fTrabajador" placeholder="Trabajador que lo hizo" class="w-full border p-3 rounded-xl mb-2">
+    <select id="fFrecuencia" class="w-full border p-3 rounded-xl mb-2">
+      <option value="2">Cada 2 meses</option>
+      <option value="3" selected>Cada 3 meses</option>
+      <option value="4">Cada 4 meses</option>
+      <option value="6">Cada 6 meses</option>
+    </select>
+    <select id="fEstado" class="w-full border p-3 rounded-xl mb-2">
+      <option value="pendiente">⏳ Pendiente</option>
+      <option value="pagado">✅ Pagado</option>
+    </select>
+    <label class="text-xs text-gray-500">Garantía Proveedor hasta:</label>
+    <input id="fGarantiaProv" type="date" class="w-full border p-3 rounded-xl mb-3">
+    <button onclick="generarVista()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">👁️ Generar Vista Previa</button>
+    <div id="vistaPrevia" class="hidden mt-3 border-2 border-blue-400 bg-blue-50 rounded-2xl p-4"></div>
+  </div>
+  <div id="lista" class="p-3 space-y-3"></div>
 </div>
 
-<div class="bottom">
-<button id="btnClientes" class="active" onclick="mostrarVista('clientes')">👥 Clientes</button>
-<button id="btnInventario" onclick="mostrarVista('inventario')">📦 Inventario</button>
-<button id="btnGastos" onclick="mostrarVista('gastos')">💰 Gastos</button>
-<button id="btnReportes" onclick="mostrarVista('reportes')">📊 Reportes</button>
+<div id="tab-inventario" class="tab hidden mx-3 bg-white rounded-2xl p-4">
+  <h2 class="font-bold">📦 Inventario Dinámico</h2>
+  <p class="text-xs text-gray-500">Si vendés 1, baja solito. Ej: 10 -> 9 disponibles</p>
+  <select id="invCategoria" class="w-full border p-3 rounded-xl my-2 bg-blue-50 font-bold">
+    <option value="Aire">❄️ Aire</option>
+    <option value="Gas">⛽ Gas</option>
+    <option value="Repuesto">🔧 Repuesto</option>
+    <option value="Otro">📦 Otro</option>
+  </select>
+  <input id="invNombre" placeholder="Ej: Mini Split 12000 BTU" class="w-full border p-3 rounded-xl mb-2">
+  <label class="text-xs font-bold">Marca:</label>
+  <select id="invMarca" class="w-full border p-3 rounded-xl mb-2">
+    <option value="Midea">Midea</option>
+    <option value="LG">LG</option>
+    <option value="Samsung">Samsung</option>
+    <option value="Daikin">Daikin</option>
+    <option value="Carrier">Carrier</option>
+    <option value="Panasonic">Panasonic</option>
+    <option value="Hisense">Hisense</option>
+    <option value="TCL">TCL</option>
+    <option value="Otra">Otra / Sin Marca</option>
+  </select>
+  <label class="text-xs font-bold">Voltaje:</label>
+  <select id="invVoltaje" class="w-full border p-3 rounded-xl mb-2 bg-yellow-50 font-bold">
+    <option value="110v">⚡ 110v</option>
+    <option value="220v">⚡ 220v</option>
+    <option value="110v/220v">⚡ 110v / 220v</option>
+    <option value="No aplica">No aplica</option>
+  </select>
+  <input id="invCant" type="number" placeholder="Cantidad que entró Ej: 10" class="w-full border p-3 rounded-xl mb-2">
+  <input id="invPrecio" type="number" placeholder="Precio $" class="w-full border p-3 rounded-xl mb-2">
+  <button onclick="guardarInventario()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Agregar al Inventario</button>
+
+  <div class="mt-4">
+    <p class="text-xs font-bold">Filtrar por:</p>
+    <div class="flex gap-2 mt-1 overflow-x-auto">
+      <button onclick="filtroInv='Todos';filtroMarca='Todos';filtroVoltaje='Todos';render()" class="bg-black text-white px-3 py-1 rounded-full text-xs font-bold">Todos</button>
+      <button onclick="filtroInv='Aire';render()" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">❄️ Aires</button>
+      <button onclick="filtroInv='Gas';render()" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-bold">⛽ Gas</button>
+      <button onclick="filtroInv='Repuesto';render()" class="bg-green-100 px-3 py-1 rounded-full text-xs font-bold">🔧 Repuestos</button>
+    </div>
+    <div class="flex gap-2 mt-2">
+      <select id="filtroMarcaSelect" onchange="filtroMarca=this.value;render()" class="border p-2 rounded-xl text-xs flex-1">
+        <option value="Todos">Todas las Marcas</option>
+        <option value="Midea">Midea</option>
+        <option value="LG">LG</option>
+        <option value="Samsung">Samsung</option>
+        <option value="Daikin">Daikin</option>
+        <option value="Carrier">Carrier</option>
+        <option value="Panasonic">Panasonic</option>
+        <option value="Hisense">Hisense</option>
+        <option value="TCL">TCL</option>
+        <option value="Otra">Otra</option>
+      </select>
+      <select id="filtroVoltajeSelect" onchange="filtroVoltaje=this.value;render()" class="border p-2 rounded-xl text-xs flex-1">
+        <option value="Todos">Todos los Voltajes</option>
+        <option value="110v">⚡ 110v</option>
+        <option value="220v">⚡ 220v</option>
+        <option value="110v/220v">⚡ 110v / 220v</option>
+        <option value="No aplica">No aplica</option>
+      </select>
+    </div>
+  </div>
+  <div id="listaInv" class="mt-3 space-y-2"></div>
 </div>
+
+<div id="tab-gastos" class="tab hidden mx-3 bg-white rounded-2xl p-4">
+  <h2 class="font-bold">💰 Gastos + Cierre</h2>
+  <input id="gDesc" placeholder="Ej: Gasolina, Comida" class="w-full border p-3 rounded-xl my-2">
+  <input id="gMonto" type="number" placeholder="Monto $" class="w-full border p-3 rounded-xl mb-2">
+  <select id="gTipo" class="w-full border p-3 rounded-xl mb-2"><option value="negocio">Negocio</option><option value="casa">Casa</option></select>
+  <button onclick="guardarGasto()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Guardar Gasto</button>
+  <div class="mt-4 bg-gray-50 p-3 rounded-xl text-sm"><b>Cierre del día:</b><p id="cierre">Entró: $0 - Salió: $0 - Quedó: $0</p><button onclick="cierreDia()" class="mt-2 bg-green-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Hacer Cierre</button></div>
+  <div id="listaGastos" class="mt-3 space-y-2"></div>
+</div>
+
+<div id="tab-calendario" class="tab hidden mx-3 bg-white rounded-2xl p-4">
+  <h2 class="font-bold">📅 Calendario</h2>
+  <input type="date" id="fechaCal" onchange="renderCal()" class="w-full border p-3 rounded-xl mt-2">
+  <div id="listaCal" class="mt-3"></div>
+</div>
+
+<div id="tab-reportes" class="tab hidden mx-3 bg-white rounded-2xl p-4">
+  <h2 class="font-bold">📊 Reportes</h2>
+  <div class="flex gap-2 my-2">
+    <button onclick="generarReporte('dia')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Día</button>
+    <button onclick="generarReporte('semana')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Semana</button>
+    <button onclick="generarReporte('mes')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Mes</button>
+    <button onclick="generarReporte('anio')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Año</button>
+  </div>
+  <div id="reporteBox" class="mt-3 bg-blue-50 p-3 rounded-xl text-sm">Tocá un botón para ver el reporte</div>
+</div>
+
+<div id="tab-precios" class="tab hidden mx-3 bg-white rounded-2xl p-4">
+  <h2 class="font-bold">🧾 Cotización + PDF</h2>
+  <p class="text-xs">Precios: Mantenimiento $25 • Instalación $80 • Reparación $40 • Gas $60</p>
+  <input id="cCliente" placeholder="Cliente cotización" class="w-full border p-3 rounded-xl my-2">
+  <input id="cDetalle" placeholder="Detalle Ej: Instalación" class="w-full border p-3 rounded-xl mb-2">
+  <input id="cMonto" type="number" placeholder="Monto $" class="w-full border p-3 rounded-xl mb-2">
+  <button onclick="cotizar()" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold">Cotización por WhatsApp</button>
+  <button onclick="factura()" class="w-full mt-2 bg-blue-600 text-white py-3 rounded-xl font-bold">Generar Factura / Garantía</button>
+  <button onclick="window.print()" class="w-full mt-2 bg-black text-white py-3 rounded-xl font-bold">Imprimir PDF</button>
+</div>
+
+<div id="tab-trabajadores" class="tab hidden mx-3 bg-white rounded-2xl p-4">
+  <h2 class="font-bold">👷 Trabajadores</h2>
+  <input id="tNombre" placeholder="Nombre trabajador" class="w-full border p-3 rounded-xl my-2">
+  <input id="tClave" placeholder="Clave trabajador Ej: juan123" class="w-full border p-3 rounded-xl mb-2">
+  <button onclick="guardarTrabajador()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Agregar Trabajador</button>
+  <div id="listaTrab" class="mt-3 space-y-2"></div>
+</div>
+</div>
+
+<nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 text-xs font-bold">
+  <button onclick="showTab('trabajos')">👥 Clientes</button>
+  <button onclick="showTab('inventario')">📦 Inventario</button>
+  <button onclick="showTab('gastos')">💰 Gastos</button>
+  <button onclick="showTab('reportes')">📊 Reportes</button>
+</nav>
 
 <script>
-let registros=JSON.parse(localStorage.getItem('controlAC_registros')||'[]');
-let garantias=JSON.parse(localStorage.getItem('controlAC_pro_garantias')||'[]');
-let ventas=JSON.parse(localStorage.getItem('controlAC_pro_ventas')||'[]');
-let gastos=JSON.parse(localStorage.getItem('controlAC_gastos')||'[]');
-let filtroInv='todos';
-document.getElementById('fecha').value=new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
-
-function mostrarVista(v){
-  ['vistaClientes','vistaInventario','vistaGastos','vistaReportes'].forEach(id=>document.getElementById(id).classList.add('hidden'));
-  let mapa={clientes:'vistaClientes',inventario:'vistaInventario',gastos:'vistaGastos',reportes:'vistaReportes'};
-  document.getElementById(mapa[v]).classList.remove('hidden');
-  ['btnClientes','btnInventario','btnGastos','btnReportes'].forEach(b=>document.getElementById(b).classList.remove('active'));
-  let mapaBtn={clientes:'btnClientes',inventario:'btnInventario',gastos:'btnGastos',reportes:'btnReportes'};
-  document.getElementById(mapaBtn[v]).classList.add('active');
-  render();
+const CLAVE="Friosreina";
+function entrar(){
+  let v=document.getElementById('claveInput').value;
+  let trabs=JSON.parse(localStorage.getItem('climaserv_trabs')||'[]');
+  let esTrab=trabs.find(t=>t.clave===v);
+  if(v===CLAVE || esTrab){
+    localStorage.setItem('climaserv_login','ok');
+    localStorage.setItem('climaserv_user', esTrab ? esTrab.nombre : 'Jefe');
+    document.getElementById('login').style.display='none';
+    document.getElementById('app').classList.remove('hidden');
+    render();
+  } else { document.getElementById('errorClave').innerText='Clave incorrecta'; }
 }
-function filtrar(tipo){
-  let input=document.getElementById('buscarTodo');
-  if(tipo==='pendientes') input.value='PENDIENTE';
-  if(tipo==='pagados') input.value='PAGADO';
-  if(tipo==='todos') input.value='';
-  if(tipo==='serie'||tipo==='telefono') input.focus();
-  buscarTodo();
+if(localStorage.getItem('climaserv_login')==='ok'){ document.getElementById('login').style.display='none'; document.getElementById('app').classList.remove('hidden'); }
+let datos=JSON.parse(localStorage.getItem('climaserv_trabajos')||'[]');
+let inventario=JSON.parse(localStorage.getItem('climaserv_inv')||'[]');
+let gastos=JSON.parse(localStorage.getItem('climaserv_gastos')||'[]');
+let trabajadores=JSON.parse(localStorage.getItem('climaserv_trabs')||'[]');
+let filtro='todos',filtroInv='Todos',filtroMarca='Todos',filtroVoltaje='Todos';
+let datosTemp=null;
+const AIRES_BASE=['Mini Split 12000 BTU','Mini Split 18000 BTU','Mini Split 24000 BTU','Mini Split 36000 BTU','Mini Split 60000 BTU'];
+function save(){ localStorage.setItem('climaserv_trabajos',JSON.stringify(datos)); localStorage.setItem('climaserv_inv',JSON.stringify(inventario)); localStorage.setItem('climaserv_gastos',JSON.stringify(gastos)); localStorage.setItem('climaserv_trabs',JSON.stringify(trabajadores)); render(); renderCal(); }
+function setFiltro(f){filtro=f;render();}
+function showTab(t){ document.querySelectorAll('.tab').forEach(e=>e.classList.add('hidden')); document.getElementById('tab-'+t).classList.remove('hidden'); }
+function generarVista(){
+  const d={ cliente:fCliente.value.trim(), telefono:fTelefono.value.trim(), cumple:fCumple.value, aire:fAire.value, serie:fSerie.value.trim(), lote:fLote.value.trim(), flete:parseFloat(fFlete.value||0), monto:parseFloat(fMonto.value||0), trabajador:fTrabajador.value.trim(), frecuencia:fFrecuencia.value, estado:fEstado.value, garantiaProv:fGarantiaProv.value, fecha:new Date().toISOString() };
+  if(!d.cliente) return alert('⚠️ Te faltó el Cliente');
+  if(!d.telefono) return alert('⚠️ Te faltó el Teléfono');
+  if(!d.serie) return alert('⚠️ Te faltó la Serie - es lo más delicado');
+  if(!d.monto || d.monto <= 0) return alert('⚠️ Revisá el Monto, tiene que ser mayor a 0');
+  if(!/^[0-9]+$/.test(d.telefono)) return alert('⚠️ El Teléfono solo debe tener números, sin + ni espacios');
+  datosTemp=d;
+  document.getElementById('vistaPrevia').classList.remove('hidden');
+  document.getElementById('vistaPrevia').innerHTML=`<h3 class="font-bold text-blue-700 mb-2">👁️ Así va a quedar guardado:</h3><p class="text-sm"><b>👤 Cliente:</b> ${d.cliente}</p><p class="text-sm"><b>📞 Teléfono:</b> ${d.telefono}</p><p class="text-sm"><b>🎂 Cumpleaños:</b> ${d.cumple || 'Sin dato'}</p><p class="text-sm"><b>❄️ Aire:</b> ${d.aire}</p><p class="text-sm"><b>🔢 Serie:</b> ${d.serie}</p><p class="text-sm"><b>📦 Lote:</b> ${d.lote || 'Sin dato'}</p><p class="text-sm"><b>🚚 Flete:</b> $${d.flete}</p><p class="text-sm"><b>💰 Monto:</b> $${d.monto}</p><p class="text-sm"><b>👷 Trabajador:</b> ${d.trabajador || 'Sin dato'}</p><p class="text-sm"><b>📅 Cada:</b> ${d.frecuencia} meses</p><p class="text-sm"><b>📌 Estado:</b> ${d.estado}</p><p class="text-sm"><b>🛡️ Garantía Prov:</b> ${d.garantiaProv || 'Sin dato'}</p><div class="flex gap-2 mt-3"><button onclick="confirmarGuardar()" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-bold">✅ Guardar Así</button><button onclick="document.getElementById('vistaPrevia').classList.add('hidden')" class="flex-1 bg-gray-200 py-3 rounded-xl font-bold">✏️ Corregir</button></div>`;
+  document.getElementById('vistaPrevia').scrollIntoView({behavior:'smooth'});
 }
-function filtrarInventario(t){ filtroInv=t; render(); }
-function guardarRegistro(){
-  let cliente=document.getElementById('cliente').value.trim();
-  let serie=document.getElementById('serieInput').value.trim().toUpperCase();
-  if(!cliente){alert('Poné el cliente');return;}
-  if(!serie){alert('Poné la serie');return;}
-  let tipo=document.getElementById('tipoEquipo').value;
-  let volt=document.getElementById('voltaje').value;
-  let reg={id:Date.now(),cliente:cliente,telefono:document.getElementById('telefono').value,fecha:document.getElementById('fecha').value,aire:document.getElementById('aire').value,tipo:tipo,voltaje:volt,serie:serie,distribuidor:document.getElementById('distribuidor').value,flete:document.getElementById('flete').value,precio:document.getElementById('precio').value,estado:document.getElementById('estado').value,notas:document.getElementById('notas').value};
-  registros.unshift(reg);
-  if(!garantias.some(g=>g.serie===serie)){
-    garantias.push({id:Date.now()+Math.random(),serie:serie,marca:"COMFORTSTAR",modelo:tipo==='Manejadora'?"CSA12CD(I)-R":"CSA12CD(O)-R",tipo:tipo,capacidad:document.getElementById('aire').value,voltaje:volt,fecha:new Date().toISOString().slice(0,10),numGarantia:"81761",numFactura:document.getElementById('notas').value||"20240103-C0001638",clienteCompra:cliente,archivo:"",vendido:false,clienteFinal:"",fechaVenta:"",precioVenta:reg.precio});
-  }
-  if(reg.estado==='pagado'){
-    ventas.push({serie:serie,cliente:cliente,fecha:new Date().toISOString().slice(0,10),precio:reg.precio,factura:reg.notas,garantia:"81761",tipo:tipo,voltaje:volt,aire:reg.aire});
-    let g=garantias.find(x=>x.serie===serie); if(g){g.vendido=true; g.clienteFinal=cliente; g.fechaVenta=new Date().toISOString().slice(0,10);}
-  }
-  localStorage.setItem('controlAC_registros',JSON.stringify(registros));
-  localStorage.setItem('controlAC_pro_garantias',JSON.stringify(garantias));
-  localStorage.setItem('controlAC_pro_ventas',JSON.stringify(ventas));
-  alert('✅ Guardado: '+tipo+' - '+volt);
-  document.getElementById('cliente').value=''; document.getElementById('serieInput').value='';
-  render();
+function confirmarGuardar(){
+  if(!datosTemp) return;
+  datos.unshift(datosTemp); save(); alert('✅ Guardado'); datosTemp=null;
+  document.getElementById('vistaPrevia').classList.add('hidden');
+  fCliente.value=''; fTelefono.value=''; fCumple.value=''; fAire.selectedIndex=0; fSerie.value=''; fLote.value=''; fFlete.value=''; fMonto.value=''; fTrabajador.value=''; fFrecuencia.value='3'; fEstado.value='pendiente'; fGarantiaProv.value='';
 }
-function cargarEjemplo81761(){
-  if(garantias.some(g=>g.numGarantia==='81761')){alert('Ya tenés el ejemplo 81761 cargado');return;}
-  let datos=[
-    {serie:"340L427803A170370581",tipo:"Manejadora",modelo:"CSA12CD(I)-R"},
-    {serie:"340L427803A170370575",tipo:"Manejadora",modelo:"CSA12CD(I)-R"},
-    {serie:"340L427803A170370468",tipo:"Manejadora",modelo:"CSA12CD(I)-R"},
-    {serie:"340L342203B090603047",tipo:"Condensador",modelo:"CSA12CD(O)-R"},
-    {serie:"340L342203B090603510",tipo:"Condensador",modelo:"CSA12CD(O)-R"},
-    {serie:"340L342203B090603770990",tipo:"Condensador",modelo:"CSA12CD(O)-R"},
-  ];
-  datos.forEach((d,i)=>{ garantias.push({id:Date.now()+i,serie:d.serie,marca:"COMFORTSTAR",modelo:d.modelo,tipo:d.tipo,capacidad:"Mini Split 12000 BTU",voltaje:"220v",fecha:"2024-04-11",numGarantia:"81761",numFactura:"20240103-C0001638",clienteCompra:"17478 - REINA SERRANO JOSE DANIEL",archivo:"Garantia-81761.pdf",vendido:false,clienteFinal:"",fechaVenta:"",precioVenta:""}); });
-  localStorage.setItem('controlAC_pro_garantias',JSON.stringify(garantias));
-  render(); alert('✅ Ejemplo 81761 cargado: 3 Manejadoras + 3 Condensadores - 220v');
+function guardarInventario(){
+  if(!invNombre.value) return alert('Poné el nombre');
+  if(!invCant.value) return alert('Poné cuántos entraron');
+  inventario.unshift({nombre:invNombre.value, categoria:invCategoria.value, marca:invMarca.value, voltaje:invVoltaje.value, cant:parseInt(invCant.value), disponibles:parseInt(invCant.value), precio:invPrecio.value});
+  save(); invNombre.value=''; invCant.value=''; invPrecio.value=''; alert('Agregado: '+invMarca.value+' '+invVoltaje.value);
 }
-function reiniciarSoloInventario(){
-  if(!confirm('¿Reiniciar SOLO inventario? Las ventas guardadas NO se borran.')) return;
-  garantias=[]; localStorage.setItem('controlAC_pro_garantias',JSON.stringify(garantias));
-  render(); alert('Inventario reiniciado en 0. Ventas guardadas: '+ventas.length);
+function venderUno(idx){
+  let item=inventario[idx];
+  let disp = item.disponibles !== undefined ? item.disponibles : item.cant;
+  if(disp <= 0) return alert('⚠️ Ya no hay disponibles de este producto, está agotado');
+  item.disponibles = disp - 1;
+  save();
+  alert(`✅ Vendiste 1 ${item.nombre}\nQuedan ${item.disponibles} disponibles`);
 }
-function venderGarantia(id){
-  let nombre=prompt('¿A quién se lo vendiste?');
-  if(!nombre) return;
-  let g=garantias.find(x=>x.id===id);
-  g.vendido=true; g.clienteFinal=nombre; g.fechaVenta=new Date().toISOString().slice(0,10);
-  ventas.push({serie:g.serie,cliente:nombre,fecha:g.fechaVenta,precio:g.precioVenta||'',factura:g.numFactura,garantia:g.numGarantia,tipo:g.tipo,voltaje:g.voltaje,aire:g.capacidad});
-  localStorage.setItem('controlAC_pro_garantias',JSON.stringify(garantias));
-  localStorage.setItem('controlAC_pro_ventas',JSON.stringify(ventas));
-  render();
+function sumarStock(idx){
+  let n=parseInt(prompt('¿Cuántos entraron nuevos?', '1')||'0');
+  if(!n || n<=0) return;
+  let item=inventario[idx];
+  if(item.disponibles===undefined) item.disponibles=item.cant;
+  item.disponibles += n;
+  item.cant = (parseInt(item.cant)||0) + n;
+  save();
 }
-function devolverGarantia(id){
-  if(!confirm('¿Devolver al inventario?')) return;
-  let g=garantias.find(x=>x.id===id); g.vendido=false; g.clienteFinal=""; g.fechaVenta="";
-  localStorage.setItem('controlAC_pro_garantias',JSON.stringify(garantias)); render();
-}
-function guardarGasto(){
-  let c=document.getElementById('gastoConcepto').value; let m=document.getElementById('gastoMonto').value;
-  if(!c||!m){alert('Llená concepto y monto');return;}
-  gastos.unshift({concepto:c,monto:m,fecha:new Date().toLocaleDateString()});
-  localStorage.setItem('controlAC_gastos',JSON.stringify(gastos));
-  document.getElementById('gastoConcepto').value=''; document.getElementById('gastoMonto').value=''; render();
-}
-function copiarResumen(){
-  let texto='CLIMASERV - CONTROL A/C\nDisponibles: '+garantias.filter(g=>!g.vendido).length+' | Vendidos guardados: '+ventas.length+'\n';
-  navigator.clipboard.writeText(texto); alert('✅ Copiado');
-}
-function exportarTodo(){
-  let t='CLIMASERV - CONTROL A/C\n\nVENTAS:\n';
-  ventas.forEach(v=>{t+=v.fecha+' | '+v.tipo+' | '+v.voltaje+' | '+v.serie+' | '+v.cliente+'\n';});
-  let b=new Blob([t],{type:'text/plain'}); let a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='climaserv-control-ac.txt'; a.click();
-}
-function generarFacturaPDF(){
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  let cliente = document.getElementById('cliente').value || (ventas.length? ventas[0].cliente : 'Cliente');
-  let fecha = new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'long',year:'numeric'});
-  let facturaNum = document.getElementById('notas').value || '20240103-C0001638';
-  let items = garantias.length ? garantias : registros.map(r=>({serie:r.serie,tipo:r.tipo||'Manejadora',voltaje:r.voltaje||'220v',capacidad:r.aire||'Mini Split 12000 BTU',modelo:r.tipo==='Condensador'?'CSA12CD(O)-R':'CSA12CD(I)-R',precioVenta:r.precio||''}));
-  let manejadoras = items.filter(x=> (x.tipo||'Manejadora')==='Manejadora');
-  let condensadores = items.filter(x=> (x.tipo||'')==='Condensador');
-  doc.setFillColor(37,99,235); doc.rect(0,0,210,32,'F');
-  doc.setTextColor(255,255,255); doc.setFontSize(20); doc.setFont(undefined,'bold');
-  doc.text('CLIMASERV - El Paraiso', 14, 14);
-  doc.setFontSize(10); doc.setFont(undefined,'normal'); doc.text('Control A/C - Factura', 14, 22);
-  doc.text('Tel: 7745-9590', 150, 14);
-  doc.setTextColor(0,0,0);
-  doc.setFontSize(11); doc.text('Cliente: '+cliente, 14, 42);
-  doc.text('Fecha: '+fecha, 14, 49);
-  doc.text('Factura / Garantia: '+facturaNum, 14, 56);
-  let y = 66;
-  doc.setFillColor(219,234,254); doc.rect(14, y, 182, 10, 'F');
-  doc.setFont(undefined,'bold'); doc.setFontSize(12); doc.text('MANEJADORAS  (Unidad Interior)', 16, y+7);
-  y+=16; doc.setFont(undefined,'normal'); doc.setFontSize(10);
-  if(manejadoras.length===0){ doc.text('Sin manejadoras en esta factura.', 16, y); y+=8; }
-  manejadoras.forEach((m,i)=>{
-    doc.text((i+1)+'. '+m.modelo+' - '+m.capacidad+' - Voltaje: '+(m.voltaje||'220v'), 16, y);
-    y+=6; doc.setFontSize(9); doc.setTextColor(80,80,80); doc.text('   Serie: '+m.serie, 16, y); doc.setTextColor(0,0,0); doc.setFontSize(10); y+=8;
-    if(y>260){doc.addPage(); y=20;}
-  });
-  y+=4;
-  doc.setFillColor(254,243,199); doc.rect(14, y, 182, 10, 'F');
-  doc.setFont(undefined,'bold'); doc.setFontSize(12); doc.text('CONDENSADORES  (Unidad Exterior)', 16, y+7);
-  y+=16; doc.setFont(undefined,'normal'); doc.setFontSize(10);
-  if(condensadores.length===0){ doc.text('Sin condensadores en esta factura.', 16, y); y+=8; }
-  condensadores.forEach((c,i)=>{
-    doc.text((i+1)+'. '+c.modelo+' - '+c.capacidad+' - Voltaje: '+(c.voltaje||'220v'), 16, y);
-    y+=6; doc.setFontSize(9); doc.setTextColor(80,80,80); doc.text('   Serie: '+c.serie, 16, y); doc.setTextColor(0,0,0); doc.setFontSize(10); y+=8;
-    if(y>260){doc.addPage(); y=20;}
-  });
-  y+=8;
-  doc.setFont(undefined,'bold'); doc.text('Resumen: '+manejadoras.length+' Manejadora(s)  +  '+condensadores.length+' Condensador(es)  =  '+items.length+' equipos', 14, y);
-  y+=10; doc.setFont(undefined,'normal'); doc.setFontSize(10);
-  doc.text('Total Flete: $'+(document.getElementById('flete').value||'0'), 14, y);
-  y+=7; doc.text('Precio Venta: $'+(document.getElementById('precio').value||'0'), 14, y);
-  y+=14; doc.text('___________________________', 14, y); y+=7; doc.text('Firma Climaserv', 14, y);
-  doc.text('___________________________', 120, y-7); doc.text('Firma Cliente', 120, y);
-  doc.save('Factura-Climaserv-'+cliente.replace(/\s/g,'_')+'.pdf');
-  document.getElementById('previewFactura').innerHTML='<div style="background:#f0fdf4;border:1px solid #16a34a;border-radius:10px;padding:10px;margin-top:10px">✅ Factura PDF generada: <b>'+manejadoras.length+' Manejadoras</b> + <b>'+condensadores.length+' Condensadores</b>, con voltaje cada una.</div>';
-}
-function buscarTodo(){
-  let bus=document.getElementById('buscarTodo').value.trim().toUpperCase();
-  let div=document.getElementById('resultadoBusqueda');
-  if(!bus){div.innerHTML=''; render(); return;}
-  let r=registros.filter(x=>(x.cliente||'').toUpperCase().includes(bus)||(x.serie||'').toUpperCase().includes(bus)||(x.telefono||'').includes(bus)||(x.estado||'').toUpperCase().includes(bus));
-  let r2=garantias.filter(g=>g.serie.includes(bus)||g.numFactura.includes(bus));
-  let r3=ventas.filter(v=>v.serie.includes(bus)||v.cliente.toUpperCase().includes(bus));
-  let html='';
-  if(r.length) html+='<div style="background:#fff;margin-top:10px;border-radius:12px;padding:10px">'+r.map(x=>'<div><b>'+x.cliente+'</b> - <span class="serie">'+x.serie+'</span> - '+x.aire+' - '+(x.tipo||'')+' - '+(x.voltaje||'')+' - '+(x.estado==='pagado'?'<span class="badge badge-green">PAGADO</span>':'<span class="badge badge-yellow">PENDIENTE</span>')+'</div>').join('<hr>')+'</div>';
-  if(r2.length) html+='<div style="background:#fff;margin-top:6px;border-radius:12px;padding:10px"><b>En Inventario:</b><br>'+r2.map(g=>'<div class="serie">'+g.serie+' - '+g.tipo+' - '+g.voltaje+' - '+(g.vendido?'VENDIDO a '+g.clienteFinal:'DISPONIBLE')+'</div>').join('')+'</div>';
-  if(r3.length) html+='<div style="background:#fff;margin-top:6px;border-radius:12px;padding:10px"><b>En Ventas Guardadas:</b><br>'+r3.map(v=>'<div>'+v.fecha+' - '+v.cliente+' - <span class="serie">'+v.serie+'</span></div>').join('')+'</div>';
-  if(!html) html='<div style="background:#fff;margin-top:10px;border-radius:12px;padding:10px;font-size:13px">No encontrado</div>';
-  div.innerHTML=html;
+function guardarGasto(){ gastos.unshift({desc:gDesc.value,monto:parseFloat(gMonto.value||0),tipo:gTipo.value,fecha:new Date().toISOString()}); save(); gDesc.value=''; gMonto.value=''; }
+function guardarTrabajador(){ trabajadores.unshift({nombre:tNombre.value,clave:tClave.value}); save(); alert('Trabajador agregado: '+tClave.value); }
+function cierreDia(){ const hoy=new Date().toDateString(); const entr=datos.filter(d=>new Date(d.fecha).toDateString()===hoy&&d.estado==='pagado').reduce((s,d)=>s+d.monto,0); const sal=gastos.filter(g=>new Date(g.fecha).toDateString()===hoy).reduce((s,g)=>s+g.monto,0); document.getElementById('cierre').innerText=`Entró: $${entr} - Salió: $${sal} - Quedó: $${entr-sal}`; alert(`Cierre\nEntró: $${entr}\nSalió: $${sal}\nQuedó: $${entr-sal}`); }
+function buscarSerie(){ const s=prompt('Escribí la Serie:'); if(!s)return; const r=datos.filter(d=>(d.serie||'').toLowerCase().includes(s.toLowerCase())); alert(r.length?r.map(x=>`${x.cliente} - ${x.aire} - $${x.monto}`).join('\n'):'No se encontró'); }
+function buscarTelefono(){ const s=prompt('Escribí el teléfono:'); if(!s)return; const r=datos.filter(d=>(d.telefono||'').includes(s)); alert(r.length?r.map(x=>`${x.cliente} - ${x.aire} - $${x.monto}`).join('\n'):'No se encontró'); }
+function exportar(){ const blob=new Blob([JSON.stringify({trabajos:datos,inventario,gastos,trabajadores},null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='copia-climaserv.json'; a.click(); }
+function importar(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=function(){ try{ const j=JSON.parse(r.result); datos=j.trabajos||[]; inventario=j.inventario||[]; gastos=j.gastos||[]; trabajadores=j.trabajadores||[]; save(); alert('Recuperado! '+datos.length+' trabajos'); }catch(err){ alert('Archivo no válido'); } }; r.readAsText(f); }
+function cotizar(){ const msg=`Hola ${cCliente.value}, cotización Climaserv El Paraíso:\n${cDetalle.value} - $${cMonto.value}`; window.open('https://wa.me/?text='+encodeURIComponent(msg)); }
+function factura(){ alert(`FACTURA CLIMASERV\nCliente: ${cCliente.value}\nDetalle: ${cDetalle.value}\nMonto: $${cMonto.value}\nGarantía 30 días`); }
+function generarReporte(tipo){ const total=datos.reduce((s,d)=>s+d.monto,0); const pend=datos.filter(d=>d.estado==='pendiente').reduce((s,d)=>s+d.monto,0); document.getElementById('reporteBox').innerHTML=`Reporte ${tipo}<br>Total: $${total}<br>Pendiente: $${pend}<br>Cobrado: $${total-pend}<br>Trabajos: ${datos.length}`; }
+function renderCal(){ const f=document.getElementById('fechaCal').value||new Date().toISOString().slice(0,10); const lista=datos.filter(d=>d.fecha.slice(0,10)===f); document.getElementById('listaCal').innerHTML=lista.length?lista.map(d=>`<div class="border p-2 rounded-xl text-sm">${d.cliente} - ${d.aire} - $${d.monto}</div>`).join(''):'Sin trabajos ese día.'; }
+function actualizarAires(){ let airesDeInventario=inventario.filter(x=>(x.categoria||'Aire')==='Aire').map(x=>`${x.nombre} - ${x.marca||''} - ${x.voltaje||''}`); let todos=[...AIRES_BASE]; airesDeInventario.forEach(a=>{if(!todos.includes(a)) todos.push(a);}); document.getElementById('fAire').innerHTML=todos.map(a=>`<option value="${a}">${a}</option>`).join(''); }
+function editar(idx){
+  const d=datos[idx];
+  fCliente.value=d.cliente||''; fTelefono.value=d.telefono||''; fCumple.value=d.cumple||''; fAire.value=d.aire||'Mini Split 12000 BTU'; fSerie.value=d.serie||''; fLote.value=d.lote||''; fFlete.value=d.flete||''; fMonto.value=d.monto||''; fTrabajador.value=d.trabajador||''; fFrecuencia.value=d.frecuencia||'3'; fEstado.value=d.estado||'pendiente'; fGarantiaProv.value=d.garantiaProv||'';
+  datos.splice(idx,1); save(); window.scrollTo(0,0); alert('Ahora corregí arriba y dale Generar Vista Previa');
 }
 function render(){
-  document.getElementById('kpiDisp').textContent=garantias.filter(g=>!g.vendido).length;
-  document.getElementById('kpiVend').textContent=ventas.length;
-  document.getElementById('kpiTotal').textContent=garantias.length;
-  let html=registros.length?registros.map(r=>'<div style="border-bottom:1px solid #f1f5f9;padding:10px 0"><b>'+r.cliente+'</b> - '+r.telefono+'<br><span class="serie">'+r.serie+'</span> - '+r.aire+'<br><span class="badge badge-blue">'+(r.tipo||'Manejadora')+'</span> <span class="badge badge-purple">'+(r.voltaje||'220v')+'</span><br><span class="small">'+r.distribuidor+' - Flete $'+(r.flete||0)+' - '+r.fecha+'</span><br>'+(r.estado==='pagado'?'<span class="badge badge-green">PAGADO</span>':'<span class="badge badge-yellow">PENDIENTE</span>')+' <button class="btn-gray" onclick="generarFacturaPDF()">🧾 Factura</button></div>').join(''):'<p class="small">Todavía no hay registros.</p>';
-  document.getElementById('listaRegistros').innerHTML=html;
-  let listaFiltrada = filtroInv==='todos' ? garantias : garantias.filter(g=>g.tipo===filtroInv);
-  let inv=listaFiltrada.length?listaFiltrada.slice().reverse().map(g=>'<div style="border-bottom:1px solid #f1f5f9;padding:10px 0"><span class="serie">'+g.serie+'</span><br>'+g.marca+' '+g.modelo+' - '+g.capacidad+'<br><span class="badge badge-blue">'+(g.tipo||'Manejadora')+'</span> <span class="badge badge-purple">'+(g.voltaje||'220v')+'</span><br><span class="small">Factura '+g.numFactura+' - Garantía '+g.numGarantia+'</span><br>'+(g.vendido?'<span class="badge badge-red">VENDIDO a '+g.clienteFinal+'</span> <button class="btn-gray" onclick="devolverGarantia('+g.id+')">Devolver</button>':'<span class="badge badge-green">DISPONIBLE</span> <button class="btn-gray" onclick="venderGarantia('+g.id+')">Vender</button>')+'</div>').join(''):'<p class="small">Inventario en 0, limpio. Dale a Cargar Ejemplo 81761.</p>';
-  document.getElementById('inventarioLista').innerHTML=inv;
-  let hv=ventas.length?ventas.slice().reverse().map(v=>'<div style="border-bottom:1px solid #f1f5f9;padding:9px 0">'+v.fecha+' - <b>'+v.cliente+'</b><br><span class="serie">'+v.serie+'</span> - '+(v.tipo||'')+' - '+(v.voltaje||'')+' - $'+(v.precio||'')+'</div>').join(''):'<p class="small">Todavía no hay ventas guardadas.</p>';
-  document.getElementById('ventasGuardadas').innerHTML=hv;
-  let hg=gastos.length?gastos.map(g=>'<div>'+g.fecha+' - '+g.concepto+' - $'+g.monto+'</div>').join(''):'<p class="small">Sin gastos.</p>';
-  document.getElementById('listaGastos').innerHTML=hg;
-  document.getElementById('reporteResumen').innerHTML='<p>Manejadoras: <b>'+garantias.filter(g=>g.tipo==="Manejadora").length+'</b><br>Condensadores: <b>'+garantias.filter(g=>g.tipo==="Condensador").length+'</b><br>Disponibles: <b>'+garantias.filter(g=>!g.vendido).length+'</b><br>Vendidos guardados: <b>'+ventas.length+'</b><br>Total gastos: $'+gastos.reduce((a,b)=>a+Number(b.monto||0),0)+'</p>';
+  actualizarAires();
+  const user=localStorage.getItem('climaserv_user')||'Jefe';
+  const q=document.getElementById('buscador').value.toLowerCase();
+  let lista=datos.filter(d=>(d.cliente||'').toLowerCase().includes(q)||(d.aire||'').toLowerCase().includes(q)||(d.serie||'').toLowerCase().includes(q)||(d.telefono||'').includes(q));
+  if(user!=='Jefe') lista=lista.filter(d=>(d.trabajador||'').toLowerCase()===user.toLowerCase());
+  if(filtro==='pendiente') lista=lista.filter(d=>d.estado==='pendiente');
+  if(filtro==='pagado') lista=lista.filter(d=>d.estado==='pagado');
+  const total=datos.reduce((s,d)=>s+(d.monto||0),0);
+  const pend=datos.filter(d=>d.estado==='pendiente').reduce((s,d)=>s+(d.monto||0),0);
+  document.getElementById('statTotal').innerText='$'+total;
+  document.getElementById('statPend').innerText='$'+pend;
+  document.getElementById('statCob').innerText='$'+(total-pend);
+  const hoy=new Date().toISOString().slice(5,10);
+  const cumples=datos.filter(d=>d.cumple&&d.cumple.slice(5,10)===hoy);
+  document.getElementById('alertas').innerText=(pend>0?`${datos.filter(d=>d.estado==='pendiente').length} pendientes • `:'Todo al día • ')+`Usuario: ${user}`;
+  document.getElementById('alertasCumple').innerText=cumples.length?`🎂 Hoy cumple: ${cumples.map(c=>c.cliente).join(', ')}`:'Sin cumpleaños hoy.';
+  document.getElementById('lista').innerHTML=lista.map((d)=>{ let idx=datos.indexOf(d); return `<div class="bg-white p-4 rounded-2xl shadow"><p class="font-bold">${d.cliente} ${d.cumple? '🎂 '+d.cumple : ''}</p><p class="text-xs text-gray-500">${d.aire} • Serie: ${d.serie||'-'} • Lote: ${d.lote||'-'} • Flete: $${d.flete||0} • Tel: ${d.telefono||''} • Trabajador: ${d.trabajador||'-'}</p><p class="font-bold text-blue-600">$${d.monto} • Cada ${d.frecuencia} meses • Garantía Prov: ${d.garantiaProv||'-'} • ${d.estado}</p><div class="flex gap-2 mt-2 flex-wrap"><button onclick="editar(${idx})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-bold">✏️ Editar</button><button onclick="datos[${idx}].estado='pagado';save()" class="bg-green-100 px-3 py-1 rounded-full text-xs font-bold">Pagado</button><button onclick="verHistorial('${d.cliente}')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Historial</button><button onclick="window.open('https://wa.me/${(d.telefono||'').replace(/[^0-9]/g,'')}?text='+encodeURIComponent('Hola ${d.cliente}, soy Climaserv, ya toca tu mantenimiento'))" class="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-bold">WhatsApp</button><button onclick="datos.splice(${idx},1);save()" class="text-red-500 text-xs font-bold">Borrar</button></div></div>`; }).join('')||'<p class="text-center text-gray-400 py-6">Sin registros</p>';
+  let invFiltrado=inventario;
+  if(filtroInv!=='Todos') invFiltrado=invFiltrado.filter(x=>(x.categoria||'Aire')===filtroInv);
+  if(filtroMarca!=='Todos') invFiltrado=invFiltrado.filter(x=>(x.marca||'Otra')===filtroMarca);
+  if(filtroVoltaje!=='Todos') invFiltrado=invFiltrado.filter(x=>(x.voltaje||'No aplica')===filtroVoltaje);
+  let iconos={Aire:'❄️',Gas:'⛽',Repuesto:'🔧',Otro:'📦'};
+  document.getElementById('listaInv').innerHTML=invFiltrado.map((x)=>{
+    let idx=inventario.indexOf(x);
+    let disp = x.disponibles !== undefined ? x.disponibles : x.cant;
+    let agotado = disp<=0;
+    return `<div class="border ${agotado?'border-red-400 bg-red-50':'border-gray-200'} p-3 rounded-xl text-sm"><p class="font-bold">${iconos[x.categoria||'Aire']||'📦'} ${x.nombre}</p><p class="text-xs text-gray-600">🏷️ Marca: <b>${x.marca||'Sin marca'}</b> • ⚡ Voltaje: <b>${x.voltaje||'No aplica'}</b> • 📦 Categoría: ${x.categoria||'Aire'}</p><p class="font-bold ${agotado?'text-red-600':'text-green-700'}">${agotado?'⛔ AGOTADO':'✅ Disponibles: '+disp+' de '+x.cant} • Precio: $${x.precio||0}</p><div class="flex gap-2 mt-2"><button onclick="venderUno(${idx})" class="bg-red-100 px-3 py-1 rounded-full text-xs font-bold">➖ Vender 1</button><button onclick="sumarStock(${idx})" class="bg-green-100 px-3 py-1 rounded-full text-xs font-bold">➕ Sumar Stock</button><button onclick="inventario.splice(${idx},1);save()" class="text-red-500 text-xs font-bold">Borrar</button></div></div>`;
+  }).join('')||'Sin inventario en este filtro';
+  document.getElementById('listaGastos').innerHTML=gastos.map(x=>`<div class="border p-2 rounded-xl text-sm">${x.desc} - $${x.monto} - ${x.tipo}</div>`).join('');
+  document.getElementById('listaTrab').innerHTML=trabajadores.map(x=>`<div class="border p-2 rounded-xl text-sm">${x.nombre} - clave: ${x.clave}</div>`).join('');
 }
-render();
+function verHistorial(cliente){ const h=datos.filter(x=>x.cliente===cliente); alert('Historial '+cliente+'\n'+h.map(x=>`${x.aire} - $${x.monto} - ${x.estado} - Serie ${x.serie}`).join('\n')); }
+render(); renderCal();
 </script>
 </body>
 </html>
