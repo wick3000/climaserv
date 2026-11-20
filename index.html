@@ -2,264 +2,544 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Climaserv - El Paraíso</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Climaserv El Paraíso - Garantías e Inventario Completo</title>
+<!-- Librería para leer PDF digital, texto seleccionable -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+/* ============================================================ */
+/* ESTILOS GENERALES - CLIMASERV EL PARAÍSO */
+/* ============================================================ */
+*{box-sizing:border-box}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#eef2f7;margin:0;padding:12px;color:#0f172a;padding-bottom:40px}
+h1{font-size:23px;margin:4px 0 2px;line-height:1.2}
+h1 span{font-size:15px;color:#2563eb}
+h2{font-size:17px;margin:16px 0 8px;display:flex;align-items:center;gap:8px}
+h3{font-size:15px;margin:12px 0 6px}
+p{margin:6px 0;line-height:1.5}
+.small{font-size:12px;color:#64748b;line-height:1.5}
+.small b{color:#334155}
+.card{background:#fff;border-radius:16px;padding:15px;margin-bottom:13px;box-shadow:0 3px 12px rgba(15,23,42,.07);border:1px solid #e2e8f0}
+.card-blue{border:2px solid #2563eb;background:#eff6ff}
+.card-green{border:2px solid #16a34a}
+.card-yellow{background:#fffbeb;border:1px solid #fde68a}
+/* Botones */
+button{border:0;border-radius:11px;padding:12px 14px;font-weight:800;cursor:pointer;font-size:14px;line-height:1.2}
+button:active{transform:scale(.98)}
+.btn-blue{background:#2563eb;color:#fff;width:100%}
+.btn-green{background:#16a34a;color:#fff}
+.btn-red{background:#dc2626;color:#fff}
+.btn-gray{background:#e2e8f0;color:#0f172a}
+.btn-orange{background:#ea580c;color:#fff}
+.btn-outline{background:#fff;border:2px solid #2563eb;color:#2563eb}
+.btn-small{padding:8px 10px;font-size:12px;border-radius:8px}
+.btn-block{width:100%;display:block}
+/* Inputs */
+input,select,textarea{width:100%;padding:11px 10px;border:1.5px solid #cbd5e1;border-radius:10px;margin:5px 0 10px;font-size:14px;background:#fff;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+label{font-size:12px;font-weight:800;color:#334155;text-transform:uppercase;letter-spacing:.3px}
+textarea{resize:vertical;min-height:90px}
+/* Layout */
+.flex{display:flex;gap:8px}
+.flex>*{flex:1}
+.flex-2{display:flex;gap:8px}
+.flex-2>*{flex:1}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+@media(max-width:520px){.grid3{grid-template-columns:1fr 1fr}.flex{flex-direction:column}}
+/* Badges y cajas */
+.badge{display:inline-block;background:#dcfce7;color:#166534;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:800}
+.badge-red{background:#fee2e2;color:#991b1b}
+.badge-blue{background:#dbeafe;color:#1e40af}
+.badge-yellow{background:#fef3c7;color:#92400e}
+.badge-gray{background:#e2e8f0;color:#334155}
+.preview{background:#eff6ff;border:1.5px dashed #2563eb;border-radius:12px;padding:12px;margin-top:10px;font-size:13px;line-height:1.6}
+.preview-ok{background:#f0fdf4;border:1.5px solid #16a34a;border-radius:12px;padding:12px;margin-top:10px}
+.preview-error{background:#fef2f2;border:1.5px solid #dc2626;border-radius:12px;padding:12px;margin-top:10px}
+.kpi{background:#0f172a;color:#fff;border-radius:14px;padding:14px;text-align:center}
+.kpi b{font-size:22px;display:block}
+.kpi span{font-size:11px;opacity:.8;text-transform:uppercase;letter-spacing:.5px}
+.kpi-green{background:#15803d}
+.kpi-blue{background:#1d4ed8}
+.kpi-orange{background:#c2410c}
+/* Tablas */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:11px;text-transform:uppercase;color:#64748b;text-align:left;padding:9px 6px;border-bottom:2px solid #e2e8f0}
+td{padding:10px 6px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+tr:last-child td{border-bottom:0}
+.serie{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:800;font-size:12px;word-break:break-all}
+.hr{height:1px;background:#e2e8f0;margin:12px 0}
+.hidden{display:none}
+.tabs{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px}
+.tab{white-space:nowrap;padding:10px 14px;border-radius:20px;background:#e2e8f0;font-weight:800;font-size:13px}
+.tab.active{background:#0f172a;color:#fff}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px}
+</style>
 </head>
-<body class="bg-gray-100 pb-24">
+<body>
 
-<div id="login" class="fixed inset-0 bg-blue-600 z-50 flex flex-col items-center justify-center p-6 text-white">
-  <h1 class="text-3xl font-bold">❄️ Climaserv</h1>
-  <p class="text-xs">El Paraíso • Privado</p>
-  <input id="claveInput" type="password" placeholder="Tu clave" class="mt-6 w-full max-w-xs p-3 rounded-xl text-black text-center">
-  <button onclick="entrar()" class="mt-3 w-full max-w-xs bg-white text-blue-600 py-3 rounded-xl font-bold">Entrar</button>
-  <p id="errorClave" class="text-xs mt-2 text-yellow-200"></p>
+<!-- ============================================================ -->
+<!-- ENCABEZADO -->
+<!-- ============================================================ -->
+<div class="topbar">
+<div>
+<h1>❄️ Climaserv <span>El Paraíso</span></h1>
+<p class="small">Garantías por unidad • Inventario Dinámico • PDF Digital FRIOAIRE<br>Dueño: José Daniel Reina Serrano - Cliente FRIOAIRE 17478</p>
+</div>
+<button class="btn-gray btn-small" onclick="exportarTodo()">⬇️ Exportar</button>
 </div>
 
-<div id="app" class="hidden">
-<header class="bg-blue-600 text-white p-4 sticky top-0 z-10">
-  <div class="flex justify-between items-center">
-    <div>
-      <h1 class="text-xl font-bold">❄️ Control A/C</h1>
-      <p class="text-xs opacity-80">Climaserv • El Paraíso</p>
-    </div>
-    <div class="flex gap-1">
-      <button onclick="exportar()" class="bg-white text-blue-600 text-xs px-3 py-2 rounded-full font-bold">📤 Copia</button>
-      <label class="bg-yellow-400 text-black text-xs px-3 py-2 rounded-full font-bold cursor-pointer">📥 Importar
-        <input type="file" accept=".json" onchange="importar(event)" class="hidden">
-      </label>
-    </div>
-  </div>
-  <input id="buscador" oninput="render()" placeholder="🔍 Buscar todo: cliente, serie, teléfono, aire..." class="w-full mt-3 p-3 rounded-xl text-black">
-  <div class="flex gap-2 mt-3 overflow-x-auto">
-    <button onclick="setFiltro('todos')" class="bg-white text-blue-600 px-3 py-1 rounded-full text-xs font-bold">Todos</button>
-    <button onclick="setFiltro('pendiente')" class="bg-yellow-400 px-3 py-1 rounded-full text-xs font-bold">⏳ Pendientes</button>
-    <button onclick="setFiltro('pagado')" class="bg-green-400 px-3 py-1 rounded-full text-xs font-bold">✅ Pagados</button>
-    <button onclick="buscarSerie()" class="bg-black text-white px-3 py-1 rounded-full text-xs font-bold">🔎 Por Serie</button>
-    <button onclick="buscarTelefono()" class="bg-white px-3 py-1 rounded-full text-xs font-bold">📞 Por Teléfono</button>
-  </div>
-</header>
-
-<div class="grid grid-cols-3 gap-2 p-3">
-  <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs">Total</p><p id="statTotal" class="font-bold text-blue-600">$0</p></div>
-  <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs">Pendiente</p><p id="statPend" class="font-bold text-yellow-600">$0</p></div>
-  <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs">Cobrado</p><p id="statCob" class="font-bold text-green-600">$0</p></div>
+<!-- ============================================================ -->
+<!-- RESUMEN RÁPIDO - KPIs -->
+<!-- ============================================================ -->
+<div class="grid3">
+<div class="kpi kpi-blue"><b id="kpiTotal">0</b><span>Total Equipos</span></div>
+<div class="kpi kpi-green"><b id="kpiDisp">0</b><span>Disponibles</span></div>
+<div class="kpi kpi-orange"><b id="kpiVend">0</b><span>Vendidos</span></div>
 </div>
 
-<div class="mx-3 bg-yellow-50 border rounded-xl p-3 text-xs"><b>🔔 Alertas:</b> <span id="alertas"></span></div>
-<div class="mx-3 mt-2 bg-blue-50 border rounded-xl p-3 text-xs"><b>🎂 Cumpleaños:</b> <span id="alertasCumple"></span></div>
-
-<div class="flex gap-2 p-3 overflow-x-auto">
-  <button onclick="showTab('trabajos')" class="bg-blue-600 text-white px-4 py-2 rounded-full text-xs font-bold">Trabajos</button>
-  <button onclick="showTab('inventario')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Inventario</button>
-  <button onclick="showTab('gastos')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Gastos</button>
-  <button onclick="showTab('calendario')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Calendario</button>
-  <button onclick="showTab('reportes')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Reportes</button>
-  <button onclick="showTab('precios')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Precios / PDF</button>
-  <button onclick="showTab('trabajadores')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Trabajadores</button>
+<!-- ============================================================ -->
+<!-- PESTAÑAS -->
+<!-- ============================================================ -->
+<div class="tabs" style="margin-top:12px">
+<button class="tab active" id="tabBtn1" onclick="mostrarTab('tab1')">📄 Subir PDF</button>
+<button class="tab" id="tabBtn2" onclick="mostrarTab('tab2')">➕ Nueva Compra</button>
+<button class="tab" id="tabBtn3" onclick="mostrarTab('tab3')">📦 Inventario</button>
+<button class="tab" id="tabBtn4" onclick="mostrarTab('tab4')">🛡️ Garantías</button>
+<button class="tab" id="tabBtn5" onclick="mostrarTab('tab5')">💰 Ventas</button>
 </div>
 
-<div id="tab-trabajos" class="tab">
-  <div class="mx-3 bg-white rounded-2xl p-4 shadow">
-    <h2 class="font-bold mb-2">Registrar Producto / Trabajo</h2>
-    <input id="fCliente" placeholder="Cliente" class="w-full border p-3 rounded-xl mb-2">
-    <input id="fTelefono" placeholder="Teléfono WhatsApp Ej: 70001234" class="w-full border p-3 rounded-xl mb-2">
-    <input id="fCumple" type="date" class="w-full border p-3 rounded-xl mb-2">
-    <label class="text-xs text-gray-500">Fecha cumpleaños del cliente</label>
-    <label class="text-xs font-bold mt-2 block">❄️ Aire - Elegí de la lista:</label>
-    <select id="fAire" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-bold">
-      <option>Mini Split 12000 BTU</option>
-      <option>Mini Split 18000 BTU</option>
-      <option>Mini Split 24000 BTU</option>
-      <option>Mini Split 36000 BTU</option>
-      <option>Mini Split 60000 BTU</option>
-    </select>
-    <input id="fSerie" placeholder="Serie" class="w-full border p-3 rounded-xl mb-2">
-    <input id="fLote" placeholder="Lote" class="w-full border p-3 rounded-xl mb-2">
-    <input id="fFlete" type="number" placeholder="Flete $" class="w-full border p-3 rounded-xl mb-2">
-    <input id="fMonto" type="number" placeholder="Monto $" class="w-full border p-3 rounded-xl mb-2">
-    <input id="fTrabajador" placeholder="Trabajador que lo hizo" class="w-full border p-3 rounded-xl mb-2">
-    <select id="fFrecuencia" class="w-full border p-3 rounded-xl mb-2">
-      <option value="2">Cada 2 meses</option>
-      <option value="3" selected>Cada 3 meses</option>
-      <option value="4">Cada 4 meses</option>
-      <option value="6">Cada 6 meses</option>
-    </select>
-    <select id="fEstado" class="w-full border p-3 rounded-xl mb-2">
-      <option value="pendiente">⏳ Pendiente</option>
-      <option value="pagado">✅ Pagado</option>
-    </select>
-    <label class="text-xs text-gray-500">Garantía Proveedor hasta:</label>
-    <input id="fGarantiaProv" type="date" class="w-full border p-3 rounded-xl mb-3">
-    <button onclick="generarVista()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">👁️ Generar Vista Previa</button>
-    <div id="vistaPrevia" class="hidden mt-3 border-2 border-blue-400 bg-blue-50 rounded-2xl p-4"></div>
-  </div>
-  <div id="lista" class="p-3 space-y-3"></div>
+<!-- ============================================================ -->
+<!-- TAB 1 - SUBIR PDF DIGITAL -->
+<!-- ============================================================ -->
+<div id="tab1">
+<div class="card card-blue">
+<h2>📄 1. Subir Garantía Digital PDF de FRIOAIRE</h2>
+<p>Pedile a FRIOAIRE el <b>PDF digital</b>, no foto. Ese PDF ya trae el texto escrito adentro, la app lo lee solo y no se equivoca en las series.</p>
+<p class="small"><b>¿Qué pedirle a FRIOAIRE?</b><br>“Hola, soy José Daniel Reina Serrano, cliente 17478. ¿Me pueden enviar el Certificado de Garantía en PDF digital, no en foto, para guardarlo en mi sistema?”</p>
+<label>1. Elegí el PDF digital (o una foto si todavía no te lo dan digital)</label>
+<input type="file" id="pdfFile" accept="application/pdf,image/*">
+<button class="btn-blue" onclick="leerArchivo()">📄 LEER PDF Y MOSTRAR VISTA PREVIA</button>
+<div id="previewArea"></div>
+<p class="small" style="margin-top:10px">Si es PDF digital, la app llena sola: Factura, Garantía, Fecha, Marca, Modelo y Series. Si es foto, te guarda el nombre del archivo y vos confirmás las series a mano, la app no te inventa ninguna serie.</p>
 </div>
 
-<div id="tab-inventario" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">📦 Inventario Separado</h2>
-  <select id="invCategoria" class="w-full border p-3 rounded-xl my-2 bg-blue-50 font-bold">
-    <option value="Aire">❄️ Aire</option>
-    <option value="Gas">⛽ Gas</option>
-    <option value="Repuesto">🔧 Repuesto</option>
-    <option value="Otro">📦 Otro</option>
-  </select>
-  <input id="invNombre" placeholder="Ej: Mini Split 12000 BTU / Gas R410" class="w-full border p-3 rounded-xl mb-2">
-  <input id="invCant" type="number" placeholder="Cantidad" class="w-full border p-3 rounded-xl mb-2">
-  <input id="invPrecio" type="number" placeholder="Precio $" class="w-full border p-3 rounded-xl mb-2">
-  <button onclick="guardarInventario()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Agregar al Inventario</button>
-  <div class="flex gap-2 mt-4 overflow-x-auto">
-    <button onclick="filtroInv='Todos';render()" class="bg-black text-white px-3 py-1 rounded-full text-xs font-bold">Todos</button>
-    <button onclick="filtroInv='Aire';render()" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">❄️ Aires</button>
-    <button onclick="filtroInv='Gas';render()" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-bold">⛽ Gas</button>
-    <button onclick="filtroInv='Repuesto';render()" class="bg-green-100 px-3 py-1 rounded-full text-xs font-bold">🔧 Repuestos</button>
-    <button onclick="filtroInv='Otro';render()" class="bg-gray-100 px-3 py-1 rounded-full text-xs font-bold">📦 Otros</button>
-  </div>
-  <div id="listaInv" class="mt-3 space-y-2"></div>
-</div>
-
-<div id="tab-gastos" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">💰 Gastos + Cierre</h2>
-  <input id="gDesc" placeholder="Ej: Gasolina, Comida" class="w-full border p-3 rounded-xl my-2">
-  <input id="gMonto" type="number" placeholder="Monto $" class="w-full border p-3 rounded-xl mb-2">
-  <select id="gTipo" class="w-full border p-3 rounded-xl mb-2"><option value="negocio">Negocio</option><option value="casa">Casa</option></select>
-  <button onclick="guardarGasto()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Guardar Gasto</button>
-  <div class="mt-4 bg-gray-50 p-3 rounded-xl text-sm"><b>Cierre del día:</b><p id="cierre">Entró: $0 - Salió: $0 - Quedó: $0</p><button onclick="cierreDia()" class="mt-2 bg-green-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Hacer Cierre</button></div>
-  <div id="listaGastos" class="mt-3 space-y-2"></div>
-</div>
-
-<div id="tab-calendario" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">📅 Calendario</h2>
-  <input type="date" id="fechaCal" onchange="renderCal()" class="w-full border p-3 rounded-xl mt-2">
-  <div id="listaCal" class="mt-3"></div>
-</div>
-
-<div id="tab-reportes" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">📊 Reportes</h2>
-  <div class="flex gap-2 my-2">
-    <button onclick="generarReporte('dia')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Día</button>
-    <button onclick="generarReporte('semana')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Semana</button>
-    <button onclick="generarReporte('mes')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Mes</button>
-    <button onclick="generarReporte('anio')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Año</button>
-  </div>
-  <div id="reporteBox" class="mt-3 bg-blue-50 p-3 rounded-xl text-sm">Tocá un botón para ver el reporte</div>
-</div>
-
-<div id="tab-precios" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">🧾 Cotización + PDF</h2>
-  <p class="text-xs">Precios: Mantenimiento $25 • Instalación $80 • Reparación $40 • Gas $60</p>
-  <input id="cCliente" placeholder="Cliente cotización" class="w-full border p-3 rounded-xl my-2">
-  <input id="cDetalle" placeholder="Detalle Ej: Instalación" class="w-full border p-3 rounded-xl mb-2">
-  <input id="cMonto" type="number" placeholder="Monto $" class="w-full border p-3 rounded-xl mb-2">
-  <button onclick="cotizar()" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold">Cotización por WhatsApp</button>
-  <button onclick="factura()" class="w-full mt-2 bg-blue-600 text-white py-3 rounded-xl font-bold">Generar Factura / Garantía</button>
-  <button onclick="window.print()" class="w-full mt-2 bg-black text-white py-3 rounded-xl font-bold">Imprimir PDF</button>
-</div>
-
-<div id="tab-trabajadores" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">👷 Trabajadores</h2>
-  <input id="tNombre" placeholder="Nombre trabajador" class="w-full border p-3 rounded-xl my-2">
-  <input id="tClave" placeholder="Clave trabajador Ej: juan123" class="w-full border p-3 rounded-xl mb-2">
-  <button onclick="guardarTrabajador()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Agregar Trabajador</button>
-  <div id="listaTrab" class="mt-3 space-y-2"></div>
+<div class="card card-yellow">
+<h2>🔍 Buscar Rápido</h2>
+<label>Buscar por Serie, Factura, Garantía o Cliente</label>
+<input id="buscarRapido" placeholder="Ej: 340L427803A170370581 o 20240103-C0001638 o 81761" oninput="buscarRapido()">
+<div id="resultadoBusquedaRapida"></div>
 </div>
 </div>
 
-<nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 text-xs font-bold">
-  <button onclick="showTab('trabajos')">👥 Clientes</button>
-  <button onclick="showTab('inventario')">📦 Inventario</button>
-  <button onclick="showTab('gastos')">💰 Gastos</button>
-  <button onclick="showTab('reportes')">📊 Reportes</button>
-</nav>
+<!-- ============================================================ -->
+<!-- TAB 2 - NUEVA COMPRA / FORMULARIO COMPLETO -->
+<!-- ============================================================ -->
+<div id="tab2" class="hidden">
+<div class="card">
+<h2>➕ 2. Datos de la Compra</h2>
+<p class="small">Llená esto a mano o dejá que el PDF lo llene solo. Cuando le das Guardar, la app crea 1 garantía por cada serie.</p>
+
+<div class="grid2">
+<div><label>Proveedor</label><input id="proveedor" value="FRIOAIRE Internacional"></div>
+<div><label>Sucursal</label><input id="sucursal" value="Constitución"></div>
+</div>
+
+<div class="grid2">
+<div><label>Fecha de Compra</label><input id="fecha" type="date" value="2024-04-11"></div>
+<div><label>N° Garantía</label><input id="numGarantia" value="81761"></div>
+</div>
+
+<div class="grid2">
+<div><label>Tipo Factura</label><input id="tipoFactura" value="03CCF"></div>
+<div><label>N° Factura</label><input id="numFactura" value="20240103-C0001638"></div>
+</div>
+
+<label>Cliente Compra (quien compró en FRIOAIRE)</label>
+<input id="clienteCompra" value="17478 - REINA SERRANO JOSE DANIEL">
+
+<div class="grid3">
+<div><label>Marca</label><input id="marca" value="COMFORTSTAR"></div>
+<div><label>Capacidad</label><input id="capacidad" value="12000 BTU"></div>
+<div><label>Voltaje</label><select id="voltaje"><option>220v</option><option>110v</option></select></div>
+</div>
+
+<div class="grid2">
+<div><label>Modelo Manejadora (Interior)</label><input id="modeloI" value="CSA12CD(I)-R"></div>
+<div><label>Modelo Condensador (Exterior)</label><input id="modeloO" value="CSA12CD(O)-R"></div>
+</div>
+
+<div class="grid2">
+<div><label>Gas / Freón</label><input id="gas" value="410A"></div>
+<div><label>SEER</label><input id="seer" value="13"></div>
+</div>
+
+<label>Series - Una por línea (cada línea = 1 garantía)</label>
+<textarea id="series" rows="8">340L427803A170370581
+340L427803A170370575
+340L427803A170370468
+340L342203B090603047
+340L342203B090603510
+340L342203B090603770990</textarea>
+<p class="small">Tip: Si pegás 6 series, se crean 6 garantías. Si pegás 10, se crean 10. No hay límite.</p>
+
+<label>Nombre del archivo / PDF guardado</label>
+<input id="nombreArchivo" value="Garantia-81761-Factura-20240103-C0001638.pdf">
+
+<label>Notas / Observaciones</label>
+<textarea id="notas" rows="2" placeholder="Ej: Compra de abril 2024, todo COMFORTSTAR 12k..."></textarea>
+
+<button class="btn-green btn-block" onclick="guardarCompra()">✅ GUARDAR COMPRA - CREAR INVENTARIO + GARANTÍAS POR SERIE</button>
+<p class="small">Al guardar: Suma al inventario, crea 1 garantía por cada serie, guarda el nombre del PDF y deja todo listo para vender.</p>
+
+<div class="hr"></div>
+<h3>Ejemplo rápido - Tu compra real</h3>
+<p class="small">Esta compra ya está cargada como ejemplo: Garantía 81761, Factura 20240103-C0001638, 6 equipos COMFORTSTAR 12000 BTU 220v. Si la volvés a guardar, la app te avisa que ya existe para no duplicarla.</p>
+<button class="btn-outline btn-block" onclick="cargarEjemplo()">↩️ Cargar ejemplo 81761 en el formulario</button>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 3 - INVENTARIO -->
+<!-- ============================================================ -->
+<div id="tab3" class="hidden">
+<div class="card">
+<h2>📦 Inventario Dinámico</h2>
+<p class="small">Este inventario baja solo. Vendés 1, baja de 6 a 5. Devolvés 1, sube de 5 a 6. No tenés que contar a mano.</p>
+<div id="inventario"></div>
+</div>
+<div class="card">
+<h2>📊 Inventario por Modelo</h2>
+<div id="inventarioDetalle"></div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 4 - GARANTÍAS -->
+<!-- ============================================================ -->
+<div id="tab4" class="hidden">
+<div class="card">
+<h2>🛡️ Garantías por Unidad</h2>
+<p class="small">Cada serie tiene su propia garantía. Cuando vendás, esa garantía pasa al cliente final, no se pierde.</p>
+<label>Filtrar</label>
+<select id="filtroEstado" onchange="render()">
+<option value="todos">Mostrar todo</option>
+<option value="disponible">Solo Disponibles</option>
+<option value="vendido">Solo Vendidos</option>
+</select>
+<div id="garantias"></div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 5 - VENTAS -->
+<!-- ============================================================ -->
+<div id="tab5" class="hidden">
+<div class="card">
+<h2>💰 Vender un Equipo</h2>
+<p class="small">Para vender, buscá la serie abajo en Garantías y dale Vender, o usá este buscador rápido.</p>
+<label>Serie a vender</label>
+<input id="serieVender" placeholder="Pegá la serie exacta">
+<label>Cliente Final (a quién se lo vendés)</label>
+<input id="clienteFinalVenta" placeholder="Ej: María López - El Paraíso">
+<label>Precio de Venta (opcional)</label>
+<input id="precioVenta" type="number" placeholder="Ej: 450">
+<label>Fecha de Venta</label>
+<input id="fechaVentaInput" type="date">
+<button class="btn-green btn-block" onclick="venderPorSerie()">💰 VENDER ESTA SERIE</button>
+<div id="msgVenta"></div>
+</div>
+<div class="card">
+<h2>📋 Historial de Ventas</h2>
+<div id="historialVentas"></div>
+</div>
+<div class="card">
+<h2>⚙️ Zona de Peligro</h2>
+<p class="small">Esto borra TODO. Usalo solo si querés empezar de cero.</p>
+<button class="btn-red btn-block" onclick="borrarTodo()">🗑️ Borrar todo y empezar de nuevo</button>
+</div>
+</div>
 
 <script>
-const CLAVE="Friosreina";
-function entrar(){
-  let v=document.getElementById('claveInput').value;
-  let trabs=JSON.parse(localStorage.getItem('climaserv_trabs')||'[]');
-  let esTrab=trabs.find(t=>t.clave===v);
-  if(v===CLAVE || esTrab){
-    localStorage.setItem('climaserv_login','ok');
-    localStorage.setItem('climaserv_user', esTrab ? esTrab.nombre : 'Jefe');
-    document.getElementById('login').style.display='none';
-    document.getElementById('app').classList.remove('hidden');
-    render();
-  } else { document.getElementById('errorClave').innerText='Clave incorrecta'; }
+/* ============================================================ */
+/* CONFIGURACIÓN PDF.JS */
+/* ============================================================ */
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+/* ============================================================ */
+/* DATOS GUARDADOS EN EL CELULAR */
+/* ============================================================ */
+let garantias = JSON.parse(localStorage.getItem('climaserv_garantias_v2')||'[]');
+let ventas = JSON.parse(localStorage.getItem('climaserv_ventas_v2')||'[]');
+
+/* ============================================================ */
+/* CARGA INICIAL - TU COMPRA REAL 81761 */
+/* ============================================================ */
+if(garantias.length===0){
+  let seriesEjemplo=[
+    {serie:"340L427803A170370581",modelo:"CSA12CD(I)-R",tipo:"MANEJADORA MINI"},
+    {serie:"340L427803A170370575",modelo:"CSA12CD(I)-R",tipo:"MANEJADORA MINI"},
+    {serie:"340L427803A170370468",modelo:"CSA12CD(I)-R",tipo:"MANEJADORA MINI"},
+    {serie:"340L342203B090603047",modelo:"CSA12CD(O)-R",tipo:"CONDENSADOR MINI"},
+    {serie:"340L342203B090603510",modelo:"CSA12CD(O)-R",tipo:"CONDENSADOR MINI"},
+    {serie:"340L342203B090603770990",modelo:"CSA12CD(O)-R",tipo:"CONDENSADOR MINI"},
+  ];
+  seriesEjemplo.forEach((item,i)=>{
+    garantias.push({
+      id: Date.now()+i,
+      serie:item.serie, marca:"COMFORTSTAR", capacidad:"12000 BTU", voltaje:"220v",
+      modelo:item.modelo, tipo:item.tipo, gas:"410A", seer:"13",
+      fecha:"2024-04-11", numGarantia:"81761", numFactura:"20240103-C0001638",
+      tipoFactura:"03CCF", sucursal:"Constitución",
+      clienteCompra:"17478 - REINA SERRANO JOSE DANIEL",
+      proveedor:"FRIOAIRE Internacional",
+      archivo:"Garantia-81761-Factura-20240103-C0001638.pdf",
+      notas:"Compra ejemplo abril 2024",
+      vendido:false, clienteFinal:"", fechaVenta:"", precioVenta:""
+    });
+  });
+  localStorage.setItem('climaserv_garantias_v2', JSON.stringify(garantias));
 }
-if(localStorage.getItem('climaserv_login')==='ok'){ document.getElementById('login').style.display='none'; document.getElementById('app').classList.remove('hidden'); }
-let datos=JSON.parse(localStorage.getItem('climaserv_trabajos')||'[]');
-let inventario=JSON.parse(localStorage.getItem('climaserv_inv')||'[]');
-let gastos=JSON.parse(localStorage.getItem('climaserv_gastos')||'[]');
-let trabajadores=JSON.parse(localStorage.getItem('climaserv_trabs')||'[]');
-let filtro='todos',filtroInv='Todos';
-let datosTemp=null;
-const AIRES_BASE=['Mini Split 12000 BTU','Mini Split 18000 BTU','Mini Split 24000 BTU','Mini Split 36000 BTU','Mini Split 60000 BTU'];
-function save(){ localStorage.setItem('climaserv_trabajos',JSON.stringify(datos)); localStorage.setItem('climaserv_inv',JSON.stringify(inventario)); localStorage.setItem('climaserv_gastos',JSON.stringify(gastos)); localStorage.setItem('climaserv_trabs',JSON.stringify(trabajadores)); render(); renderCal(); }
-function setFiltro(f){filtro=f;render();}
-function showTab(t){ document.querySelectorAll('.tab').forEach(e=>e.classList.add('hidden')); document.getElementById('tab-'+t).classList.remove('hidden'); }
-function generarVista(){
-  const d={ cliente:fCliente.value.trim(), telefono:fTelefono.value.trim(), cumple:fCumple.value, aire:fAire.value, serie:fSerie.value.trim(), lote:fLote.value.trim(), flete:parseFloat(fFlete.value||0), monto:parseFloat(fMonto.value||0), trabajador:fTrabajador.value.trim(), frecuencia:fFrecuencia.value, estado:fEstado.value, garantiaProv:fGarantiaProv.value, fecha:new Date().toISOString() };
-  if(!d.cliente) return alert('⚠️ Te faltó el Cliente');
-  if(!d.telefono) return alert('⚠️ Te faltó el Teléfono');
-  if(!d.serie) return alert('⚠️ Te faltó la Serie - es lo más delicado');
-  if(!d.monto || d.monto <= 0) return alert('⚠️ Revisá el Monto, tiene que ser mayor a 0');
-  if(!/^[0-9]+$/.test(d.telefono)) return alert('⚠️ El Teléfono solo debe tener números, sin + ni espacios');
-  datosTemp=d;
-  document.getElementById('vistaPrevia').classList.remove('hidden');
-  document.getElementById('vistaPrevia').innerHTML=`<h3 class="font-bold text-blue-700 mb-2">👁️ Así va a quedar guardado:</h3><p class="text-sm"><b>👤 Cliente:</b> ${d.cliente}</p><p class="text-sm"><b>📞 Teléfono:</b> ${d.telefono}</p><p class="text-sm"><b>🎂 Cumpleaños:</b> ${d.cumple || 'Sin dato'}</p><p class="text-sm"><b>❄️ Aire:</b> ${d.aire}</p><p class="text-sm"><b>🔢 Serie:</b> ${d.serie}</p><p class="text-sm"><b>📦 Lote:</b> ${d.lote || 'Sin dato'}</p><p class="text-sm"><b>🚚 Flete:</b> $${d.flete}</p><p class="text-sm"><b>💰 Monto:</b> $${d.monto}</p><p class="text-sm"><b>👷 Trabajador:</b> ${d.trabajador || 'Sin dato'}</p><p class="text-sm"><b>📅 Cada:</b> ${d.frecuencia} meses</p><p class="text-sm"><b>📌 Estado:</b> ${d.estado}</p><p class="text-sm"><b>🛡️ Garantía Prov:</b> ${d.garantiaProv || 'Sin dato'}</p><div class="flex gap-2 mt-3"><button onclick="confirmarGuardar()" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-bold">✅ Guardar Así</button><button onclick="document.getElementById('vistaPrevia').classList.add('hidden')" class="flex-1 bg-gray-200 py-3 rounded-xl font-bold">✏️ Corregir</button></div>`;
-  document.getElementById('vistaPrevia').scrollIntoView({behavior:'smooth'});
+
+/* ============================================================ */
+/* PESTAÑAS */
+/* ============================================================ */
+function mostrarTab(id){
+  ['tab1','tab2','tab3','tab4','tab5'].forEach(t=>document.getElementById(t).classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  ['tabBtn1','tabBtn2','tabBtn3','tabBtn4','tabBtn5'].forEach(b=>document.getElementById(b).classList.remove('active'));
+  let mapa={tab1:'tabBtn1',tab2:'tabBtn2',tab3:'tabBtn3',tab4:'tabBtn4',tab5:'tabBtn5'};
+  document.getElementById(mapa[id]).classList.add('active');
+  render();
 }
-function confirmarGuardar(){
-  if(!datosTemp) return;
-  datos.unshift(datosTemp); save(); alert('✅ Guardado'); datosTemp=null;
-  document.getElementById('vistaPrevia').classList.add('hidden');
-  fCliente.value=''; fTelefono.value=''; fCumple.value=''; fAire.selectedIndex=0; fSerie.value=''; fLote.value=''; fFlete.value=''; fMonto.value=''; fTrabajador.value=''; fFrecuencia.value='3'; fEstado.value='pendiente'; fGarantiaProv.value='';
+function cargarEjemplo(){
+  document.getElementById('proveedor').value="FRIOAIRE Internacional";
+  document.getElementById('fecha').value="2024-04-11";
+  document.getElementById('numGarantia').value="81761";
+  document.getElementById('tipoFactura').value="03CCF";
+  document.getElementById('numFactura').value="20240103-C0001638";
+  document.getElementById('sucursal').value="Constitución";
+  document.getElementById('clienteCompra').value="17478 - REINA SERRANO JOSE DANIEL";
+  document.getElementById('marca').value="COMFORTSTAR";
+  document.getElementById('capacidad').value="12000 BTU";
+  document.getElementById('voltaje').value="220v";
+  document.getElementById('modeloI').value="CSA12CD(I)-R";
+  document.getElementById('modeloO').value="CSA12CD(O)-R";
+  document.getElementById('series').value="340L427803A170370581\n340L427803A170370575\n340L427803A170370468\n340L342203B090603047\n340L342203B090603510\n340L342203B090603770990";
+  document.getElementById('nombreArchivo').value="Garantia-81761-Factura-20240103-C0001638.pdf";
+  mostrarTab('tab2');
+  alert('Ejemplo 81761 cargado en el formulario.');
 }
-function guardarInventario(){ if(!invNombre.value) return alert('Poné el nombre'); inventario.unshift({nombre:invNombre.value,categoria:invCategoria.value,cant:invCant.value,precio:invPrecio.value}); save(); invNombre.value=''; invCant.value=''; invPrecio.value=''; alert('Agregado a '+invCategoria.value); }
-function guardarGasto(){ gastos.unshift({desc:gDesc.value,monto:parseFloat(gMonto.value||0),tipo:gTipo.value,fecha:new Date().toISOString()}); save(); }
-function guardarTrabajador(){ trabajadores.unshift({nombre:tNombre.value,clave:tClave.value}); save(); alert('Trabajador agregado: '+tClave.value); }
-function cierreDia(){ const hoy=new Date().toDateString(); const entr=datos.filter(d=>new Date(d.fecha).toDateString()===hoy&&d.estado==='pagado').reduce((s,d)=>s+d.monto,0); const sal=gastos.filter(g=>new Date(g.fecha).toDateString()===hoy).reduce((s,g)=>s+g.monto,0); document.getElementById('cierre').innerText=`Entró: $${entr} - Salió: $${sal} - Quedó: $${entr-sal}`; alert(`Cierre\nEntró: $${entr}\nSalió: $${sal}\nQuedó: $${entr-sal}`); }
-function buscarSerie(){ const s=prompt('Escribí la Serie:'); if(!s)return; const r=datos.filter(d=>(d.serie||'').toLowerCase().includes(s.toLowerCase())); alert(r.length?r.map(x=>`${x.cliente} - ${x.aire} - $${x.monto}`).join('\n'):'No se encontró'); }
-function buscarTelefono(){ const s=prompt('Escribí el teléfono:'); if(!s)return; const r=datos.filter(d=>(d.telefono||'').includes(s)); alert(r.length?r.map(x=>`${x.cliente} - ${x.aire} - $${x.monto}`).join('\n'):'No se encontró'); }
-function exportar(){ const blob=new Blob([JSON.stringify({trabajos:datos,inventario,gastos,trabajadores},null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='copia-climaserv.json'; a.click(); }
-function importar(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=function(){ try{ const j=JSON.parse(r.result); datos=j.trabajos||[]; inventario=j.inventario||[]; gastos=j.gastos||[]; trabajadores=j.trabajadores||[]; save(); alert('Recuperado! '+datos.length+' trabajos'); }catch(err){ alert('Archivo no válido'); } }; r.readAsText(f); }
-function cotizar(){ const msg=`Hola ${cCliente.value}, cotización Climaserv El Paraíso:\n${cDetalle.value} - $${cMonto.value}`; window.open('https://wa.me/?text='+encodeURIComponent(msg)); }
-function factura(){ alert(`FACTURA CLIMASERV\nCliente: ${cCliente.value}\nDetalle: ${cDetalle.value}\nMonto: $${cMonto.value}\nGarantía 30 días`); }
-function generarReporte(tipo){ const total=datos.reduce((s,d)=>s+d.monto,0); const pend=datos.filter(d=>d.estado==='pendiente').reduce((s,d)=>s+d.monto,0); document.getElementById('reporteBox').innerHTML=`Reporte ${tipo}<br>Total: $${total}<br>Pendiente: $${pend}<br>Cobrado: $${total-pend}<br>Trabajos: ${datos.length}`; }
-function renderCal(){ const f=document.getElementById('fechaCal').value||new Date().toISOString().slice(0,10); const lista=datos.filter(d=>d.fecha.slice(0,10)===f); document.getElementById('listaCal').innerHTML=lista.length?lista.map(d=>`<div class="border p-2 rounded-xl text-sm">${d.cliente} - ${d.aire} - $${d.monto}</div>`).join(''):'Sin trabajos ese día.'; }
-function actualizarAires(){ let airesDeInventario=inventario.filter(x=>(x.categoria||'Aire')==='Aire').map(x=>x.nombre); let todos=[...AIRES_BASE]; airesDeInventario.forEach(a=>{if(!todos.includes(a)) todos.push(a);}); document.getElementById('fAire').innerHTML=todos.map(a=>`<option value="${a}">${a}</option>`).join(''); }
-function editar(idx){
-  const d=datos[idx];
-  fCliente.value=d.cliente||''; fTelefono.value=d.telefono||''; fCumple.value=d.cumple||''; fAire.value=d.aire||'Mini Split 12000 BTU'; fSerie.value=d.serie||''; fLote.value=d.lote||''; fFlete.value=d.flete||''; fMonto.value=d.monto||''; fTrabajador.value=d.trabajador||''; fFrecuencia.value=d.frecuencia||'3'; fEstado.value=d.estado||'pendiente'; fGarantiaProv.value=d.garantiaProv||'';
-  datos.splice(idx,1); save(); window.scrollTo(0,0); alert('Ahora corregí arriba y dale Generar Vista Previa');
+
+/* ============================================================ */
+/* LEER PDF DIGITAL */
+/* ============================================================ */
+async function leerArchivo(){
+  let f=document.getElementById('pdfFile').files[0];
+  if(!f){alert('Primero elegí el PDF digital');return;}
+  document.getElementById('previewArea').innerHTML='<div class="preview">Leyendo... esperá un momento, estoy sacando el texto del PDF...</div>';
+  if(f.type.includes('pdf')){
+    try{
+      let buf=await f.arrayBuffer();
+      let pdf=await pdfjsLib.getDocument({data:buf}).promise;
+      let texto="";
+      for(let i=1;i<=pdf.numPages;i++){
+        let p=await pdf.getPage(i);
+        let c=await p.getTextContent();
+        texto+=c.items.map(x=>x.str).join(' ')+' \n';
+      }
+      procesarTexto(texto,f.name);
+    }catch(e){
+      document.getElementById('previewArea').innerHTML='<div class="preview-error">No pude leer este PDF. Pedile a FRIOAIRE el PDF digital, no una foto escaneada.</div>';
+    }
+  }else{
+    document.getElementById('nombreArchivo').value=f.name;
+    document.getElementById('previewArea').innerHTML='<div class="preview"><b>📷 Foto guardada como:</b> '+f.name+'<br>Como es foto, confirmá vos las series abajo antes de guardar. No te invento ninguna serie.<br><button class="btn-blue" style="margin-top:8px" onclick="mostrarTab(\'tab2\')">Ir a revisar y guardar</button></div>';
+  }
 }
+function procesarTexto(t, nombre){
+  // Buscar factura tipo 20240103-C0001638
+  let facturaMatch = t.match(/20240\d+-\w+\d+/i);
+  let factura = facturaMatch ? facturaMatch[0] : document.getElementById('numFactura').value;
+  // Buscar garantía 81761
+  let garantiaMatch = t.match(/81761|81[.,\s]?761/);
+  let garantia = garantiaMatch ? garantiaMatch[0].replace(/[^0-9]/g,'') : "81761";
+  // Buscar todas las series 340L...
+  let series = [...new Set(t.match(/340L[A-Z0-9]{10,}/gi)||[])];
+  if(series.length===0) series=[...new Set(t.match(/[0-9]{3}L[A-Z0-9]{10,}/gi)||[])];
+  // Buscar fecha
+  let fechaMatch = t.match(/2024-\d{2}-\d{2}/);
+  // Llenar formulario
+  document.getElementById('numFactura').value=factura;
+  document.getElementById('numGarantia').value=garantia;
+  document.getElementById('nombreArchivo').value=nombre;
+  if(fechaMatch) document.getElementById('fecha').value=fechaMatch[0];
+  if(series.length>0) document.getElementById('series').value=series.join('\n');
+  // Mostrar vista previa
+  let html='<div class="preview-ok"><b>✅ Esto leí del PDF digital:</b><br>';
+  html+='Factura: <b>'+factura+'</b><br>';
+  html+='Garantía: <b>'+garantia+'</b><br>';
+  html+='Series encontradas: <b>'+series.length+'</b><br>';
+  html+='<span class="serie">'+series.join('<br>')+'</span><br><br>';
+  html+='Revisá abajo, si está bien dale <b>GUARDAR COMPRA</b>. Si una serie está mal, corregila a mano antes de guardar.<br>';
+  html+='<button class="btn-blue" style="margin-top:10px" onclick="mostrarTab(\'tab2\')">➡️ Ir a revisar y guardar</button></div>';
+  document.getElementById('previewArea').innerHTML=html;
+}
+
+/* ============================================================ */
+/* GUARDAR COMPRA */
+/* ============================================================ */
+function guardarCompra(){
+  let series=document.getElementById('series').value.split('\n').map(s=>s.trim().toUpperCase()).filter(Boolean);
+  if(series.length===0){alert('Poné al menos 1 serie');return;}
+  let base={
+    proveedor:document.getElementById('proveedor').value,
+    fecha:document.getElementById('fecha').value,
+    numGarantia:document.getElementById('numGarantia').value,
+    tipoFactura:document.getElementById('tipoFactura').value,
+    numFactura:document.getElementById('numFactura').value,
+    sucursal:document.getElementById('sucursal').value,
+    clienteCompra:document.getElementById('clienteCompra').value,
+    marca:document.getElementById('marca').value,
+    capacidad:document.getElementById('capacidad').value,
+    voltaje:document.getElementById('voltaje').value,
+    gas:document.getElementById('gas').value,
+    seer:document.getElementById('seer').value,
+    archivo:document.getElementById('nombreArchivo').value,
+    notas:document.getElementById('notas').value
+  };
+  let duplicadas=series.filter(s=>garantias.some(g=>g.serie===s));
+  if(duplicadas.length>0 && !confirm('Estas series ya existen: '+duplicadas.join(', ')+'. ¿Querés guardarlas igual?')) return;
+  series.forEach((s,i)=>{
+    let esManejadora = s.includes('4278') || s.includes('427803');
+    garantias.push({...base,id:Date.now()+i+Math.random(),serie:s,modelo:esManejadora?document.getElementById('modeloI').value:document.getElementById('modeloO').value,tipo:esManejadora?"MANEJADORA MINI":"CONDENSADOR MINI",vendido:false,clienteFinal:"",fechaVenta:"",precioVenta:""});
+  });
+  localStorage.setItem('climaserv_garantias_v2',JSON.stringify(garantias));
+  alert('✅ Guardado! Se crearon '+series.length+' garantías y se sumó al inventario.');
+  mostrarTab('tab3');
+  render();
+}
+
+/* ============================================================ */
+/* VENDER / DEVOLVER */
+/* ============================================================ */
+function vender(id){
+  let nombre=prompt('¿A quién se lo vendiste? Escribí nombre del cliente final:');
+  if(!nombre) return;
+  let precio=prompt('¿Precio de venta? (podés dejar vacío)');
+  let g=garantias.find(x=>x.id===id);
+  g.vendido=true; g.clienteFinal=nombre; g.fechaVenta=new Date().toISOString().slice(0,10); g.precioVenta=precio||"";
+  ventas.push({serie:g.serie,cliente:nombre,fecha:g.fechaVenta,precio:precio||"",factura:g.numFactura,garantia:g.numGarantia});
+  localStorage.setItem('climaserv_garantias_v2',JSON.stringify(garantias));
+  localStorage.setItem('climaserv_ventas_v2',JSON.stringify(ventas));
+  render();
+}
+function venderPorSerie(){
+  let serie=document.getElementById('serieVender').value.trim().toUpperCase();
+  let cliente=document.getElementById('clienteFinalVenta').value.trim();
+  let precio=document.getElementById('precioVenta').value;
+  let fecha=document.getElementById('fechaVentaInput').value || new Date().toISOString().slice(0,10);
+  if(!serie){alert('Pegá la serie');return;}
+  if(!cliente){alert('Poné el nombre del cliente');return;}
+  let g=garantias.find(x=>x.serie===serie);
+  if(!g){document.getElementById('msgVenta').innerHTML='<div class="preview-error">No encontré esa serie: '+serie+'</div>';return;}
+  if(g.vendido){document.getElementById('msgVenta').innerHTML='<div class="preview-error">Esa serie ya está vendida a '+g.clienteFinal+'</div>';return;}
+  g.vendido=true; g.clienteFinal=cliente; g.fechaVenta=fecha; g.precioVenta=precio;
+  ventas.push({serie:serie,cliente:cliente,fecha:fecha,precio:precio,factura:g.numFactura,garantia:g.numGarantia});
+  localStorage.setItem('climaserv_garantias_v2',JSON.stringify(garantias));
+  localStorage.setItem('climaserv_ventas_v2',JSON.stringify(ventas));
+  document.getElementById('msgVenta').innerHTML='<div class="preview-ok">✅ Vendido! Serie '+serie+' a '+cliente+' el '+fecha+'</div>';
+  render();
+}
+function devolver(id){
+  if(!confirm('¿Devolver este equipo al inventario?')) return;
+  let g=garantias.find(x=>x.id===id);
+  g.vendido=false; g.clienteFinal=""; g.fechaVenta=""; g.precioVenta="";
+  localStorage.setItem('climaserv_garantias_v2',JSON.stringify(garantias));
+  render();
+}
+function borrarTodo(){
+  if(!confirm('¿Seguro querés borrar TODO? No se puede deshacer.')) return;
+  localStorage.clear(); location.reload();
+}
+function exportarTodo(){
+  let texto="CLIMASERV - INVENTARIO Y GARANTÍAS\n\n";
+  garantias.forEach(g=>{
+    texto+=`Serie: ${g.serie} | ${g.marca} ${g.modelo} ${g.capacidad} ${g.voltaje} | Factura ${g.numFactura} | Garantía ${g.numGarantia} | ${g.vendido?'VENDIDO a '+g.clienteFinal:'DISPONIBLE'}\n`;
+  });
+  let blob=new Blob([texto],{type:'text/plain'});
+  let a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='climaserv-inventario.txt'; a.click();
+}
+
+/* ============================================================ */
+/* BUSCAR */
+/* ============================================================ */
+function buscarRapido(){
+  let bus=document.getElementById('buscarRapido').value.trim().toUpperCase();
+  let div=document.getElementById('resultadoBusquedaRapida');
+  if(!bus){div.innerHTML='';return;}
+  let r=garantias.filter(g=>g.serie.includes(bus)||g.numFactura.includes(bus)||g.numGarantia.includes(bus)||g.clienteFinal.toUpperCase().includes(bus));
+  if(r.length===0){div.innerHTML='<p class="small">No encontrado</p>';return;}
+  div.innerHTML=r.map(g=>`<div class="preview"><b class="serie">${g.serie}</b> - ${g.marca} ${g.modelo} ${g.capacidad} ${g.voltaje}<br>Factura ${g.numFactura} - Garantía ${g.numGarantia} - ${g.fecha}<br>Archivo: ${g.archivo}<br>Estado: ${g.vendido?'<span class="badge badge-red">VENDIDO a '+g.clienteFinal+'</span>':'<span class="badge">DISPONIBLE</span>'}</div>`).join('');
+}
+
+/* ============================================================ */
+/* RENDER - DIBUJAR TODO EN PANTALLA */
+/* ============================================================ */
 function render(){
-  actualizarAires();
-  const user=localStorage.getItem('climaserv_user')||'Jefe';
-  const q=document.getElementById('buscador').value.toLowerCase();
-  let lista=datos.filter(d=>(d.cliente||'').toLowerCase().includes(q)||(d.aire||'').toLowerCase().includes(q)||(d.serie||'').toLowerCase().includes(q)||(d.telefono||'').includes(q));
-  if(user!=='Jefe') lista=lista.filter(d=>(d.trabajador||'').toLowerCase()===user.toLowerCase());
-  if(filtro==='pendiente') lista=lista.filter(d=>d.estado==='pendiente');
-  if(filtro==='pagado') lista=lista.filter(d=>d.estado==='pagado');
-  const total=datos.reduce((s,d)=>s+(d.monto||0),0);
-  const pend=datos.filter(d=>d.estado==='pendiente').reduce((s,d)=>s+(d.monto||0),0);
-  document.getElementById('statTotal').innerText='$'+total;
-  document.getElementById('statPend').innerText='$'+pend;
-  document.getElementById('statCob').innerText='$'+(total-pend);
-  const hoy=new Date().toISOString().slice(5,10);
-  const cumples=datos.filter(d=>d.cumple&&d.cumple.slice(5,10)===hoy);
-  document.getElementById('alertas').innerText=(pend>0?`${datos.filter(d=>d.estado==='pendiente').length} pendientes • `:'Todo al día • ')+`Usuario: ${user}`;
-  document.getElementById('alertasCumple').innerText=cumples.length?`🎂 Hoy cumple: ${cumples.map(c=>c.cliente).join(', ')}`:'Sin cumpleaños hoy.';
-  document.getElementById('lista').innerHTML=lista.map((d)=>{ let idx=datos.indexOf(d); return `<div class="bg-white p-4 rounded-2xl shadow"><p class="font-bold">${d.cliente} ${d.cumple? '🎂 '+d.cumple : ''}</p><p class="text-xs text-gray-500">${d.aire} • Serie: ${d.serie||'-'} • Lote: ${d.lote||'-'} • Flete: $${d.flete||0} • Tel: ${d.telefono||''} • Trabajador: ${d.trabajador||'-'}</p><p class="font-bold text-blue-600">$${d.monto} • Cada ${d.frecuencia} meses • Garantía Prov: ${d.garantiaProv||'-'} • ${d.estado}</p><div class="flex gap-2 mt-2 flex-wrap"><button onclick="editar(${idx})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-bold">✏️ Editar</button><button onclick="datos[${idx}].estado='pagado';save()" class="bg-green-100 px-3 py-1 rounded-full text-xs font-bold">Pagado</button><button onclick="verHistorial('${d.cliente}')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Historial</button><button onclick="window.open('https://wa.me/${(d.telefono||'').replace(/[^0-9]/g,'')}?text='+encodeURIComponent('Hola ${d.cliente}, soy Climaserv, ya toca tu mantenimiento'))" class="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-bold">WhatsApp</button><button onclick="datos.splice(${idx},1);save()" class="text-red-500 text-xs font-bold">Borrar</button></div></div>`; }).join('')||'<p class="text-center text-gray-400 py-6">Sin registros</p>';
-  let invFiltrado=filtroInv==='Todos'?inventario:inventario.filter(x=>(x.categoria||'Aire')===filtroInv);
-  let iconos={Aire:'❄️',Gas:'⛽',Repuesto:'🔧',Otro:'📦'};
-  document.getElementById('listaInv').innerHTML=invFiltrado.map(x=>`<div class="border p-2 rounded-xl text-sm">${iconos[x.categoria||'Aire']||'📦'} <b>[${x.categoria||'Aire'}]</b> ${x.nombre} - Cant: ${x.cant} - $${x.precio}</div>`).join('')||'Sin inventario en esta categoría';
-  document.getElementById('listaGastos').innerHTML=gastos.map(x=>`<div class="border p-2 rounded-xl text-sm">${x.desc} - $${x.monto} - ${x.tipo}</div>`).join('');
-  document.getElementById('listaTrab').innerHTML=trabajadores.map(x=>`<div class="border p-2 rounded-xl text-sm">${x.nombre} - clave: ${x.clave}</div>`).join('');
+  document.getElementById('kpiTotal').textContent=garantias.length;
+  document.getElementById('kpiDisp').textContent=garantias.filter(g=>!g.vendido).length;
+  document.getElementById('kpiVend').textContent=garantias.filter(g=>g.vendido).length;
+  // Inventario agrupado por modelo
+  let grupos={};
+  garantias.forEach(g=>{
+    let k=g.marca+' | '+g.modelo+' | '+g.capacidad+' | '+g.voltaje;
+    if(!grupos[k]) grupos[k]={total:0,disp:0};
+    grupos[k].total++; if(!g.vendido) grupos[k].disp++;
+  });
+  let invHtml='<table><tr><th>Modelo</th><th>Disponibles</th><th>Total</th></tr>';
+  for(let k in grupos){invHtml+=`<tr><td>${k}</td><td><b style="font-size:16px">${grupos[k].disp}</b></td><td>${grupos[k].total}</td></tr>`;}
+  invHtml+='</table>';
+  document.getElementById('inventario').innerHTML=invHtml;
+  // Detalle por modelo y tipo
+  let det='<table><tr><th>Tipo</th><th>Modelo</th><th>Disp.</th><th>Total</th></tr>';
+  let grupos2={};
+  garantias.forEach(g=>{
+    let k=g.tipo+'|'+g.modelo;
+    if(!grupos2[k]) grupos2[k]={total:0,disp:0};
+    grupos2[k].total++; if(!g.vendido) grupos2[k].disp++;
+  });
+  for(let k in grupos2){
+    let partes=k.split('|');
+    det+=`<tr><td>${partes[0]}</td><td>${partes[1]}</td><td><b>${grupos2[k].disp}</b></td><td>${grupos2[k].total}</td></tr>`;
+  }
+  det+='</table>';
+  document.getElementById('inventarioDetalle').innerHTML=det;
+  // Garantías filtradas
+  let filtro=document.getElementById('filtroEstado') ? document.getElementById('filtroEstado').value : 'todos';
+  let lista=garantias.slice().reverse();
+  if(filtro==='disponible') lista=lista.filter(g=>!g.vendido);
+  if(filtro==='vendido') lista=lista.filter(g=>g.vendido);
+  let html='<table><tr><th>Serie</th><th>Modelo</th><th>Factura / Garantía</th><th>Estado</th><th>Acción</th></tr>';
+  lista.forEach(g=>{
+    html+=`<tr><td class="serie">${g.serie}<br><span class="small">${g.tipo}</span></td><td>${g.modelo}<br><span class="small">${g.capacidad} ${g.voltaje} - ${g.gas}</span></td><td>${g.numFactura}<br><span class="small">Garantía ${g.numGarantia} - ${g.fecha}<br>Archivo: ${g.archivo}</span></td><td>${g.vendido?'<span class="badge badge-red">VENDIDO<br>'+g.clienteFinal+'<br>'+g.fechaVenta+'</span>':'<span class="badge">DISPONIBLE</span>'}</td><td>${g.vendido?`<button class="btn-gray btn-small" onclick="devolver(${g.id})">Devolver</button>`:`<button class="btn-green btn-small" onclick="vender(${g.id})">Vender</button>`}</td></tr>`;
+  });
+  html+='</table>';
+  if(lista.length===0) html='<p class="small">No hay equipos con ese filtro.</p>';
+  document.getElementById('garantias').innerHTML=html;
+  // Historial ventas
+  let hv='<table><tr><th>Fecha</th><th>Serie</th><th>Cliente</th><th>Precio</th></tr>';
+  ventas.slice().reverse().forEach(v=>{
+    hv+=`<tr><td>${v.fecha}</td><td class="serie">${v.serie}</td><td>${v.cliente}</td><td>${v.precio||'-'}</td></tr>`;
+  });
+  hv+='</table>';
+  if(ventas.length===0) hv='<p class="small">Todavía no hay ventas. Cuando vendas 1, va a aparecer acá.</p>';
+  document.getElementById('historialVentas').innerHTML=hv;
+  // Fecha venta por defecto hoy
+  let fv=document.getElementById('fechaVentaInput');
+  if(fv && !fv.value) fv.value=new Date().toISOString().slice(0,10);
 }
-function verHistorial(cliente){ const h=datos.filter(x=>x.cliente===cliente); alert('Historial '+cliente+'\n'+h.map(x=>`${x.aire} - $${x.monto} - ${x.estado} - Serie ${x.serie}`).join('\n')); }
-render(); renderCal();
+render();
 </script>
 </body>
 </html>
