@@ -13,15 +13,11 @@
 <input id="claveInput" type="password" placeholder="Tu clave" class="mt-6 w-full max-w-xs p-3 rounded-xl text-black text-center">
 <button onclick="entrar()" class="mt-3 w-full max-w-xs bg-white text-blue-600 py-3 rounded-xl font-bold">Entrar</button>
 <p id="errorClave" class="text-xs mt-2 text-yellow-200"></p>
-<p class="text-[11px] mt-4 opacity-70">Si sos trabajador, usá tu clave de trabajador</p>
 </div>
 <div id="app" class="hidden">
 <header class="bg-blue-600 text-white p-4 sticky top-0 z-10">
 <div class="flex justify-between items-center">
-<div>
-<h1 class="text-xl font-bold">❄️ Control A/C</h1>
-<p class="text-xs opacity-80">Climaserv • El Paraíso • Privado</p>
-</div>
+<div><h1 class="text-xl font-bold">❄️ Control A/C</h1><p class="text-xs opacity-80">Climaserv • El Paraíso</p></div>
 <div class="flex gap-1">
 <button onclick="exportar()" class="bg-white text-blue-600 text-xs px-3 py-2 rounded-full font-bold">📤 Copia</button>
 <label class="bg-yellow-400 text-black text-xs px-3 py-2 rounded-full font-bold cursor-pointer">📥 Importar<input type="file" accept=".json" onchange="importar(event)" class="hidden"></label>
@@ -42,7 +38,7 @@
 <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs">Cobrado</p><p id="statCob" class="font-bold text-green-600">$0</p></div>
 </div>
 <div class="mx-3 bg-yellow-50 border rounded-xl p-3 text-xs"><b>🔔 Alertas:</b> <span id="alertas"></span></div>
-<div class="mx-3 mt-2 bg-blue-50 border rounded-xl p-3 text-xs"><b>🎂 Cumpleaños y Mantenimientos:</b> <span id="alertasCumple"></span></div>
+<div class="mx-3 mt-2 bg-blue-50 border rounded-xl p-3 text-xs"><b>🎂 Cumpleaños:</b> <span id="alertasCumple"></span></div>
 <div class="flex gap-2 p-3 overflow-x-auto">
 <button onclick="showTab('trabajos')" class="bg-blue-600 text-white px-4 py-2 rounded-full text-xs font-bold">Trabajos</button>
 <button onclick="showTab('inventario')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Inventario</button>
@@ -59,7 +55,8 @@
 <input id="fTelefono" placeholder="Teléfono WhatsApp Ej: 70001234" class="w-full border p-3 rounded-xl mb-2">
 <input id="fCumple" type="date" class="w-full border p-3 rounded-xl mb-2">
 <label class="text-xs text-gray-500">Fecha cumpleaños del cliente</label>
-<input id="fAire" placeholder="Aire Ej: Mini Split 12000 BTU" class="w-full border p-3 rounded-xl mb-2">
+<label class="text-xs font-bold mt-2 block">❄️ Aire - Elegí de la lista:</label>
+<select id="fAire" class="w-full border p-3 rounded-xl mb-2 bg-blue-50 font-bold"></select>
 <input id="fSerie" placeholder="Serie" class="w-full border p-3 rounded-xl mb-2">
 <input id="fLote" placeholder="Lote" class="w-full border p-3 rounded-xl mb-2">
 <input id="fFlete" type="number" placeholder="Flete $" class="w-full border p-3 rounded-xl mb-2">
@@ -70,21 +67,34 @@
 <label class="text-xs text-gray-500">Garantía Proveedor hasta:</label>
 <input id="fGarantiaProv" type="date" class="w-full border p-3 rounded-xl mb-3">
 <button onclick="guardar()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Guardar Trabajo</button>
-<p class="text-[11px] text-gray-400 text-center mt-2">Con Serie, Lote, Flete, Cumpleaños, Trabajador y Garantía Proveedor. Funciona sin internet.</p>
 </div>
 <div id="lista" class="p-3 space-y-3"></div>
 </div>
 <div id="tab-inventario" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-<h2 class="font-bold">📦 Inventario</h2>
-<input id="invNombre" placeholder="Producto Ej: Gas R410" class="w-full border p-3 rounded-xl my-2">
+<h2 class="font-bold">📦 Inventario Separado</h2>
+<p class="text-xs text-gray-500">Primero elegí qué tipo es, así no se mezclan aires con gas.</p>
+<select id="invCategoria" class="w-full border p-3 rounded-xl my-2 bg-blue-50 font-bold">
+<option value="Aire">❄️ Aire</option>
+<option value="Gas">⛽ Gas</option>
+<option value="Repuesto">🔧 Repuesto</option>
+<option value="Otro">📦 Otro</option>
+</select>
+<input id="invNombre" placeholder="Ej: Si es Aire poné: Mini Split 12000 BTU. Si es Gas: Gas R410" class="w-full border p-3 rounded-xl mb-2">
 <input id="invCant" type="number" placeholder="Cantidad" class="w-full border p-3 rounded-xl mb-2">
 <input id="invPrecio" type="number" placeholder="Precio $" class="w-full border p-3 rounded-xl mb-2">
-<button onclick="guardarInventario()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Agregar</button>
+<button onclick="guardarInventario()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Agregar al Inventario</button>
+<div class="flex gap-2 mt-4 overflow-x-auto">
+<button onclick="filtroInv='Todos';render()" class="bg-black text-white px-3 py-1 rounded-full text-xs font-bold">Todos</button>
+<button onclick="filtroInv='Aire';render()" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">❄️ Aires</button>
+<button onclick="filtroInv='Gas';render()" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-bold">⛽ Gas</button>
+<button onclick="filtroInv='Repuesto';render()" class="bg-green-100 px-3 py-1 rounded-full text-xs font-bold">🔧 Repuestos</button>
+<button onclick="filtroInv='Otro';render()" class="bg-gray-100 px-3 py-1 rounded-full text-xs font-bold">📦 Otros</button>
+</div>
 <div id="listaInv" class="mt-3 space-y-2"></div>
 </div>
 <div id="tab-gastos" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-<h2 class="font-bold">💰 Gastos + Cierre del Día</h2>
-<input id="gDesc" placeholder="Ej: Gasolina, Comida, Repuesto" class="w-full border p-3 rounded-xl my-2">
+<h2 class="font-bold">💰 Gastos + Cierre</h2>
+<input id="gDesc" placeholder="Ej: Gasolina, Comida" class="w-full border p-3 rounded-xl my-2">
 <input id="gMonto" type="number" placeholder="Monto $" class="w-full border p-3 rounded-xl mb-2">
 <select id="gTipo" class="w-full border p-3 rounded-xl mb-2"><option value="negocio">Negocio</option><option value="casa">Casa</option></select>
 <button onclick="guardarGasto()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Guardar Gasto</button>
@@ -92,20 +102,18 @@
 <div id="listaGastos" class="mt-3 space-y-2"></div>
 </div>
 <div id="tab-calendario" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-<h2 class="font-bold">📅 Calendario Día / Semana / Mes</h2>
-<div class="flex gap-2 my-2"><button onclick="vistaCal='dia';renderCal()" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Día</button><button onclick="vistaCal='semana';renderCal()" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Semana</button><button onclick="vistaCal='mes';renderCal()" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Mes</button></div>
-<input type="date" id="fechaCal" onchange="renderCal()" class="w-full border p-3 rounded-xl">
+<h2 class="font-bold">📅 Calendario</h2>
+<input type="date" id="fechaCal" onchange="renderCal()" class="w-full border p-3 rounded-xl mt-2">
 <div id="listaCal" class="mt-3"></div>
 </div>
 <div id="tab-reportes" class="tab hidden mx-3 bg-white rounded-2xl p-4">
 <h2 class="font-bold">📊 Reportes</h2>
 <div class="flex gap-2 my-2"><button onclick="generarReporte('dia')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Día</button><button onclick="generarReporte('semana')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Semana</button><button onclick="generarReporte('mes')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Mes</button><button onclick="generarReporte('anio')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Año</button></div>
 <div id="reporteBox" class="mt-3 bg-blue-50 p-3 rounded-xl text-sm">Tocá un botón para ver el reporte</div>
-<button onclick="compararMeses()" class="mt-3 w-full bg-black text-white py-3 rounded-xl font-bold">Comparar Mes Anterior vs Este Mes</button>
 </div>
 <div id="tab-precios" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-<h2 class="font-bold">🧾 Cotización + PDF / Factura / Garantía</h2>
-<p class="text-xs">Precios Fijos: Mantenimiento $25 • Instalación $80 • Reparación $40 • Gas $60</p>
+<h2 class="font-bold">🧾 Cotización + PDF</h2>
+<p class="text-xs">Precios: Mantenimiento $25 • Instalación $80 • Reparación $40 • Gas $60</p>
 <input id="cCliente" placeholder="Cliente cotización" class="w-full border p-3 rounded-xl my-2">
 <input id="cDetalle" placeholder="Detalle Ej: Instalación" class="w-full border p-3 rounded-xl mb-2">
 <input id="cMonto" type="number" placeholder="Monto $" class="w-full border p-3 rounded-xl mb-2">
@@ -133,118 +141,65 @@ function entrar(){
 let v=document.getElementById('claveInput').value;
 let trabs=JSON.parse(localStorage.getItem('climaserv_trabs')||'[]');
 let esTrab=trabs.find(t=>t.clave===v);
-if(v===CLAVE || esTrab){
-localStorage.setItem('climaserv_login','ok');
-localStorage.setItem('climaserv_user', esTrab ? esTrab.nombre : 'Jefe');
-document.getElementById('login').style.display='none';
-document.getElementById('app').classList.remove('hidden');
-render();
-}else{document.getElementById('errorClave').innerText='Clave incorrecta';}
+if(v===CLAVE || esTrab){localStorage.setItem('climaserv_login','ok');localStorage.setItem('climaserv_user', esTrab ? esTrab.nombre : 'Jefe');document.getElementById('login').style.display='none';document.getElementById('app').classList.remove('hidden');render();}
+else{document.getElementById('errorClave').innerText='Clave incorrecta';}
 }
-if(localStorage.getItem('climaserv_login')==='ok'){
-document.getElementById('login').style.display='none';
-document.getElementById('app').classList.remove('hidden');
-}
+if(localStorage.getItem('climaserv_login')==='ok'){document.getElementById('login').style.display='none';document.getElementById('app').classList.remove('hidden');}
 let datos=JSON.parse(localStorage.getItem('climaserv_trabajos')||'[]');
 let inventario=JSON.parse(localStorage.getItem('climaserv_inv')||'[]');
 let gastos=JSON.parse(localStorage.getItem('climaserv_gastos')||'[]');
 let trabajadores=JSON.parse(localStorage.getItem('climaserv_trabs')||'[]');
-let filtro='todos',vistaCal='dia';
-function save(){
-localStorage.setItem('climaserv_trabajos',JSON.stringify(datos));
-localStorage.setItem('climaserv_inv',JSON.stringify(inventario));
-localStorage.setItem('climaserv_gastos',JSON.stringify(gastos));
-localStorage.setItem('climaserv_trabs',JSON.stringify(trabajadores));
-render();renderCal();
-}
+let filtro='todos',filtroInv='Todos',vistaCal='dia';
+const AIRES_BASE=['Mini Split 12000 BTU','Mini Split 18000 BTU','Mini Split 24000 BTU','Mini Split 36000 BTU','Mini Split 60000 BTU'];
+function save(){localStorage.setItem('climaserv_trabajos',JSON.stringify(datos));localStorage.setItem('climaserv_inv',JSON.stringify(inventario));localStorage.setItem('climaserv_gastos',JSON.stringify(gastos));localStorage.setItem('climaserv_trabs',JSON.stringify(trabajadores));render();renderCal();}
 function setFiltro(f){filtro=f;render();}
-function showTab(t){
-document.querySelectorAll('.tab').forEach(e=>e.classList.add('hidden'));
-document.getElementById('tab-'+t).classList.remove('hidden');
-}
+function showTab(t){document.querySelectorAll('.tab').forEach(e=>e.classList.add('hidden'));document.getElementById('tab-'+t).classList.remove('hidden');}
 function guardar(){
 const d={cliente:fCliente.value,telefono:fTelefono.value,cumple:fCumple.value,aire:fAire.value,serie:fSerie.value,lote:fLote.value,flete:parseFloat(fFlete.value||0),monto:parseFloat(fMonto.value||0),trabajador:fTrabajador.value,frecuencia:fFrecuencia.value,estado:fEstado.value,garantiaProv:fGarantiaProv.value,fecha:new Date().toISOString()};
-if(!d.cliente)return alert('Poné el cliente');
-datos.unshift(d);save();alert('Guardado');
-fCliente.value='';fAire.value='';fSerie.value='';fMonto.value='';
+if(!d.cliente)return alert('Poné el cliente');datos.unshift(d);save();alert('Guardado');fCliente.value='';fSerie.value='';fMonto.value='';
 }
-function guardarInventario(){inventario.unshift({nombre:invNombre.value,cant:invCant.value,precio:invPrecio.value});save();}
+function guardarInventario(){
+if(!invNombre.value)return alert('Poné el nombre');
+inventario.unshift({nombre:invNombre.value,categoria:invCategoria.value,cant:invCant.value,precio:invPrecio.value});save();invNombre.value='';invCant.value='';invPrecio.value='';alert('Agregado a '+invCategoria.value);
+}
 function guardarGasto(){gastos.unshift({desc:gDesc.value,monto:parseFloat(gMonto.value||0),tipo:gTipo.value,fecha:new Date().toISOString()});save();}
-function guardarTrabajador(){trabajadores.unshift({nombre:tNombre.value,clave:tClave.value});save();alert('Trabajador agregado, su clave es: '+tClave.value);}
-function cierreDia(){
-const hoy=new Date().toDateString();
-const entr=datos.filter(d=>new Date(d.fecha).toDateString()===hoy&&d.estado==='pagado').reduce((s,d)=>s+d.monto,0);
-const sal=gastos.filter(g=>new Date(g.fecha).toDateString()===hoy).reduce((s,g)=>s+g.monto,0);
-document.getElementById('cierre').innerText=`Entró: $${entr} - Salió: $${sal} - Quedó: $${entr-sal}`;
-alert(`Cierre\nEntró: $${entr}\nSalió: $${sal}\nQuedó: $${entr-sal}`);
-}
-function buscarSerie(){
-const s=prompt('Escribí la Serie:');if(!s)return;
-const r=datos.filter(d=>(d.serie||'').toLowerCase().includes(s.toLowerCase()));
-alert(r.length?r.map(x=>`${x.cliente} - ${x.aire} - $${x.monto} - ${x.estado} - Tel: ${x.telefono}`).join('\n'):'No se encontró esa serie');
-}
-function buscarTelefono(){
-const s=prompt('Escribí el teléfono:');if(!s)return;
-const r=datos.filter(d=>(d.telefono||'').includes(s));
-alert(r.length?r.map(x=>`${x.cliente} - ${x.aire} - $${x.monto}`).join('\n'):'No se encontró');
-}
-function exportar(){
-const blob=new Blob([JSON.stringify({trabajos:datos,inventario,gastos,trabajadores},null,2)],{type:'application/json'});
-const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='copia-climaserv.json';a.click();
-}
-function importar(e){
-const f=e.target.files[0];if(!f)return;
-const r=new FileReader();
-r.onload=function(){try{const j=JSON.parse(r.result);datos=j.trabajos||[];inventario=j.inventario||[];gastos=j.gastos||[];trabajadores=j.trabajadores||[];save();alert('Recuperado! '+datos.length+' trabajos');}catch(err){alert('Archivo no válido');}};
-r.readAsText(f);
-}
-function cotizar(){
-const msg=`Hola ${cCliente.value}, te mando cotización Climaserv El Paraíso:\n${cDetalle.value} - $${cMonto.value}\nGarantía incluida. Precios: Mant $25, Inst $80, Rep $40, Gas $60`;
-window.open('https://wa.me/?text='+encodeURIComponent(msg));
-}
-function factura(){
-const msg=`FACTURA CLIMASERV EL PARAÍSO\nCliente: ${cCliente.value}\nDetalle: ${cDetalle.value}\nMonto: $${cMonto.value}\nGarantía: 30 días servicio, Garantía Proveedor según equipo.`;
-alert(msg);
-}
-function generarReporte(tipo){
-const total=datos.reduce((s,d)=>s+d.monto,0);
-const pend=datos.filter(d=>d.estado==='pendiente').reduce((s,d)=>s+d.monto,0);
-document.getElementById('reporteBox').innerHTML=`Reporte ${tipo}<br>Total: $${total}<br>Pendiente: $${pend}<br>Cobrado: $${total-pend}<br>Trabajos: ${datos.length}`;
-}
-function compararMeses(){alert('Comparar: Este mes vs mes anterior - Revisá el total en Reportes. Si este mes es mayor, vas subiendo.');generarReporte('comparar');}
-function renderCal(){
-const f=document.getElementById('fechaCal').value||new Date().toISOString().slice(0,10);
-const lista=datos.filter(d=>d.fecha.slice(0,10)===f);
-document.getElementById('listaCal').innerHTML=lista.length?lista.map(d=>`<div class="border p-2 rounded-xl text-sm">${d.cliente} - ${d.aire} - $${d.monto}</div>`).join(''):'Sin trabajos ese día. Vista: '+vistaCal;
+function guardarTrabajador(){trabajadores.unshift({nombre:tNombre.value,clave:tClave.value});save();alert('Trabajador agregado: '+tClave.value);}
+function cierreDia(){const hoy=new Date().toDateString();const entr=datos.filter(d=>new Date(d.fecha).toDateString()===hoy&&d.estado==='pagado').reduce((s,d)=>s+d.monto,0);const sal=gastos.filter(g=>new Date(g.fecha).toDateString()===hoy).reduce((s,g)=>s+g.monto,0);document.getElementById('cierre').innerText=`Entró: $${entr} - Salió: $${sal} - Quedó: $${entr-sal}`;alert(`Cierre\nEntró: $${entr}\nSalió: $${sal}\nQuedó: $${entr-sal}`);}
+function buscarSerie(){const s=prompt('Escribí la Serie:');if(!s)return;const r=datos.filter(d=>(d.serie||'').toLowerCase().includes(s.toLowerCase()));alert(r.length?r.map(x=>`${x.cliente} - ${x.aire} - $${x.monto}`).join('\n'):'No se encontró');}
+function buscarTelefono(){const s=prompt('Escribí el teléfono:');if(!s)return;const r=datos.filter(d=>(d.telefono||'').includes(s));alert(r.length?r.map(x=>`${x.cliente} - ${x.aire} - $${x.monto}`).join('\n'):'No se encontró');}
+function exportar(){const blob=new Blob([JSON.stringify({trabajos:datos,inventario,gastos,trabajadores},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='copia-climaserv.json';a.click();}
+function importar(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=function(){try{const j=JSON.parse(r.result);datos=j.trabajos||[];inventario=j.inventario||[];gastos=j.gastos||[];trabajadores=j.trabajadores||[];save();alert('Recuperado! '+datos.length+' trabajos');}catch(err){alert('Archivo no válido');}};r.readAsText(f);}
+function cotizar(){const msg=`Hola ${cCliente.value}, cotización Climaserv El Paraíso:\n${cDetalle.value} - $${cMonto.value}`;window.open('https://wa.me/?text='+encodeURIComponent(msg));}
+function factura(){alert(`FACTURA CLIMASERV\nCliente: ${cCliente.value}\nDetalle: ${cDetalle.value}\nMonto: $${cMonto.value}\nGarantía 30 días`);}
+function generarReporte(tipo){const total=datos.reduce((s,d)=>s+d.monto,0);const pend=datos.filter(d=>d.estado==='pendiente').reduce((s,d)=>s+d.monto,0);document.getElementById('reporteBox').innerHTML=`Reporte ${tipo}<br>Total: $${total}<br>Pendiente: $${pend}<br>Cobrado: $${total-pend}<br>Trabajos: ${datos.length}`;}
+function renderCal(){const f=document.getElementById('fechaCal').value||new Date().toISOString().slice(0,10);const lista=datos.filter(d=>d.fecha.slice(0,10)===f);document.getElementById('listaCal').innerHTML=lista.length?lista.map(d=>`<div class="border p-2 rounded-xl text-sm">${d.cliente} - ${d.aire} - $${d.monto}</div>`).join(''):'Sin trabajos ese día.';}
+function actualizarAires(){
+let airesDeInventario=inventario.filter(x=> (x.categoria||'Aire')==='Aire').map(x=>x.nombre);
+let todos=[...AIRES_BASE];
+airesDeInventario.forEach(a=>{if(!todos.includes(a)) todos.push(a);});
+document.getElementById('fAire').innerHTML=todos.map(a=>`<option value="${a}">${a}</option>`).join('');
 }
 function render(){
+actualizarAires();
 const user=localStorage.getItem('climaserv_user')||'Jefe';
 const q=document.getElementById('buscador').value.toLowerCase();
 let lista=datos.filter(d=>(d.cliente||'').toLowerCase().includes(q)||(d.aire||'').toLowerCase().includes(q)||(d.serie||'').toLowerCase().includes(q)||(d.telefono||'').includes(q));
 if(user!=='Jefe') lista=lista.filter(d=>(d.trabajador||'').toLowerCase()===user.toLowerCase());
 if(filtro==='pendiente')lista=lista.filter(d=>d.estado==='pendiente');
 if(filtro==='pagado')lista=lista.filter(d=>d.estado==='pagado');
-const total=datos.reduce((s,d)=>s+(d.monto||0),0);
-const pend=datos.filter(d=>d.estado==='pendiente').reduce((s,d)=>s+(d.monto||0),0);
-document.getElementById('statTotal').innerText='$'+total;
-document.getElementById('statPend').innerText='$'+pend;
-document.getElementById('statCob').innerText='$'+(total-pend);
-const hoy=new Date().toISOString().slice(5,10);
-const cumples=datos.filter(d=>d.cumple&&d.cumple.slice(5,10)===hoy);
+const total=datos.reduce((s,d)=>s+(d.monto||0),0);const pend=datos.filter(d=>d.estado==='pendiente').reduce((s,d)=>s+(d.monto||0),0);
+document.getElementById('statTotal').innerText='$'+total;document.getElementById('statPend').innerText='$'+pend;document.getElementById('statCob').innerText='$'+(total-pend);
+const hoy=new Date().toISOString().slice(5,10);const cumples=datos.filter(d=>d.cumple&&d.cumple.slice(5,10)===hoy);
 document.getElementById('alertas').innerText=(pend>0?`${datos.filter(d=>d.estado==='pendiente').length} pendientes • `:'Todo al día • ')+`Usuario: ${user}`;
-document.getElementById('alertasCumple').innerText=cumples.length?`🎂 Hoy cumple: ${cumples.map(c=>c.cliente).join(', ')} - Mandale WhatsApp`:'Sin cumpleaños hoy. Revisá mantenimientos de hace 3 meses.';
-document.getElementById('lista').innerHTML=lista.map((d)=>{
-let idx=datos.indexOf(d);
-return `<div class="bg-white p-4 rounded-2xl shadow"><p class="font-bold">${d.cliente} ${d.cumple? '🎂 '+d.cumple : ''}</p><p class="text-xs text-gray-500">${d.aire} • Serie: ${d.serie||'-'} • Lote: ${d.lote||'-'} • Flete: $${d.flete||0} • Tel: ${d.telefono||''} • Trabajador: ${d.trabajador||'-'}</p><p class="font-bold text-blue-600">$${d.monto} • Cada ${d.frecuencia} meses • Garantía Prov: ${d.garantiaProv||'-'} • ${d.estado}</p><div class="flex gap-2 mt-2 flex-wrap"><button onclick="datos[${idx}].estado='pagado';save()" class="bg-green-100 px-3 py-1 rounded-full text-xs font-bold">Pagado</button><button onclick="verHistorial('${d.cliente}')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Historial</button><button onclick="window.open('https://wa.me/${(d.telefono||'').replace(/[^0-9]/g,'')}?text='+encodeURIComponent('Hola ${d.cliente}, soy Climaserv El Paraíso, ya toca tu mantenimiento'))" class="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-bold">WhatsApp</button><button onclick="datos.splice(${idx},1);save()" class="text-red-500 text-xs font-bold">Borrar</button></div></div>`;
-}).join('')||'<p class="text-center text-gray-400 py-6">Sin registros</p>';
-document.getElementById('listaInv').innerHTML=inventario.map(x=>`<div class="border p-2 rounded-xl text-sm">${x.nombre} - ${x.cant} - $${x.precio}</div>`).join('');
+document.getElementById('alertasCumple').innerText=cumples.length?`🎂 Hoy cumple: ${cumples.map(c=>c.cliente).join(', ')}`:'Sin cumpleaños hoy.';
+document.getElementById('lista').innerHTML=lista.map((d)=>{let idx=datos.indexOf(d);return `<div class="bg-white p-4 rounded-2xl shadow"><p class="font-bold">${d.cliente} ${d.cumple? '🎂 '+d.cumple : ''}</p><p class="text-xs text-gray-500">${d.aire} • Serie: ${d.serie||'-'} • Lote: ${d.lote||'-'} • Flete: $${d.flete||0} • Tel: ${d.telefono||''} • Trabajador: ${d.trabajador||'-'}</p><p class="font-bold text-blue-600">$${d.monto} • Cada ${d.frecuencia} meses • Garantía Prov: ${d.garantiaProv||'-'} • ${d.estado}</p><div class="flex gap-2 mt-2 flex-wrap"><button onclick="datos[${idx}].estado='pagado';save()" class="bg-green-100 px-3 py-1 rounded-full text-xs font-bold">Pagado</button><button onclick="verHistorial('${d.cliente}')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Historial</button><button onclick="window.open('https://wa.me/${(d.telefono||'').replace(/[^0-9]/g,'')}?text='+encodeURIComponent('Hola ${d.cliente}, soy Climaserv, ya toca tu mantenimiento'))" class="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-bold">WhatsApp</button><button onclick="datos.splice(${idx},1);save()" class="text-red-500 text-xs font-bold">Borrar</button></div></div>`;}).join('')||'<p class="text-center text-gray-400 py-6">Sin registros</p>';
+let invFiltrado=filtroInv==='Todos'?inventario:inventario.filter(x=>(x.categoria||'Aire')===filtroInv);
+let iconos={Aire:'❄️',Gas:'⛽',Repuesto:'🔧',Otro:'📦'};
+document.getElementById('listaInv').innerHTML=invFiltrado.map(x=>`<div class="border p-2 rounded-xl text-sm">${iconos[x.categoria||'Aire']||'📦'} <b>[${x.categoria||'Aire'}]</b> ${x.nombre} - Cant: ${x.cant} - $${x.precio}</div>`).join('')||'Sin inventario en esta categoría';
 document.getElementById('listaGastos').innerHTML=gastos.map(x=>`<div class="border p-2 rounded-xl text-sm">${x.desc} - $${x.monto} - ${x.tipo}</div>`).join('');
 document.getElementById('listaTrab').innerHTML=trabajadores.map(x=>`<div class="border p-2 rounded-xl text-sm">${x.nombre} - clave: ${x.clave}</div>`).join('');
 }
-function verHistorial(cliente){
-const h=datos.filter(x=>x.cliente===cliente);
-alert('Historial '+cliente+'\n'+h.map(x=>`${x.aire} - $${x.monto} - ${x.estado} - Serie ${x.serie}`).join('\n'));
-}
+function verHistorial(cliente){const h=datos.filter(x=>x.cliente===cliente);alert('Historial '+cliente+'\n'+h.map(x=>`${x.aire} - $${x.monto} - ${x.estado} - Serie ${x.serie}`).join('\n'));}
 render();renderCal();
 </script>
 </body>
