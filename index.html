@@ -61,7 +61,7 @@
     <input id="fCliente" placeholder="Cliente" class="w-full border p-3 rounded-xl mb-2">
     <label class="text-xs font-black">Teléfono - Esto agrupa el historial</label>
     <input id="fTelefono" placeholder="Ej: 70001234" inputmode="numeric" class="w-full border p-3 rounded-xl mb-2">
-    <label class="text-xs font-black">Departamento ▼</label>
+    <label class="text-xs font-black">Departamento de ESTE equipo ▼</label>
     <select id="fDepartamento" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-black">
       <option value="">Seleccionar Departamento ▼</option>
       <option>Ahuachapán</option><option>Cabañas</option><option>Chalatenango</option><option>Cuscatlán</option><option>La Libertad</option><option>La Paz</option><option>La Unión</option><option>Morazán</option><option>San Miguel</option><option>San Salvador</option><option>San Vicente</option><option>Santa Ana</option><option>Sonsonate</option><option>Usulután</option>
@@ -360,15 +360,15 @@ function guardarEdicionInventario(){
   alert('✅ Editado en Factura Y en Inventario'); cancelarEditarInv(); save();
 }
 function cancelarEditarInv(){ editandoInvIndex=-1; editandoInvSerieOld=''; document.getElementById('editandoInv').classList.add('hidden'); document.getElementById('invSerie').value=''; mostrarModoAgregar(); }
-// --- NUEVO: AGREGAR OTRO EQUIPO AL MISMO CLIENTE, SIN PERDER HISTORIAL ---
 function agregarOtroEquipo(telefono){
   let ultimo=datos.find(d=>d.telefono===telefono);
   if(!ultimo) return;
-  fCliente.value=ultimo.cliente||''; fTelefono.value=ultimo.telefono||''; document.getElementById('fDepartamento').value=ultimo.departamento||''; fCumple.value=ultimo.cumple||'';
+  fCliente.value=ultimo.cliente||''; fTelefono.value=ultimo.telefono||''; fCumple.value=ultimo.cumple||'';
+  document.getElementById('fDepartamento').value=''; // NO copiar departamento, cada equipo puede ir a otro departamento
   document.getElementById('fFechaTrabajo').value=''; document.getElementById('fCapacidadTrabajo').value=''; document.getElementById('fSistema').value=''; fTrabajador.value=ultimo.trabajador||''; fFrecuencia.value=ultimo.frecuencia||'3'; document.getElementById('fEstado').value='pendiente'; fGarantiaProv.value=''; document.getElementById('fMonto').value=''; document.getElementById('fMontoPendiente').value='';
   toggleSeriesInternas();
   window.scrollTo(0,0);
-  alert('Listo para agregar otro equipo a '+ultimo.cliente+'\nYa te llené nombre, teléfono y departamento. Solo poné la nueva capacidad, fecha y precio.');
+  alert('Listo para agregar otro equipo a '+ultimo.cliente+'\nYa te llené nombre, teléfono y cumpleaños. Vos elegís el nuevo departamento, capacidad, fecha y precio.');
 }
 function abrirPago(idx){
   let d=datos[idx];
@@ -485,7 +485,6 @@ function render(){
   const cumples=datos.filter(d=>d.cumple&&d.cumple.slice(5,10)===hoy);
   document.getElementById('alertas').innerText=(pend>0?`${datos.filter(d=>d.estado==='pendiente').length} pendientes de pagar • `:'Todo al día • ')+`Usuario: ${user}`;
   document.getElementById('alertasCumple').innerText=cumples.length?`🎂 Hoy cumple: ${cumples.map(c=>c.cliente).join(', ')}`:'Sin cumpleaños hoy.';
-  // AGRUPAR POR TELEFONO PARA NO PERDER HISTORIAL
   let grupos={};
   lista.forEach(d=>{ let key=(d.telefono||d.cliente||'').trim()||d.cliente; if(!grupos[key]) grupos[key]=[]; grupos[key].push(d); });
   document.getElementById('lista').innerHTML=Object.values(grupos).map(grupo=>{
@@ -494,13 +493,13 @@ function render(){
     let equiposHtml=grupo.map(d=>{
       let idx=datos.indexOf(d); let esPend=d.estado==='pendiente';
       return `<div class="border rounded-xl p-3 mt-2 ${esPend?'bg-yellow-50':'bg-green-50'}">
-        <p class="text-xs font-black">📅 ${d.fechaTrabajo||'-'} • ${d.capacidadTrabajo} • ${d.sistema||'-'} • ${d.trabajador||'-'} • Garantía hasta: ${d.garantiaProv||'-'}</p>
+        <p class="text-xs font-black">📅 ${d.fechaTrabajo||'-'} • ${d.departamento||'-'} • ${d.capacidadTrabajo} • ${d.sistema||'-'} • ${d.trabajador||'-'} • Garantía hasta: ${d.garantiaProv||'-'}</p>
         <p class="text-xs font-black ${esPend?'text-yellow-600':'text-green-600'}">${esPend?'⏳ PENDIENTE DE PAGAR':'✅ PAGADO'} - Venta $${d.monto} ${d.precioCompra!==undefined?`• Compra $${d.precioCompra} • Ganancia $${d.ganancia||0}`:''}</p>
         ${d.serieManejadora?`<p class="text-sm font-black">Manejadora: ${d.serieManejadora} • Condensadora: ${d.serieCondensadora}</p>`:`<p class="text-xs text-gray-500 font-bold">Sin series todavía - Apretá PENDIENTE DE PAGAR para elegirlas</p>`}
-        <div class="flex gap-2 mt-2 flex-wrap">${esPend ? `<button onclick="abrirPago(${idx})" class="bg-yellow-400 px-4 py-2 rounded-full text-xs font-black">⏳ PENDIENTE DE PAGAR</button>` : `<span class="bg-green-100 px-3 py-1 rounded-full text-xs font-black">✅ PAGADO</span>`}<button onclick="editar(${idx})" class="bg-white border px-3 py-1 rounded-full text-xs font-black">✏️ Editar este equipo</button><button onclick="if(confirm('¿Borrar solo este equipo? El resto del historial de este cliente queda.')){datos.splice(${idx},1);save()}" class="text-red-500 text-xs font-black">Borrar este equipo</button></div>
+        <div class="flex gap-2 mt-2 flex-wrap">${esPend ? `<button onclick="abrirPago(${idx})" class="bg-yellow-400 px-4 py-2 rounded-full text-xs font-black">⏳ PENDIENTE DE PAGAR</button>` : `<span class="bg-green-100 px-3 py-1 rounded-full text-xs font-black">✅ PAGADO</span>`}<button onclick="editar(${idx})" class="bg-white border px-3 py-1 rounded-full text-xs font-black">✏️ Editar este equipo</button></div>
       </div>`;
     }).join('');
-    return `<div class="bg-white p-4 rounded-2xl shadow"><p class="font-black text-lg">${primero.cliente} - ${primero.telefono}</p><p class="text-xs text-gray-500 font-bold">${primero.departamento} • Cumple: ${primero.cumple||'-'} • Total comprado: $${totalCliente} • Equipos: ${grupo.length}</p><button onclick="agregarOtroEquipo('${primero.telefono}')" class="w-full mt-2 bg-blue-600 text-white py-2 rounded-xl text-xs font-black">➕ Agregar otro equipo a este cliente</button>${equiposHtml}</div>`;
+    return `<div class="bg-white p-4 rounded-2xl shadow"><p class="font-black text-lg">${primero.cliente} - ${primero.telefono}</p><p class="text-xs text-gray-500 font-bold">Cumple: ${primero.cumple||'-'} • Total comprado: $${totalCliente} • Equipos: ${grupo.length}</p><button onclick="agregarOtroEquipo('${primero.telefono}')" class="w-full mt-2 bg-blue-600 text-white py-2 rounded-xl text-xs font-black">➕ Agregar otro equipo a este cliente</button>${equiposHtml}</div>`;
   }).join('')||'<p class="text-center text-gray-400 py-6 font-bold">Sin registros</p>';
   let facFiltrado=facturas.filter(x=>(x.modelo||'').toLowerCase().includes(q)||(x.serie||'').toLowerCase().includes(q)||(x.descripcion||'').toLowerCase().includes(q)||(x.marca||'').toLowerCase().includes(q)||(x.factura||'').toLowerCase().includes(q));
   document.getElementById('totalInv5').innerText=inventario.length+' equipos en bodega • '+facturas.length+' en Factura historial';
