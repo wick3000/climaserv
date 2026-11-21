@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -62,7 +61,7 @@
 <div id="tab-trabajos" class="tab">
  <div class="mx-3 bg-white rounded-2xl p-4 shadow">
  <h2 class="font-black text-lg">Registrar Trabajo - 1 equipo por venta</h2>
- <p class="text-xs font-bold text-blue-600">Si el cliente compra 2 equipos de diferente capacidad, guardás 2 ventas con el mismo cliente. Si vuelve después, usás el botón ➕ Agregar otro equipo.</p>
+ <p class="text-xs font-bold text-blue-600">Si el cliente compra 2 equipos de diferente capacidad, guardás 2 ventas con el mismo cliente.</p>
  <label class="text-xs font-black mt-2 block">Cliente</label>
  <input id="fCliente" placeholder="Cliente" class="w-full border p-3 rounded-xl mb-2">
  <label class="text-xs font-black">Teléfono - Esto agrupa el historial</label>
@@ -79,7 +78,7 @@
  <label class="text-xs font-black">Capacidad de ESTE equipo ▼</label>
  <select id="fCapacidadTrabajo" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-black"></select>
  <label class="text-xs font-black">Elegir sistema ▼</label>
- <select id="fSistema" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-black">
+<select id="fSistema" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-black">
  <option value="">Elegir sistema ▼</option><option value="CONVENCIONAL">CONVENCIONAL</option><option value="INVERTER">INVERTER</option>
  </select>
  <label class="text-xs font-black">Trabajador que lo hizo</label>
@@ -99,7 +98,7 @@
  <p id="errorSeries" class="text-xs text-red-600 font-black hidden"></p>
  <div class="bg-yellow-50 border rounded-xl p-3 mt-2 text-sm">
  <p class="font-black">Precio de compra (auto): <b id="txtCompraAuto">$0</b></p>
- <p class="text- text-gray-500">Compra = Costo Manejadora + Costo Condensadora de Factura.</p>
+ <p class="text-xs text-gray-500">Compra = Costo Manejadora + Costo Condensadora de Factura.</p>
  <label class="text-xs font-black mt-2 block">Precio de venta final - Vos lo ponés</label>
  <input id="fMonto" type="number" placeholder="Precio venta final $" class="w-full border p-3 rounded-xl mt-1">
  <p class="font-black">Ganancia: <b id="txtGananciaAuto">$0</b></p>
@@ -115,10 +114,10 @@
  <div id="lista" class="p-3 space-y-3"></div>
 </div>
 
-<!-- 1. RUTA DEL DIA -->
+<!-- 1. RUTA DEL DIA - CORREGIDA: Mantenimientos + Instalaciones Pendientes -->
 <div id="tab-ruta" class="tab hidden mx-3 bg-white rounded-2xl p-4">
  <h2 class="font-black text-lg">🚗 Ruta del Día</h2>
- <p class="text-xs font-bold text-gray-600">Elegí el día y el departamento y te arma la ruta solo con mantenimientos por vencer / vencidos. Cuando terminás uno, le das ✅ Hecho y se quita de la ruta.</p>
+ <p class="text-xs font-bold text-gray-600">Mantenimientos por vencer / vencidos + Instalaciones PENDIENTE DE PAGAR. Cuando pagás una instalación, se elimina sola de la ruta. Cuando hacés un mantenimiento, se reinicia el conteo y se borra de alertas.</p>
  <div class="grid grid-cols-2 gap-2 mt-3">
  <div><label class="text-xs font-black">Fecha de ruta</label><input id="rutaFecha" type="date" class="w-full border p-3 rounded-xl"></div>
  <div><label class="text-xs font-black">Departamento de la ruta ▼</label>
@@ -141,7 +140,7 @@
 <!-- 2. GARANTIAS -->
 <div id="tab-garantias" class="tab hidden mx-3 bg-white rounded-2xl p-4">
  <h2 class="font-black text-lg">🛡️ Garantías</h2>
- <p class="text-xs font-bold text-gray-600">Todas las garantías juntas. Agrupado por cliente. Te dice cuántos días le quedan y si ya venció.</p>
+ <p class="text-xs font-bold text-gray-600">Todas las garantías juntas. Agrupado por cliente.</p>
  <div class="grid grid-cols-3 gap-2 mt-3 text-center">
  <div class="bg-green-50 border rounded-xl p-2"><p class="text-xs font-black">Vigentes</p><p id="garVigentes" class="font-black text-green-600">0</p></div>
  <div class="bg-yellow-50 border rounded-xl p-2"><p class="text-xs font-black">Por vencer 30 días</p><p id="garPorVencer" class="font-black text-yellow-600">0</p></div>
@@ -158,10 +157,10 @@
 
 <div id="tab-mantenimientos" class="tab hidden mx-3 bg-white rounded-2xl p-4">
  <h2 class="font-black text-lg">🔧 Mantenimientos</h2>
- <p class="text-xs font-bold text-gray-600">Abajo: agrupado por cliente. Arriba: ruta por departamento solo para los que están por vencer.</p>
+ <p class="text-xs font-bold text-gray-600">Si le das Hecho o Mantenimiento hecho, se reinicia el conteo y se borra de alertas. No te deja sin poner monto.</p>
  <div class="bg-orange-50 border border-orange-300 rounded-2xl p-3 mt-3">
  <h3 class="font-black text-sm">🚗 Ruta por Departamento - Solo por vencer / vencidos</h3>
- <p class="text- font-bold text-gray-600">Esto es para armar tu ruta. Agrupado por departamento.</p>
+ <p class="text-xs font-bold text-gray-600">Esto es para armar tu ruta. Agrupado por departamento.</p>
  <div id="listaRuta" class="mt-2 space-y-2"></div>
  </div>
  <div class="grid grid-cols-3 gap-2 mt-3 text-center">
@@ -234,7 +233,7 @@
  <p class="text-xs font-black mt-2">Total en bodega: <span id="totalInv5">0</span> equipos</p>
  <p class="text-xs font-bold">De aquí SÍ se descuenta cuando se paga. De Factura NO.</p>
  <div class="overflow-x-auto mt-3">
- <table class="w-full text- border">
+ <table class="w-full text-xs border">
  <tr class="bg-gray-100"><th class="p-2 border font-black">Cantidad</th><th class="p-2 border font-black">Apartado</th><th class="p-2 border font-black">Disponible</th><th class="p-2 border font-black">Modelo</th><th class="p-2 border font-black">Descripción</th><th class="p-2 border font-black">Capacidad</th><th class="p-2 border font-black">Marca</th></tr>
  <tbody id="listaInv"></tbody>
  </table>
@@ -316,7 +315,6 @@
  </div>
  </div>
 </div>
-
 <script>
 const CLAVE="Friosreina";
 function entrar(){
@@ -346,11 +344,14 @@ function normCap(s){ return (s||'').toString().toLowerCase().replace(/[^0-9]/g,'
 function parseFecha(s){ if(!s) return null; let d=new Date(s+'T12:00:00'); return isNaN(d)?null:d; }
 function fmtFecha(d){ if(!d) return '-'; return d.toISOString().slice(0,10); }
 function sumarDias(fecha,dias){ let d=new Date(fecha); d.setDate(d.getDate()+dias); return d; }
+
+// === CORREGIDO: respeta la frecuencia que elegiste ===
+function diasMant(d){ let f=parseInt(d.frecuencia||3); if(isNaN(f)||f<=0) f=3; return f*30; }
 function infoMant(d){
  let baseStr = d.ultimoMant || d.fechaTrabajo || d.fecha;
  let base = parseFecha(baseStr ? baseStr.slice(0,10): null);
  if(!base) return null;
- let vence = sumarDias(base, 90);
+ let vence = sumarDias(base, diasMant(d));
  let hoy = new Date(); hoy.setHours(12,0,0,0);
  let dias = Math.round((vence - hoy)/(1000*60*60*24));
  return {base, vence, dias, baseStr: fmtFecha(base), venceStr: fmtFecha(vence)};
@@ -363,29 +364,41 @@ function infoGarantia(d){
  let dias = Math.round((vence - hoy)/(1000*60*60*24));
  return {vence, dias, venceStr: fmtFecha(vence)};
 }
+
+// === CORREGIDO: LOS 2 BOTONES HACEN LO MISMO - MONTO OBLIGATORIO, REINICIA Y BORRA ALERTA ===
 function hacerMantenimiento(idx){
  let d=datos[idx]; let info=infoMant(d); if(!info) return;
- let costoStr = prompt('¿Costo del mantenimiento para '+d.cliente+' - '+d.capacidadTrabajo+'?\nEj: 25\nSi fue gratis poné 0');
+ // 1. Pregunta qué le hizo
+ let queHizo = prompt('¿Qué le hiciste a '+d.cliente+' - '+d.capacidadTrabajo+'?\nEj: Limpieza, Limpieza + Gas, Reparación');
+ if(queHizo===null) return;
+ // 2. MONTO OBLIGATORIO - Si no pone monto, NO se borra nada
+ let costoStr = prompt('¿Cuánto cobraste por el mantenimiento a '+d.cliente+'?\n⚠️ OBLIGATORIO - Si no ponés monto, NO se va a marcar como hecho.\nEj: 25 - Si fue gratis poné 0');
  if(costoStr===null) return;
- let costo = parseFloat(costoStr||0);
+ costoStr=(costoStr||'').trim();
+ if(costoStr==='' || isNaN(parseFloat(costoStr))){
+   alert('❌ NO se marcó como hecho.\nTenés que poner un monto. Si fue gratis poné 0.');
+   return;
+ }
+ let costo = parseFloat(costoStr);
+ if(costo<0){ alert('❌ El monto no puede ser negativo.'); return; }
  let hoyStr = new Date().toISOString().slice(0,10);
  if(!d.historialMant) d.historialMant=[];
- d.historialMant.unshift({fecha: hoyStr, costo: costo, baseAnterior: info.baseStr, vencimientoAnterior: info.venceStr});
+ d.historialMant.unshift({fecha: hoyStr, costo: costo, que: queHizo||'', baseAnterior: info.baseStr, vencimientoAnterior: info.venceStr});
  d.ultimoMant = hoyStr;
  d.ultimoCostoMant = costo;
- // Marcar hecho en ruta de hoy
+ d.ultimoQueMant = queHizo||'';
+ // Comunicación Ruta <-> Mantenimiento: marcar hecho en ruta del día también
  let fechaRuta = document.getElementById('rutaFecha').value || hoyStr;
  if(!d.rutaHecha) d.rutaHecha={};
  d.rutaHecha[fechaRuta]=true;
  save();
- alert('✅ Mantenimiento hecho guardado aparte\nCliente: '+d.cliente+'\nFecha: '+hoyStr+'\nCosto: $'+costo+'\nPróximo: en 90 días');
+ let proximo = sumarDias(parseFecha(hoyStr), diasMant(d));
+ alert('✅ Mantenimiento hecho\nCliente: '+d.cliente+'\nQué hizo: '+(queHizo||'-')+'\nCosto: $'+costo+'\nFecha: '+hoyStr+'\nPróximo: '+fmtFecha(proximo)+' (en '+diasMant(d)+' días)\nYa se borró de Alertas y de Ruta.');
 }
+// === CORREGIDO: Antes solo lo quitaba de Ruta, ahora reinicia conteo igual que Mantenimiento hecho ===
 function marcarRutaHecha(idx){
- let fechaRuta = document.getElementById('rutaFecha').value || new Date().toISOString().slice(0,10);
- let d=datos[idx];
- if(!d.rutaHecha) d.rutaHecha={};
- d.rutaHecha[fechaRuta]=true;
- save();
+ // Mismo comportamiento que hacerMantenimiento para que no quede la confusión de 2 botones distintos
+ hacerMantenimiento(idx);
 }
 function desmarcarRuta(idx){
  let fechaRuta = document.getElementById('rutaFecha').value || new Date().toISOString().slice(0,10);
@@ -401,10 +414,16 @@ function avisarWhatsApp(d){
 function compartirRuta(){
  let fechaRuta = document.getElementById('rutaFecha').value || new Date().toISOString().slice(0,10);
  let dep = document.getElementById('rutaDep').value;
- let items = datos.map(d=>({d, info: infoMant(d)})).filter(x=>x.info && x.info.dias<=15);
+ // Ruta = mantenimientos por vencer + instalaciones pendientes
+ let itemsMant = datos.map(d=>({d, info: infoMant(d), tipo:'mant'})).filter(x=>x.info && x.info.dias<=15);
+ let itemsPend = datos.filter(d=>d.estado==='pendiente').map(d=>({d, info: infoMant(d), tipo:'pend'}));
+ let items=[...itemsMant, ...itemsPend];
  if(dep!=='todos') items = items.filter(x=>x.d.departamento===dep);
  if(!items.length) return alert('No hay ruta para compartir.');
- let texto = `🚗 RUTA ${fechaRuta} - ${dep==='todos'?'Todos':dep}\n` + items.map((x,i)=>`${i+1}. ${x.d.cliente} - ${x.d.telefono} - ${x.d.departamento} - ${x.d.capacidadTrabajo} - ${x.info.dias<0?Math.abs(x.info.dias)+' días sin mant.':x.info.dias+' días'}`).join('\n');
+ let texto = `🚗 RUTA ${fechaRuta} - ${dep==='todos'?'Todos':dep}\n` + items.map((x,i)=>{
+   if(x.tipo==='pend') return `${i+1}. 🔧 INSTALAR / COBRAR - ${x.d.cliente} - ${x.d.telefono} - ${x.d.departamento} - ${x.d.capacidadTrabajo} - PENDIENTE $${x.d.monto}`;
+   return `${i+1}. 🔧 MANT. - ${x.d.cliente} - ${x.d.telefono} - ${x.d.departamento} - ${x.d.capacidadTrabajo} - ${x.info.dias<0?Math.abs(x.info.dias)+' días sin mant.':x.info.dias+' días'}`;
+ }).join('\n');
  window.open('https://wa.me/?text='+encodeURIComponent(texto));
 }
 function cargarCapacidades(){
@@ -504,7 +523,7 @@ function agregarOtroEquipo(telefono){
  document.getElementById('fFechaTrabajo').value=''; document.getElementById('fCapacidadTrabajo').value=''; document.getElementById('fSistema').value=''; fTrabajador.value=ultimo.trabajador||''; fFrecuencia.value=ultimo.frecuencia||'3'; document.getElementById('fEstado').value='pendiente'; fGarantiaProv.value=''; document.getElementById('fMonto').value=''; document.getElementById('fMontoPendiente').value='';
  toggleSeriesInternas();
  window.scrollTo(0,0);
- alert('Listo para agregar otro equipo a '+ultimo.cliente+'\nYa te llené nombre, teléfono y cumpleaños. Vos elegís el nuevo departamento, capacidad, fecha y precio.');
+ alert('Listo para agregar otro equipo a '+ultimo.cliente);
 }
 function abrirPago(idx){
  let d=datos[idx];
@@ -546,9 +565,10 @@ function confirmarPagoConSeries(){
  let compra=getCostoSerie(m)+getCostoSerie(c);
  d.serieManejadora=m; d.serieCondensadora=c; d.precioCompra=compra; d.ganancia=parseFloat(d.monto||0)-compra;
  d.estado='pagado'; d.fechaPago=new Date().toISOString();
+ // CORREGIDO: Al pagar, sale de Ruta del Día porque ya no es pendiente
  inventario=inventario.filter(x=>x.serie!==m && x.serie!==c);
  cerrarModalSerie(); save();
- alert('✅ Pagado\nManejadora: '+m+'\nCondensadora: '+c+'\nCompra: $'+compra+'\nVenta: $'+d.monto+'\nGanancia: $'+d.ganancia+'\nSe descontó SOLO de Inventario. Factura quedó intacta.');
+ alert('✅ Pagado\nManejadora: '+m+'\nCondensadora: '+c+'\nCompra: $'+compra+'\nVenta: $'+d.monto+'\nGanancia: $'+d.ganancia+'\nYa se quitó de Ruta del Día. Se descontó SOLO de Inventario.');
 }
 function generarVista(){
  let esPagado=document.getElementById('fEstado').value==='pagado';
@@ -632,7 +652,6 @@ function render(){
  let items = alertasPorDep[dep].map(({d,info})=>`• ${d.cliente} - ${d.telefono} - ${d.capacidadTrabajo} - ${info.dias<0?Math.abs(info.dias)+' días sin mant.':info.dias+' días'}`).join('<br>');
  return `<div class="mt-1"><b>📍 ${dep} - ${alertasPorDep[dep].length} equipos:</b><br>${items}</div>`;
  }).join(''): '';
- // ALERTAS GARANTIA
  let infosGar = datos.map(d=>({d, info: infoGarantia(d)})).filter(x=>x.info);
  let garPorVencer = infosGar.filter(x=>x.info.dias<=30 && x.info.dias>=0);
  let garVencidas = infosGar.filter(x=>x.info.dias<0);
@@ -640,7 +659,6 @@ function render(){
  document.getElementById('garVigentes').innerText = infosGar.filter(x=>x.info.dias>30).length;
  document.getElementById('garPorVencer').innerText = garPorVencer.length;
  document.getElementById('garVencidas').innerText = garVencidas.length;
- // GARANTIAS LISTA - AGRUPADO POR CLIENTE
  let listaGar = infosGar.slice().sort((a,b)=>a.info.dias-b.info.dias);
  if(filtroGar==='vigentes') listaGar = listaGar.filter(x=>x.info.dias>30);
  if(filtroGar==='porvencer') listaGar = listaGar.filter(x=>x.info.dias<=30 && x.info.dias>=0);
@@ -662,19 +680,39 @@ function render(){
  </div>`;
  }).join('');
  return `<div class="bg-white p-4 rounded-2xl shadow border"><p class="font-black text-lg">${primero.cliente} - ${primero.telefono}</p><p class="text-xs text-gray-500 font-bold">Equipos con garantía: ${grupo.length}</p>${equiposHtml}</div>`;
- }).join('') || '<p class="text-center text-gray-400 py-6 font-bold">Sin garantías todavía. Poné la fecha de garantía cuando registrás la venta.</p>';
- // RUTA DEL DIA
+ }).join('') || '<p class="text-center text-gray-400 py-6 font-bold">Sin garantías todavía.</p>';
+
+ // === RUTA DEL DIA CORREGIDA: Mantenimientos + Instalaciones Pendientes ===
  let fechaRuta = document.getElementById('rutaFecha').value || new Date().toISOString().slice(0,10);
  let depRuta = document.getElementById('rutaDep').value || 'todos';
- let rutaItems = infosMant.filter(x=>x.info.dias<=15);
+ // 1. Mantenimientos por vencer
+ let rutaMant = infosMant.filter(x=>x.info.dias<=15).map(x=>({...x, tipo:'mant'}));
+ // 2. Instalaciones PENDIENTE DE PAGAR - si se paga, ya no aparece porque estado cambia a pagado
+ let rutaPend = datos.filter(d=>d.estado==='pendiente').map(d=>({d, info: infoMant(d), tipo:'pend'}));
+ let rutaItems = [...rutaMant, ...rutaPend];
  if(depRuta!=='todos') rutaItems = rutaItems.filter(x=>x.d.departamento===depRuta);
- rutaItems = rutaItems.sort((a,b)=>a.info.dias-b.info.dias);
- let hechosRuta = rutaItems.filter(x=>x.d.rutaHecha && x.d.rutaHecha[fechaRuta]);
- let pendientesRuta = rutaItems.filter(x=>!(x.d.rutaHecha && x.d.rutaHecha[fechaRuta]));
+ rutaItems = rutaItems.sort((a,b)=>{
+   if(a.tipo!==b.tipo) return a.tipo==='pend' ? -1 : 1;
+   return (a.info?a.info.dias:0)-(b.info?b.info.dias:0);
+ });
+ let hechosRuta = rutaItems.filter(x=>x.tipo==='mant' && x.d.rutaHecha && x.d.rutaHecha[fechaRuta]);
+ let pendientesRuta = rutaItems.filter(x=>!(x.tipo==='mant' && x.d.rutaHecha && x.d.rutaHecha[fechaRuta]));
  let mostrarRuta = filtroRuta==='hechos' ? hechosRuta: (filtroRuta==='pendientes' ? pendientesRuta: rutaItems);
  document.getElementById('rutaResumen').innerText = `📍 ${depRuta==='todos'?'Todos los departamentos':depRuta} • ${fechaRuta} • Total ruta: ${rutaItems.length} • Pendientes: ${pendientesRuta.length} • Hechos: ${hechosRuta.length}`;
- document.getElementById('listaRutaDia').innerHTML = mostrarRuta.map(({d,info},i)=>{
+ document.getElementById('listaRutaDia').innerHTML = mostrarRuta.map((item,i)=>{
+ let d=item.d; let info=item.info;
  let idx=datos.indexOf(d);
+ if(item.tipo==='pend'){
+   return `<div class="border bg-yellow-50 border-yellow-300 rounded-2xl p-3">
+ <div class="flex justify-between"><p class="font-black text-lg">${i+1}. 🔧 INSTALAR / COBRAR - ${d.cliente} - ${d.telefono}</p><span class="text-xs font-black text-yellow-600">PENDIENTE $${d.monto}</span></div>
+ <p class="text-xs font-bold">📍 ${d.departamento} • ${d.capacidadTrabajo} • ${d.sistema||''} • Instalado: ${d.fechaTrabajo||'-'}</p>
+ <p class="text-xs font-bold">🔢 ${d.serieManejadora||'Sin serie'} / ${d.serieCondensadora||'Sin serie'}</p>
+ <div class="flex gap-2 mt-2 flex-wrap">
+ <button onclick="abrirPago(${idx})" class="bg-yellow-400 px-3 py-2 rounded-full text-xs font-black">💰 PAGAR - Se quita de Ruta</button>
+ <button onclick="avisarWhatsApp(datos[${idx}])" class="bg-green-500 text-white px-3 py-2 rounded-full text-xs font-black">💬 Ya voy</button>
+ </div>
+ </div>`;
+ }
  let hecho = d.rutaHecha && d.rutaHecha[fechaRuta];
  let texto = info.dias>0 ? `${info.dias} días para mantenimiento`: (info.dias===0 ? `HOY toca`: `${Math.abs(info.dias)} días sin mantenimiento`);
  return `<div class="border ${hecho?'bg-green-50 border-green-300 opacity-70':'bg-white'} rounded-2xl p-3">
@@ -682,10 +720,11 @@ function render(){
  <p class="text-xs font-bold">📍 ${d.departamento} • ${d.capacidadTrabajo} • ${d.sistema||''} • Toca: ${info.venceStr}</p>
  <p class="text-xs font-bold">🔢 ${d.serieManejadora||'Sin serie'} / ${d.serieCondensadora||'Sin serie'}</p>
  <div class="flex gap-2 mt-2 flex-wrap">
- ${!hecho ? `<button onclick="marcarRutaHecha(${idx})" class="bg-blue-600 text-white px-3 py-2 rounded-full text-xs font-black">✅ Marcar hecho en ruta</button><button onclick="avisarWhatsApp(datos[${idx}])" class="bg-green-500 text-white px-3 py-2 rounded-full text-xs font-black">💬 Ya voy</button><button onclick="hacerMantenimiento(${idx})" class="bg-green-600 text-white px-3 py-2 rounded-full text-xs font-black">🔧 Mant. hecho + $</button>`: `<button onclick="desmarcarRuta(${idx})" class="bg-gray-200 px-3 py-2 rounded-full text-xs font-black">↩️ Quitar hecho</button>`}
+ ${!hecho ? `<button onclick="marcarRutaHecha(${idx})" class="bg-blue-600 text-white px-3 py-2 rounded-full text-xs font-black">✅ Hecho - Pide monto y reinicia</button><button onclick="avisarWhatsApp(datos[${idx}])" class="bg-green-500 text-white px-3 py-2 rounded-full text-xs font-black">💬 Ya voy</button><button onclick="hacerMantenimiento(${idx})" class="bg-green-600 text-white px-3 py-2 rounded-full text-xs font-black">🔧 Mant. hecho + $</button>`: `<button onclick="desmarcarRuta(${idx})" class="bg-gray-200 px-3 py-2 rounded-full text-xs font-black">↩️ Quitar hecho</button>`}
  </div>
  </div>`;
- }).join('') || '<p class="text-center text-gray-400 py-6 font-bold">No hay ruta para este departamento / fecha. Cambiá el departamento a Todos.</p>';
+ }).join('') || '<p class="text-center text-gray-400 py-6 font-bold">No hay ruta para este departamento / fecha.</p>';
+
  document.getElementById('mantAlDia').innerText = infosMant.filter(x=>x.info.dias>15).length;
  document.getElementById('mantPorVencer').innerText = porVencerMant.length;
  document.getElementById('mantVencidos').innerText = vencidosMant.length;
@@ -696,10 +735,10 @@ function render(){
  let items = gruposRuta[dep].map(({d,info})=>{
  let idx=datos.indexOf(d);
  let texto = info.dias>0 ? `${info.dias} días para mantenimiento`: (info.dias===0 ? `HOY toca`: `${Math.abs(info.dias)} días sin mantenimiento`);
- return `<div class="bg-white border rounded-xl p-2 flex justify-between items-center"><div><p class="text-xs font-black">${d.cliente} - ${d.telefono} - ${d.capacidadTrabajo} - ${d.sistema||''}</p><p class="text- font-bold">🔢 ${d.serieManejadora||'Sin serie'} / ${d.serieCondensadora||'Sin serie'} • ${texto}</p></div><button onclick="hacerMantenimiento(${idx})" class="bg-green-600 text-white px-3 py-1 rounded-full text- font-black">✅ Hecho</button></div>`;
+ return `<div class="bg-white border rounded-xl p-2 flex justify-between items-center"><div><p class="text-xs font-black">${d.cliente} - ${d.telefono} - ${d.capacidadTrabajo} - ${d.sistema||''}</p><p class="text-xs font-bold">🔢 ${d.serieManejadora||'Sin serie'} / ${d.serieCondensadora||'Sin serie'} • ${texto}</p></div><button onclick="hacerMantenimiento(${idx})" class="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-black">✅ Hecho</button></div>`;
  }).join('');
  return `<div class="border rounded-xl p-2"><h4 class="font-black text-sm">📍 ${dep} - ${gruposRuta[dep].length} equipos</h4>${items}</div>`;
- }).join(''): '<p class="text-xs font-bold text-gray-500">Ninguno por vencer. No tenés ruta pendiente.</p>';
+ }).join(''): '<p class="text-xs font-bold text-gray-500">Ninguno por vencer.</p>';
  let listaMant = infosMant.slice().sort((a,b)=>a.info.dias-b.info.dias);
  if(filtroMant==='porvencer') listaMant = listaMant.filter(x=>x.info.dias<=15 && x.info.dias>=0);
  if(filtroMant==='vencidos') listaMant = listaMant.filter(x=>x.info.dias<0);
@@ -711,19 +750,19 @@ function render(){
  let idx=datos.indexOf(d);
  let color = info.dias<0 ? 'bg-red-50 border-red-300': (info.dias<=15 ? 'bg-yellow-50 border-yellow-300': 'bg-green-50 border-green-300');
  let textoDias = info.dias>0 ? `${info.dias} días para mantenimiento`: (info.dias===0 ? `HOY toca mantenimiento`: `${Math.abs(info.dias)} días sin mantenimiento`);
- let hist = (d.historialMant||[]).map(h=>`${h.fecha} - $${h.costo}`).join(' • ');
+ let hist = (d.historialMant||[]).map(h=>`${h.fecha} - $${h.costo} ${h.que?'- '+h.que:''}`).join(' • ');
  return `<div class="border ${color} rounded-xl p-3 mt-2">
  <p class="text-xs font-black">📍 Ubicación: ${d.departamento||'Sin departamento'} • ${d.capacidadTrabajo} • ${d.sistema||''} • Instalado: ${info.baseStr}</p>
  <p class="text-xs font-black">🔢 Serie Manejadora: ${d.serieManejadora||'Sin serie todavía'} • Serie Condensadora: ${d.serieCondensadora||'Sin serie todavía'}</p>
- <p class="text-xs font-black">Toca: ${info.venceStr}</p>
+ <p class="text-xs font-black">Toca: ${info.venceStr} • Cada ${d.frecuencia||3} meses</p>
  <p class="text-sm font-black ${info.dias<0?'text-red-600':info.dias<=15?'text-yellow-600':'text-green-600'}">${textoDias}</p>
- <p class="text-xs font-bold">Último mantenimiento hecho: ${d.ultimoMant||'Ninguno todavía - cuenta desde instalación'} ${d.ultimoCostoMant!==undefined?' - Costo $'+d.ultimoCostoMant:''}</p>
- ${hist?`<p class="text- text-gray-600 font-bold">Historial aparte: ${hist}</p>`:''}
+ <p class="text-xs font-bold">Último mantenimiento hecho: ${d.ultimoMant||'Ninguno todavía - cuenta desde instalación'} ${d.ultimoCostoMant!==undefined?' - Costo $'+d.ultimoCostoMant:''} ${d.ultimoQueMant?'- '+d.ultimoQueMant:''}</p>
+ ${hist?`<p class="text-xs text-gray-600 font-bold">Historial aparte: ${hist}</p>`:''}
  <button onclick="hacerMantenimiento(${idx})" class="mt-2 bg-green-600 text-white px-4 py-2 rounded-full text-xs font-black">✅ Mantenimiento hecho</button>
  </div>`;
  }).join('');
  return `<div class="bg-white p-4 rounded-2xl shadow border"><p class="font-black text-lg">${primero.cliente} - ${primero.telefono}</p><p class="text-xs text-gray-500 font-bold">Equipos: ${grupo.length} • Cumple: ${primero.cumple||'-'}</p>${equiposHtml}</div>`;
- }).join('') || '<p class="text-center text-gray-400 py-6 font-bold">Sin mantenimientos todavía. Agregá una venta.</p>';
+ }).join('') || '<p class="text-center text-gray-400 py-6 font-bold">Sin mantenimientos todavía.</p>';
  let grupos={};
  lista.forEach(d=>{ let key=(d.telefono||d.cliente||'').trim()||d.cliente; if(!grupos[key]) grupos[key]=[]; grupos[key].push(d); });
  document.getElementById('lista').innerHTML=Object.values(grupos).map(grupo=>{
@@ -733,7 +772,7 @@ function render(){
  let idx=datos.indexOf(d); let esPend=d.estado==='pendiente';
  let im=infoMant(d);
  let mantTxt = im ? (im.dias<0?`🔴 ${Math.abs(im.dias)} días sin mantenimiento`: im.dias<=15?`🟡 ${im.dias} días para mantenimiento`: `🟢 ${im.dias} días para mantenimiento`): '';
- let histMant = (d.historialMant||[]).map(h=>`${h.fecha} $${h.costo}`).join(' • ');
+ let histMant = (d.historialMant||[]).map(h=>`${h.fecha} $${h.costo} ${h.que?'- '+h.que:''}`).join(' • ');
  let ig=infoGarantia(d);
  let garTxt = ig ? (ig.dias<0?`🔴 Garantía vencida hace ${Math.abs(ig.dias)} días`: ig.dias<=30?`🟡 Garantía vence en ${ig.dias} días (${ig.venceStr})`: `🟢 Garantía hasta ${ig.venceStr}`): 'Sin garantía';
  return `<div class="border rounded-xl p-3 mt-2 ${esPend?'bg-yellow-50':'bg-green-50'}">
@@ -741,7 +780,7 @@ function render(){
  <p class="text-xs font-black ${esPend?'text-yellow-600':'text-green-600'}">${esPend?'⏳ PENDIENTE DE PAGAR':'✅ PAGADO'} - Venta $${d.monto} ${d.precioCompra!==undefined?`• Compra $${d.precioCompra} • Ganancia $${d.ganancia||0}`:''}</p>
  <p class="text-xs font-black">🔧 ${mantTxt} - Toca: ${im?im.venceStr:'-'}</p>
  <p class="text-xs font-black">🛡️ ${garTxt}</p>
- ${histMant?`<p class="text- font-bold text-gray-600">Historial mant. aparte: ${histMant}</p>`:''}
+ ${histMant?`<p class="text-xs font-bold text-gray-600">Historial mant. aparte: ${histMant}</p>`:''}
  ${d.serieManejadora?`<p class="text-sm font-black">Manejadora: ${d.serieManejadora} • Condensadora: ${d.serieCondensadora}</p>`:`<p class="text-xs text-gray-500 font-bold">Sin series todavía - Apretá PENDIENTE DE PAGAR para elegirlas</p>`}
  <div class="flex gap-2 mt-2 flex-wrap">${esPend ? `<button onclick="abrirPago(${idx})" class="bg-yellow-400 px-4 py-2 rounded-full text-xs font-black">⏳ PENDIENTE DE PAGAR</button>`: `<span class="bg-green-100 px-3 py-1 rounded-full text-xs font-black">✅ PAGADO</span>`}<button onclick="editar(${idx})" class="bg-white border px-3 py-1 rounded-full text-xs font-black">✏️ Editar este equipo</button></div>
  </div>`;
@@ -750,14 +789,14 @@ function render(){
  }).join('')||'<p class="text-center text-gray-400 py-6 font-bold">Sin registros</p>';
  let facFiltrado=facturas.filter(x=>(x.modelo||'').toLowerCase().includes(q)||(x.serie||'').toLowerCase().includes(q)||(x.descripcion||'').toLowerCase().includes(q)||(x.marca||'').toLowerCase().includes(q)||(x.factura||'').toLowerCase().includes(q));
  document.getElementById('totalInv5').innerText=inventario.length+' equipos en bodega • '+facturas.length+' en Factura historial';
- document.getElementById('listaFactura').innerHTML=facFiltrado.map((x)=>{ let idx=facturas.indexOf(x); let enInv=inventario.some(v=>v.serie===x.serie); return `<div class="border p-2 rounded-xl text-xs font-bold"><b class="font-black">${x.modelo} - Serie ${x.serie}</b> ${enInv?'<span class="bg-green-100 px-2 py-0.5 rounded-full text- font-black">En Inventario</span>':'<span class="bg-gray-200 px-2 py-0.5 rounded-full text- font-black">Ya vendido - Solo en Factura</span>'}<br>📅 ${x.fecha||'-'} • 🧾 Factura: ${x.factura||'-'} (${x.tipoFactura||'-'}) • 🛡️ Garantía: ${x.garantia||'-'} • 🏢 ${x.sucursal||'-'}<br>${x.descripcion} • ${x.capacidad} • ${x.marca} • Costo $${x.precioCosto||0}<br><button onclick="editarInventario(${idx})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-black mt-1">✏️ Editar</button></div>`; }).join('')||'<p class="text-xs text-gray-400">Sin facturas.</p>';
+ document.getElementById('listaFactura').innerHTML=facFiltrado.map((x)=>{ let idx=facturas.indexOf(x); let enInv=inventario.some(v=>v.serie===x.serie); return `<div class="border p-2 rounded-xl text-xs font-bold"><b class="font-black">${x.modelo} - Serie ${x.serie}</b> ${enInv?'<span class="bg-green-100 px-2 py-0.5 rounded-full text-xs font-black">En Inventario</span>':'<span class="bg-gray-200 px-2 py-0.5 rounded-full text-xs font-black">Ya vendido - Solo en Factura</span>'}<br>📅 ${x.fecha||'-'} • 🧾 Factura: ${x.factura||'-'} (${x.tipoFactura||'-'}) • 🛡️ Garantía: ${x.garantia||'-'} • 🏢 ${x.sucursal||'-'}<br>${x.descripcion} • ${x.capacidad} • ${x.marca} • Costo $${x.precioCosto||0}<br><button onclick="editarInventario(${idx})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-black mt-1">✏️ Editar</button></div>`; }).join('')||'<p class="text-xs text-gray-400">Sin facturas.</p>';
  let gruposInv={};
  inventario.forEach(x=>{ let key=(x.modelo||'').trim().toLowerCase(); if(!gruposInv[key]) gruposInv[key]={modelo:x.modelo,descripcion:x.descripcion,capacidad:x.capacidad,marca:x.marca,cant:0}; gruposInv[key].cant++; });
  let gruposArr=Object.values(gruposInv);
  document.getElementById('listaInv').innerHTML=gruposArr.map(g=>{
  let apartados=datos.filter(d=>d.estado==='pendiente' && normCap(d.capacidadTrabajo)===normCap(g.capacidad)).length;
  let disponible=Math.max(0, g.cant - apartados);
- return `<tr class="border-b"><td class="p-2 border text-center font-black text-lg">${g.cant}</td><td class="p-2 border text-center font-black text-yellow-600">${apartados}</td><td class="p-2 border text-center font-black ${disponible===0?'text-red-600':'text-green-600'}">${disponible}</td><td class="p-2 border font-black">${g.modelo}</td><td class="p-2 border text- font-bold">${g.descripcion}</td><td class="p-2 border font-bold">${g.capacidad}</td><td class="p-2 border font-bold">${g.marca}</td></tr>`;
+ return `<tr class="border-b"><td class="p-2 border text-center font-black text-lg">${g.cant}</td><td class="p-2 border text-center font-black text-yellow-600">${apartados}</td><td class="p-2 border text-center font-black ${disponible===0?'text-red-600':'text-green-600'}">${disponible}</td><td class="p-2 border font-black">${g.modelo}</td><td class="p-2 border text-xs font-bold">${g.descripcion}</td><td class="p-2 border font-bold">${g.capacidad}</td><td class="p-2 border font-bold">${g.marca}</td></tr>`;
  }).join('')||'<tr><td colspan="7" class="p-2 text-center text-gray-400 font-bold">Sin inventario. En Factura sí queda el historial.</td></tr>';
  document.getElementById('listaGastos').innerHTML=gastos.map(x=>`<div class="border p-2 rounded-xl text-sm font-bold">${x.desc} - $${x.monto} - ${x.tipo}</div>`).join('');
  document.getElementById('listaTrab').innerHTML=trabajadores.map(x=>`<div class="border p-2 rounded-xl text-sm font-bold">${x.nombre} - clave: ${x.clave}</div>`).join('');
