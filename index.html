@@ -5,252 +5,245 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Climaserv - El Paraíso</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<style>h1,h2,h3,label,.titulo{font-weight:900 !important}</style>
 </head>
 <body class="bg-gray-100 pb-24">
 
 <div id="login" class="fixed inset-0 bg-blue-600 z-50 flex flex-col items-center justify-center p-6 text-white">
-  <h1 class="text-3xl font-bold">❄️ Climaserv</h1>
-  <p class="text-xs">El Paraíso • Privado</p>
+  <h1 class="text-3xl font-black">❄️ Climaserv</h1>
+  <p class="text-xs font-bold">El Paraíso • Privado</p>
   <input id="claveInput" type="password" placeholder="Tu clave" class="mt-6 w-full max-w-xs p-3 rounded-xl text-black text-center">
-  <button onclick="entrar()" class="mt-3 w-full max-w-xs bg-white text-blue-600 py-3 rounded-xl font-bold">Entrar</button>
+  <button onclick="entrar()" class="mt-3 w-full max-w-xs bg-white text-blue-600 py-3 rounded-xl font-black">Entrar</button>
   <p id="errorClave" class="text-xs mt-2 text-yellow-200"></p>
 </div>
 
 <div id="app" class="hidden">
 <header class="bg-blue-600 text-white p-4 sticky top-0 z-10">
   <div class="flex justify-between items-center">
-    <div><h1 class="text-xl font-bold">❄️ Control A/C</h1><p class="text-xs opacity-80">Climaserv • El Paraíso</p></div>
-    <div><button onclick="exportar()" class="bg-white text-blue-600 text-xs px-3 py-2 rounded-full font-bold">📤 Copia</button></div>
+    <div><h1 class="text-xl font-black">❄️ Control A/C</h1><p class="text-xs opacity-80 font-bold">Climaserv • El Paraíso</p></div>
+    <div><button onclick="exportar()" class="bg-white text-blue-600 text-xs px-3 py-2 rounded-full font-black">📤 Copia</button></div>
   </div>
   <input id="buscador" oninput="render()" placeholder="🔍 Buscar: cliente, serie, teléfono, capacidad..." class="w-full mt-3 p-3 rounded-xl text-black">
   <div class="flex gap-2 mt-3 overflow-x-auto">
-    <button onclick="setFiltro('todos')" class="bg-white text-blue-600 px-3 py-1 rounded-full text-xs font-bold">Todos</button>
-    <button onclick="setFiltro('pendiente')" class="bg-yellow-400 px-3 py-1 rounded-full text-xs font-bold">⏳ Pendientes</button>
-    <button onclick="setFiltro('pagado')" class="bg-green-400 px-3 py-1 rounded-full text-xs font-bold">✅ Pagados</button>
-    <button onclick="buscarSerie()" class="bg-black text-white px-3 py-1 rounded-full text-xs font-bold">🔎 Por Serie</button>
+    <button onclick="setFiltro('todos')" class="bg-white text-blue-600 px-3 py-1 rounded-full text-xs font-black">Todos</button>
+    <button onclick="setFiltro('pendiente')" class="bg-yellow-400 px-3 py-1 rounded-full text-xs font-black">⏳ Pendientes de Pagar</button>
+    <button onclick="setFiltro('pagado')" class="bg-green-400 px-3 py-1 rounded-full text-xs font-black">✅ Pagados</button>
+    <button onclick="buscarSerie()" class="bg-black text-white px-3 py-1 rounded-full text-xs font-black">🔎 Por Serie</button>
   </div>
 </header>
 
 <div class="grid grid-cols-3 gap-2 p-3">
-  <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs">Total</p><p id="statTotal" class="font-bold text-blue-600">$0</p></div>
-  <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs">Pendiente</p><p id="statPend" class="font-bold text-yellow-600">$0</p></div>
-  <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs">Cobrado</p><p id="statCob" class="font-bold text-green-600">$0</p></div>
+  <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs font-black">Total</p><p id="statTotal" class="font-black text-blue-600">$0</p></div>
+  <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs font-black">Pendiente de Pagar</p><p id="statPend" class="font-black text-yellow-600">$0</p></div>
+  <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs font-black">Cobrado</p><p id="statCob" class="font-black text-green-600">$0</p></div>
 </div>
 
-<div class="mx-3 bg-yellow-50 border rounded-xl p-3 text-xs"><b>🔔 Alertas:</b> <span id="alertas"></span></div>
-<div class="mx-3 mt-2 bg-blue-50 border rounded-xl p-3 text-xs"><b>🎂 Cumpleaños:</b> <span id="alertasCumple"></span></div>
+<div class="mx-3 bg-yellow-50 border rounded-xl p-3 text-xs"><b class="font-black">🔔 Alertas:</b> <span id="alertas"></span></div>
+<div class="mx-3 mt-2 bg-blue-50 border rounded-xl p-3 text-xs"><b class="font-black">🎂 Cumpleaños:</b> <span id="alertasCumple"></span></div>
 
 <div class="flex gap-2 p-3 overflow-x-auto">
-  <button onclick="showTab('trabajos')" class="bg-blue-600 text-white px-4 py-2 rounded-full text-xs font-bold">Trabajos</button>
-  <button onclick="showTab('catalogo')" class="bg-white px-4 py-2 rounded-full text-xs font-bold border-2 border-blue-600">📋 Catálogo</button>
-  <button onclick="showTab('factura')" class="bg-white px-4 py-2 rounded-full text-xs font-bold border-2 border-green-600">🧾 Factura</button>
-  <button onclick="showTab('inventario')" class="bg-white px-4 py-2 rounded-full text-xs font-bold border-2 border-black">📦 Inventario</button>
-  <button onclick="showTab('gastos')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Gastos</button>
-  <button onclick="showTab('calendario')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Calendario</button>
-  <button onclick="showTab('reportes')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Reportes</button>
-  <button onclick="showTab('precios')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Precios / PDF</button>
-  <button onclick="showTab('trabajadores')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Trabajadores</button>
+  <button onclick="showTab('trabajos')" class="bg-blue-600 text-white px-4 py-2 rounded-full text-xs font-black">Trabajos</button>
+  <button onclick="showTab('catalogo')" class="bg-white px-4 py-2 rounded-full text-xs font-black border-2 border-blue-600">📋 Catálogo</button>
+  <button onclick="showTab('factura')" class="bg-white px-4 py-2 rounded-full text-xs font-black border-2 border-green-600">🧾 Factura</button>
+  <button onclick="showTab('inventario')" class="bg-white px-4 py-2 rounded-full text-xs font-black border-2 border-black">📦 Inventario</button>
+  <button onclick="showTab('gastos')" class="bg-white px-4 py-2 rounded-full text-xs font-black">Gastos</button>
+  <button onclick="showTab('calendario')" class="bg-white px-4 py-2 rounded-full text-xs font-black">Calendario</button>
+  <button onclick="showTab('reportes')" class="bg-white px-4 py-2 rounded-full text-xs font-black">Reportes</button>
+  <button onclick="showTab('precios')" class="bg-white px-4 py-2 rounded-full text-xs font-black">Precios / PDF</button>
+  <button onclick="showTab('trabajadores')" class="bg-white px-4 py-2 rounded-full text-xs font-black">Trabajadores</button>
 </div>
 
-<!-- TRABAJOS - SIMPLIFICADO -->
 <div id="tab-trabajos" class="tab">
   <div class="mx-3 bg-white rounded-2xl p-4 shadow">
-    <h2 class="font-bold mb-2">Registrar Trabajo</h2>
-    <label class="text-xs font-bold">Cliente</label>
+    <h2 class="font-black text-lg">Registrar Trabajo</h2>
+    <label class="text-xs font-black">Cliente</label>
     <input id="fCliente" placeholder="Cliente" class="w-full border p-3 rounded-xl mb-2">
-    <label class="text-xs font-bold">Teléfono</label>
+    <label class="text-xs font-black">Teléfono</label>
     <input id="fTelefono" placeholder="Ej: 70001234" inputmode="numeric" class="w-full border p-3 rounded-xl mb-2">
-    <label class="text-xs font-bold">Departamento ▼</label>
-    <select id="fDepartamento" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-bold">
+    <label class="text-xs font-black">Departamento ▼</label>
+    <select id="fDepartamento" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-black">
       <option value="">Seleccionar Departamento ▼</option>
       <option>Ahuachapán</option><option>Cabañas</option><option>Chalatenango</option><option>Cuscatlán</option><option>La Libertad</option><option>La Paz</option><option>La Unión</option><option>Morazán</option><option>San Miguel</option><option>San Salvador</option><option>San Vicente</option><option>Santa Ana</option><option>Sonsonate</option><option>Usulután</option>
     </select>
-    <label class="text-xs font-bold">Fecha de instalación</label>
+    <label class="text-xs font-black">Fecha de instalación</label>
     <input id="fFechaTrabajo" type="date" class="w-full border p-3 rounded-xl mb-2">
-    <label class="text-xs font-bold">Fecha cumpleaños del cliente (opcional)</label>
+    <label class="text-xs font-black">Fecha cumpleaños del cliente (opcional)</label>
     <input id="fCumple" type="date" class="w-full border p-3 rounded-xl mb-2">
-    <label class="text-xs font-bold">Capacidad - De Inventario, sin duplicar ▼</label>
-    <select id="fCapacidadTrabajo" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-bold"></select>
-    <label class="text-xs font-bold">Elegir sistema ▼</label>
-    <select id="fSistema" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-bold">
-      <option value="">Elegir sistema ▼</option>
-      <option value="CONVENCIONAL">CONVENCIONAL</option>
-      <option value="INVERTER">INVERTER</option>
+    <label class="text-xs font-black">Capacidad - De Inventario, sin duplicar ▼</label>
+    <select id="fCapacidadTrabajo" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-black"></select>
+    <label class="text-xs font-black">Elegir sistema ▼</label>
+    <select id="fSistema" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-black">
+      <option value="">Elegir sistema ▼</option><option value="CONVENCIONAL">CONVENCIONAL</option><option value="INVERTER">INVERTER</option>
     </select>
-    <label class="text-xs font-bold">Trabajador que lo hizo</label>
+    <label class="text-xs font-black">Trabajador que lo hizo</label>
     <input id="fTrabajador" placeholder="Trabajador que lo hizo" class="w-full border p-3 rounded-xl mb-2">
-    <label class="text-xs font-bold">Mantenimiento</label>
+    <label class="text-xs font-black">Mantenimiento</label>
     <select id="fFrecuencia" class="w-full border p-3 rounded-xl mb-2"><option value="3" selected>Cada 3 meses</option><option value="2">Cada 2 meses</option><option value="4">Cada 4 meses</option><option value="6">Cada 6 meses</option></select>
-    <label class="text-xs font-bold">Estado</label>
-    <select id="fEstado" onchange="toggleSeriesInternas()" class="w-full border p-3 rounded-xl mb-2"><option value="pendiente">⏳ Pendiente</option><option value="pagado">✅ Pagado</option></select>
-    <label class="text-xs font-bold">Garantía del equipo hasta - ¿Hasta cuándo cubre?</label>
+    <label class="text-xs font-black">Estado</label>
+    <select id="fEstado" onchange="toggleSeriesInternas()" class="w-full border p-3 rounded-xl mb-2"><option value="pendiente">⏳ PENDIENTE DE PAGAR</option><option value="pagado">✅ Pagado</option></select>
+    <label class="text-xs font-black">Garantía del equipo hasta - ¿Hasta cuándo cubre?</label>
     <input id="fGarantiaProv" type="date" class="w-full border p-3 rounded-xl mb-2">
-
-    <!-- INTERNO - SOLO SI ES PAGADO, NO SE MIRA FEO -->
     <div id="boxSeriesInternas" class="hidden bg-gray-50 border rounded-xl p-3 mb-2">
-      <p class="text-xs font-bold">🔒 Interno - Series que entregaste (no se muestra en la lista)</p>
-      <label class="text-xs">Serie Manejadora</label>
+      <p class="text-xs font-black">🔒 Interno - Series que entregaste</p>
+      <label class="text-xs font-black">Serie Manejadora</label>
       <select id="fSerieManejadora" onchange="calcularCompraAuto()" class="w-full border p-3 rounded-xl mb-2 font-mono"></select>
-      <label class="text-xs">Serie Condensadora</label>
+      <label class="text-xs font-black">Serie Condensadora</label>
       <select id="fSerieCondensadora" onchange="calcularCompraAuto()" class="w-full border p-3 rounded-xl mb-2 font-mono"></select>
-      <p id="errorSeries" class="text-xs text-red-600 font-bold hidden"></p>
+      <p id="errorSeries" class="text-xs text-red-600 font-black hidden"></p>
       <div class="bg-yellow-50 border rounded-xl p-3 mt-2 text-sm">
-        <p>Precio de compra (auto): <b id="txtCompraAuto">$0</b></p>
-        <p class="text-[11px] text-gray-500">Compra = Costo Manejadora + Costo Condensadora de Factura. No lo escribís, se suma solo.</p>
-        <label class="text-xs font-bold mt-2 block">Precio de venta final - Vos lo ponés</label>
+        <p class="font-black">Precio de compra (auto): <b id="txtCompraAuto">$0</b></p>
+        <p class="text-[11px] text-gray-500">Compra = Costo Manejadora + Costo Condensadora de Factura.</p>
+        <label class="text-xs font-black mt-2 block">Precio de venta final - Vos lo ponés</label>
         <input id="fMonto" type="number" placeholder="Precio venta final $" class="w-full border p-3 rounded-xl mt-1">
-        <p class="mt-1">Ganancia: <b id="txtGananciaAuto">$0</b></p>
+        <p class="font-black">Ganancia: <b id="txtGananciaAuto">$0</b></p>
       </div>
     </div>
-
-    <!-- Si es pendiente, el precio venta también se pone acá, simple -->
     <div id="boxVentaPendiente">
-      <label class="text-xs font-bold">Precio de venta final</label>
+      <label class="text-xs font-black">Precio de venta final</label>
       <input id="fMontoPendiente" type="number" placeholder="Precio venta final $" class="w-full border p-3 rounded-xl mb-2">
     </div>
-
-    <button onclick="generarVista()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">👁️ Generar Vista Previa</button>
+    <button onclick="generarVista()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-black">👁️ Generar Vista Previa</button>
     <div id="vistaPrevia" class="hidden mt-3 border-2 border-blue-400 bg-blue-50 rounded-2xl p-4"></div>
   </div>
   <div id="lista" class="p-3 space-y-3"></div>
 </div>
 
 <div id="tab-catalogo" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">📋 Catálogo</h2>
-  <p class="text-xs text-gray-500">Vacío. Vos agregás todo.</p>
+  <h2 class="font-black text-lg">📋 Catálogo</h2>
+  <p class="text-xs text-gray-500 font-bold">Vacío. Vos agregás todo.</p>
   <div class="mt-3 bg-blue-50 p-3 rounded-xl">
-    <p id="editandoCat" class="text-xs font-bold text-orange-600 hidden">✏️ Estás en modo EDITAR</p>
+    <p id="editandoCat" class="text-xs font-black text-orange-600 hidden">✏️ Estás en modo EDITAR</p>
     <input id="catModelo" placeholder="Modelo" class="w-full border p-3 rounded-xl mb-2 bg-white">
     <input id="catDesc" placeholder="Descripción" class="w-full border p-3 rounded-xl mb-2 bg-white">
     <input id="catCap" placeholder="Capacidad Ej: 12000 BTU" class="w-full border p-3 rounded-xl mb-2 bg-white">
     <input id="catMarca" placeholder="Marca" class="w-full border p-3 rounded-xl mb-2 bg-white">
     <div class="flex gap-2">
-      <button onclick="agregarCatalogo()" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold">➕ Agregar</button>
-      <button onclick="guardarEdicionCatalogo()" class="flex-1 bg-yellow-400 py-3 rounded-xl font-bold">✏️ Editar</button>
-      <button onclick="borrarEditandoCatalogo()" class="flex-1 bg-red-500 text-white py-3 rounded-xl font-bold">🗑️ Borrar</button>
+      <button onclick="agregarCatalogo()" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-black">➕ Agregar</button>
+      <button onclick="guardarEdicionCatalogo()" class="flex-1 bg-yellow-400 py-3 rounded-xl font-black">✏️ Editar</button>
+      <button onclick="borrarEditandoCatalogo()" class="flex-1 bg-red-500 text-white py-3 rounded-xl font-black">🗑️ Borrar</button>
     </div>
-    <button id="btnCancelarEdit" onclick="cancelarEditarCat()" class="w-full mt-2 bg-gray-200 py-2 rounded-xl text-xs font-bold hidden">Cancelar edición</button>
+    <button id="btnCancelarEdit" onclick="cancelarEditarCat()" class="w-full mt-2 bg-gray-200 py-2 rounded-xl text-xs font-black hidden">Cancelar edición</button>
   </div>
   <div id="listaCatalogo" class="mt-3 space-y-2"></div>
 </div>
 
 <div id="tab-factura" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">🧾 Factura ⇄ Inventario</h2>
-  <p class="text-xs text-red-600 font-bold">⚠️ En Factura NO se puede borrar. Solo editar. El Precio Costo es interno, es el que se usa para sumar la compra.</p>
+  <h2 class="font-black text-lg">🧾 Factura ⇄ Inventario</h2>
+  <p class="text-xs text-red-600 font-black">⚠️ En Factura NO se borra nada cuando se paga. Queda como historial. Solo se descuenta de Inventario.</p>
   <div class="grid grid-cols-2 gap-2 mt-3">
-    <div><label class="text-xs">Fecha</label><input id="invFecha" type="date" class="w-full border p-3 rounded-xl"></div>
-    <div><label class="text-xs">Tipo Factura</label><input id="invTipoFactura" placeholder="Ej: 03CCF" class="w-full border p-3 rounded-xl"></div>
-    <div><label class="text-xs">N° Factura</label><input id="invFactura" placeholder="N° Factura" class="w-full border p-3 rounded-xl"></div>
-    <div><label class="text-xs">N° Garantía</label><input id="invGarantia" placeholder="N° Garantía" class="w-full border p-3 rounded-xl"></div>
-    <div class="col-span-2"><label class="text-xs">Sucursal</label><input id="invSucursal" placeholder="Sucursal" class="w-full border p-3 rounded-xl"></div>
+    <div><label class="text-xs font-black">Fecha</label><input id="invFecha" type="date" class="w-full border p-3 rounded-xl"></div>
+    <div><label class="text-xs font-black">Tipo Factura</label><input id="invTipoFactura" placeholder="Ej: 03CCF" class="w-full border p-3 rounded-xl"></div>
+    <div><label class="text-xs font-black">N° Factura</label><input id="invFactura" placeholder="N° Factura" class="w-full border p-3 rounded-xl"></div>
+    <div><label class="text-xs font-black">N° Garantía</label><input id="invGarantia" placeholder="N° Garantía" class="w-full border p-3 rounded-xl"></div>
+    <div class="col-span-2"><label class="text-xs font-black">Sucursal</label><input id="invSucursal" placeholder="Sucursal" class="w-full border p-3 rounded-xl"></div>
   </div>
   <hr class="my-3">
-  <p id="editandoInv" class="text-xs font-bold text-orange-600 hidden">✏️ Estás EDITANDO</p>
-  <label class="text-xs font-bold">Modelo ▼</label>
-  <select id="invModelo" onchange="autollenarCatalogo()" class="w-full border-2 border-blue-400 p-3 rounded-xl my-2 bg-blue-50 font-bold"></select>
-  <label class="text-xs font-bold">Descripción (auto)</label>
+  <p id="editandoInv" class="text-xs font-black text-orange-600 hidden">✏️ Estás EDITANDO</p>
+  <label class="text-xs font-black">Modelo ▼</label>
+  <select id="invModelo" onchange="autollenarCatalogo()" class="w-full border-2 border-blue-400 p-3 rounded-xl my-2 bg-blue-50 font-black"></select>
+  <label class="text-xs font-black">Descripción (auto)</label>
   <input id="invDesc" readonly class="w-full border p-3 rounded-xl mb-2 bg-gray-100">
-  <label class="text-xs font-bold">Serie - 1 Serie = 1 equipo</label>
-  <input id="invSerie" placeholder="Ej: 370581" maxlength="6" inputmode="numeric" class="w-full border-2 border-red-400 p-3 rounded-xl mb-2 font-mono font-bold">
-  <label class="text-xs font-bold">Capacidad (auto)</label>
+  <label class="text-xs font-black">Serie - 1 Serie = 1 equipo</label>
+  <input id="invSerie" placeholder="Ej: 370581" maxlength="6" inputmode="numeric" class="w-full border-2 border-red-400 p-3 rounded-xl mb-2 font-mono font-black">
+  <label class="text-xs font-black">Capacidad (auto)</label>
   <input id="invCap" readonly class="w-full border p-3 rounded-xl mb-2 bg-gray-100">
-  <label class="text-xs font-bold">Marca (auto)</label>
+  <label class="text-xs font-black">Marca (auto)</label>
   <input id="invMarca2" readonly class="w-full border p-3 rounded-xl mb-2 bg-gray-100">
   <div class="bg-yellow-50 border rounded-xl p-3 mb-2">
-    <label class="text-xs font-bold">Precio Costo - Interno, para sumar la compra después</label>
+    <label class="text-xs font-black">Precio Costo - Interno, para sumar la compra después</label>
     <input id="invPrecioCosto" type="number" placeholder="Precio Costo $ de ESTE equipo" class="w-full border p-3 rounded-xl mt-1">
   </div>
-  <button id="btnAgregarInv" onclick="guardarInventarioNuevo()" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold">✅ AGREGAR PRODUCTO NUEVO</button>
-  <button id="btnEditarInv" onclick="guardarEdicionInventario()" class="w-full bg-yellow-400 py-3 rounded-xl font-bold hidden">✏️ GUARDAR CAMBIOS</button>
-  <button onclick="cancelarEditarInv()" class="w-full mt-2 bg-gray-200 py-2 rounded-xl text-xs font-bold">Cancelar edición</button>
-  <button onclick="showTab('inventario')" class="w-full mt-2 bg-black text-white py-3 rounded-xl font-bold">📦 Ver Inventario</button>
-  <div class="mt-4"><h3 class="font-bold text-sm">🧾 Lista Factura - Solo Editar</h3><div id="listaFactura" class="mt-2 space-y-2"></div></div>
+  <button id="btnAgregarInv" onclick="guardarInventarioNuevo()" class="w-full bg-green-600 text-white py-3 rounded-xl font-black">✅ AGREGAR PRODUCTO NUEVO</button>
+  <button id="btnEditarInv" onclick="guardarEdicionInventario()" class="w-full bg-yellow-400 py-3 rounded-xl font-black hidden">✏️ GUARDAR CAMBIOS</button>
+  <button onclick="cancelarEditarInv()" class="w-full mt-2 bg-gray-200 py-2 rounded-xl text-xs font-black">Cancelar edición</button>
+  <button onclick="showTab('inventario')" class="w-full mt-2 bg-black text-white py-3 rounded-xl font-black">📦 Ver Inventario</button>
+  <div class="mt-4"><h3 class="font-black text-sm">🧾 Lista Factura - Historial, NO se borra al pagar, Solo Editar</h3><div id="listaFactura" class="mt-2 space-y-2"></div></div>
 </div>
 
 <div id="tab-inventario" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">📦 Inventario</h2>
-  <p class="text-xs font-bold mt-2">Total en bodega: <span id="totalInv5">0</span> equipos</p>
+  <h2 class="font-black text-lg">📦 Inventario</h2>
+  <p class="text-xs font-black mt-2">Total en bodega: <span id="totalInv5">0</span> equipos</p>
+  <p class="text-xs font-bold">De aquí SÍ se descuenta cuando se paga. De Factura NO.</p>
   <div class="overflow-x-auto mt-3">
     <table class="w-full text-[11px] border">
-      <tr class="bg-gray-100"><th class="p-2 border">Cantidad</th><th class="p-2 border">Apartado</th><th class="p-2 border">Disponible</th><th class="p-2 border">Modelo</th><th class="p-2 border">Descripción</th><th class="p-2 border">Capacidad</th><th class="p-2 border">Marca</th></tr>
+      <tr class="bg-gray-100"><th class="p-2 border font-black">Cantidad</th><th class="p-2 border font-black">Apartado</th><th class="p-2 border font-black">Disponible</th><th class="p-2 border font-black">Modelo</th><th class="p-2 border font-black">Descripción</th><th class="p-2 border font-black">Capacidad</th><th class="p-2 border font-black">Marca</th></tr>
       <tbody id="listaInv"></tbody>
     </table>
   </div>
-  <button onclick="showTab('factura')" class="w-full mt-3 bg-blue-600 text-white py-3 rounded-xl font-bold">⬅️ Volver a Factura</button>
+  <button onclick="showTab('factura')" class="w-full mt-3 bg-blue-600 text-white py-3 rounded-xl font-black">⬅️ Volver a Factura</button>
 </div>
 
 <div id="tab-gastos" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">💰 Gastos + Cierre</h2>
+  <h2 class="font-black text-lg">💰 Gastos + Cierre</h2>
   <input id="gDesc" placeholder="Ej: Gasolina" class="w-full border p-3 rounded-xl my-2">
   <input id="gMonto" type="number" placeholder="Monto $" class="w-full border p-3 rounded-xl mb-2">
   <select id="gTipo" class="w-full border p-3 rounded-xl mb-2"><option value="negocio">Negocio</option><option value="casa">Casa</option></select>
-  <button onclick="guardarGasto()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Guardar Gasto</button>
-  <div class="mt-4 bg-gray-50 p-3 rounded-xl text-sm"><b>Cierre:</b><p id="cierre">Entró: $0 - Salió: $0 - Quedó: $0</p><button onclick="cierreDia()" class="mt-2 bg-green-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Hacer Cierre</button></div>
+  <button onclick="guardarGasto()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-black">Guardar Gasto</button>
+  <div class="mt-4 bg-gray-50 p-3 rounded-xl text-sm"><b class="font-black">Cierre:</b><p id="cierre">Entró: $0 - Salió: $0 - Quedó: $0</p><button onclick="cierreDia()" class="mt-2 bg-green-600 text-white px-4 py-2 rounded-xl text-xs font-black">Hacer Cierre</button></div>
   <div id="listaGastos" class="mt-3 space-y-2"></div>
 </div>
 
 <div id="tab-calendario" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">📅 Calendario</h2>
+  <h2 class="font-black text-lg">📅 Calendario</h2>
   <input type="date" id="fechaCal" onchange="renderCal()" class="w-full border p-3 rounded-xl mt-2">
   <div id="listaCal" class="mt-3"></div>
 </div>
 
 <div id="tab-reportes" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">📊 Reportes</h2>
+  <h2 class="font-black text-lg">📊 Reportes</h2>
   <div class="flex gap-2 my-2">
-    <button onclick="generarReporte('dia')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Día</button>
-    <button onclick="generarReporte('semana')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Semana</button>
-    <button onclick="generarReporte('mes')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Mes</button>
-    <button onclick="generarReporte('anio')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Año</button>
+    <button onclick="generarReporte('dia')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-black">Día</button>
+    <button onclick="generarReporte('semana')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-black">Semana</button>
+    <button onclick="generarReporte('mes')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-black">Mes</button>
+    <button onclick="generarReporte('anio')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-black">Año</button>
   </div>
   <div id="reporteBox" class="mt-3 bg-blue-50 p-3 rounded-xl text-sm">Tocá un botón</div>
 </div>
 
 <div id="tab-precios" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">🧾 Cotización + PDF</h2>
-  <p class="text-xs">Mantenimiento $25 • Instalación $80 • Reparación $40 • Gas $60</p>
+  <h2 class="font-black text-lg">🧾 Cotización + PDF</h2>
+  <p class="text-xs font-bold">Mantenimiento $25 • Instalación $80 • Reparación $40 • Gas $60</p>
   <input id="cCliente" placeholder="Cliente cotización" class="w-full border p-3 rounded-xl my-2">
   <input id="cDetalle" placeholder="Detalle" class="w-full border p-3 rounded-xl mb-2">
   <input id="cMonto" type="number" placeholder="Monto $" class="w-full border p-3 rounded-xl mb-2">
-  <button onclick="cotizar()" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold">Cotización por WhatsApp</button>
-  <button onclick="factura()" class="w-full mt-2 bg-blue-600 text-white py-3 rounded-xl font-bold">Generar Factura / Garantía</button>
-  <button onclick="window.print()" class="w-full mt-2 bg-black text-white py-3 rounded-xl font-bold">Imprimir PDF</button>
+  <button onclick="cotizar()" class="w-full bg-green-600 text-white py-3 rounded-xl font-black">Cotización por WhatsApp</button>
+  <button onclick="factura()" class="w-full mt-2 bg-blue-600 text-white py-3 rounded-xl font-black">Generar Factura / Garantía</button>
+  <button onclick="window.print()" class="w-full mt-2 bg-black text-white py-3 rounded-xl font-black">Imprimir PDF</button>
 </div>
 
 <div id="tab-trabajadores" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">👷 Trabajadores</h2>
+  <h2 class="font-black text-lg">👷 Trabajadores</h2>
   <input id="tNombre" placeholder="Nombre trabajador" class="w-full border p-3 rounded-xl my-2">
   <input id="tClave" placeholder="Clave Ej: juan123" class="w-full border p-3 rounded-xl mb-2">
-  <button onclick="guardarTrabajador()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Agregar Trabajador</button>
+  <button onclick="guardarTrabajador()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-black">Agregar Trabajador</button>
   <div id="listaTrab" class="mt-3 space-y-2"></div>
 </div>
 </div>
 
-<nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 text-xs font-bold">
+<nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 text-xs font-black">
   <button onclick="showTab('trabajos')">👥 Clientes</button>
   <button onclick="showTab('catalogo')">📋 Catálogo</button>
   <button onclick="showTab('factura')">🧾 Factura</button>
   <button onclick="showTab('inventario')">📦 Inventario</button>
 </nav>
 
-<!-- MODAL PAGO - SERIES INTERNAS -->
 <div id="modalSerie" class="hidden fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4">
   <div class="bg-white rounded-2xl p-4 w-full max-w-sm">
-    <h3 class="font-bold">¿Qué Series le diste?</h3>
-    <p id="modalSerieTexto" class="text-xs text-gray-500 mt-1"></p>
-    <label class="text-xs font-bold mt-2 block">Serie Manejadora</label>
-    <select id="selectSerieManejadora" onchange="calcularCompraModal()" class="w-full border-2 border-red-400 p-3 rounded-xl my-1 font-mono font-bold"></select>
-    <label class="text-xs font-bold block">Serie Condensadora</label>
-    <select id="selectSerieCondensadora" onchange="calcularCompraModal()" class="w-full border-2 border-red-400 p-3 rounded-xl my-1 font-mono font-bold"></select>
-    <div class="bg-yellow-50 p-3 rounded-xl text-sm mt-2">
+    <h3 id="modalTitulo" class="font-black">¿Qué Series le diste?</h3>
+    <p id="modalSerieTexto" class="text-xs text-gray-500 mt-1 font-bold"></p>
+    <label class="text-xs font-black mt-2 block">Serie Manejadora</label>
+    <select id="selectSerieManejadora" onchange="calcularCompraModal()" class="w-full border-2 border-red-400 p-3 rounded-xl my-1 font-mono font-black"></select>
+    <label class="text-xs font-black block">Serie Condensadora</label>
+    <select id="selectSerieCondensadora" onchange="calcularCompraModal()" class="w-full border-2 border-red-400 p-3 rounded-xl my-1 font-mono font-black"></select>
+    <div class="bg-yellow-50 p-3 rounded-xl text-sm mt-2 font-bold">
       <p>Compra auto: <b id="modalCompra">$0</b></p>
       <p>Venta: <b id="modalVenta">$0</b></p>
       <p>Ganancia: <b id="modalGanancia">$0</b></p>
     </div>
-    <p id="modalError" class="text-xs text-red-600 font-bold hidden mt-2"></p>
+    <p id="modalError" class="text-xs text-red-600 font-black hidden mt-2"></p>
     <div class="flex gap-2 mt-3">
-      <button onclick="confirmarPagoConSeries()" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-bold">✅ Confirmar Pago</button>
-      <button onclick="cerrarModalSerie()" class="flex-1 bg-gray-200 py-3 rounded-xl font-bold">Cancelar</button>
+      <button id="btnModalConfirmar" onclick="confirmarPagoConSeries()" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-black">✅ Confirmar Pago</button>
+      <button onclick="cerrarModalSerie()" class="flex-1 bg-gray-200 py-3 rounded-xl font-black">Cancelar</button>
     </div>
   </div>
 </div>
@@ -268,18 +261,19 @@ if(localStorage.getItem('climaserv_login')==='ok'){ document.getElementById('log
 let CATALOGO=JSON.parse(localStorage.getItem('climaserv_catalogo')||'[]');
 let datos=JSON.parse(localStorage.getItem('climaserv_trabajos')||'[]');
 let inventario=JSON.parse(localStorage.getItem('climaserv_inv_5')||'[]');
+let facturas=JSON.parse(localStorage.getItem('climaserv_facturas')||'[]');
+if(facturas.length===0 && inventario.length>0){ facturas=[...inventario]; }
 let gastos=JSON.parse(localStorage.getItem('climaserv_gastos')||'[]');
 let trabajadores=JSON.parse(localStorage.getItem('climaserv_trabs')||'[]');
-let filtro='todos'; let datosTemp=null; let editandoCatIndex=-1; let editandoInvIndex=-1; let pagandoIndex=-1;
-function save(){ localStorage.setItem('climaserv_catalogo',JSON.stringify(CATALOGO)); localStorage.setItem('climaserv_trabajos',JSON.stringify(datos)); localStorage.setItem('climaserv_inv_5',JSON.stringify(inventario)); localStorage.setItem('climaserv_gastos',JSON.stringify(gastos)); localStorage.setItem('climaserv_trabs',JSON.stringify(trabajadores)); render(); renderCal(); }
+let filtro='todos'; let datosTemp=null; let editandoCatIndex=-1; let editandoInvIndex=-1; let editandoInvSerieOld=''; let pagandoIndex=-1; let modoModal='pago';
+function save(){ localStorage.setItem('climaserv_catalogo',JSON.stringify(CATALOGO)); localStorage.setItem('climaserv_trabajos',JSON.stringify(datos)); localStorage.setItem('climaserv_inv_5',JSON.stringify(inventario)); localStorage.setItem('climaserv_facturas',JSON.stringify(facturas)); localStorage.setItem('climaserv_gastos',JSON.stringify(gastos)); localStorage.setItem('climaserv_trabs',JSON.stringify(trabajadores)); render(); renderCal(); }
 function setFiltro(f){filtro=f;render();}
 function showTab(t){ document.querySelectorAll('.tab').forEach(e=>e.classList.add('hidden')); document.getElementById('tab-'+t).classList.remove('hidden'); }
 function normCap(s){ return (s||'').toString().toLowerCase().replace(/[^0-9]/g,''); }
-
-// --- CAPACIDAD SIN DUPLICAR, DE INVENTARIO ---
 function cargarCapacidades(){
   let sel=document.getElementById('fCapacidadTrabajo'); if(!sel) return;
   let caps=[]; inventario.forEach(x=>{ let c=(x.capacidad||'').trim(); if(c && !caps.some(y=>normCap(y)===normCap(c))) caps.push(c); });
+  facturas.forEach(x=>{ let c=(x.capacidad||'').trim(); if(c && !caps.some(y=>normCap(y)===normCap(c))) caps.push(c); });
   let actual=sel.value;
   if(caps.length===0){ sel.innerHTML='<option value="">-- Primero agregá en Factura / Inventario --</option>'; }
   else { sel.innerHTML='<option value="">Elegir capacidad ▼</option>'+caps.map(c=>`<option value="${c}">${c}</option>`).join(''); if(actual) sel.value=actual; }
@@ -300,35 +294,29 @@ function llenarSeriesTrabajo(){
 function validarSeries(mSerie,cSerie,capEsperada){
   if(!mSerie || !cSerie) return 'Te faltan las 2 Series. Sin las 2 no se puede pagar.';
   if(mSerie===cSerie) return '❌ La Manejadora y la Condensadora NO pueden ser la misma Serie.';
-  let m=inventario.find(x=>x.serie===mSerie); let c=inventario.find(x=>x.serie===cSerie);
-  if(!m) return '❌ Manejadora '+mSerie+' NO está en Inventario.';
-  if(!c) return '❌ Condensadora '+cSerie+' NO está en Inventario.';
-  if(normCap(m.capacidad)!==normCap(c.capacidad)) return '❌ Capacidad no coincide: Manejadora '+m.capacidad+' vs Condensadora '+c.capacidad+'. No se puede pagar.';
+  let m=inventario.find(x=>x.serie===mSerie) || facturas.find(x=>x.serie===mSerie);
+  let c=inventario.find(x=>x.serie===cSerie) || facturas.find(x=>x.serie===cSerie);
+  if(!m) return '❌ Manejadora '+mSerie+' NO está en Inventario / Factura.';
+  if(!c) return '❌ Condensadora '+cSerie+' NO está en Inventario / Factura.';
+  if(normCap(m.capacidad)!==normCap(c.capacidad)) return '❌ Capacidad no coincide: Manejadora '+m.capacidad+' vs Condensadora '+c.capacidad+'.';
   if(capEsperada && normCap(m.capacidad)!==normCap(capEsperada)) return '❌ Capacidad no coincide con el trabajo: Trabajo '+capEsperada+' vs Equipo '+m.capacidad+'.';
-  if(capEsperada && normCap(c.capacidad)!==normCap(capEsperada)) return '❌ Capacidad no coincide con el trabajo.';
   return '';
 }
+function getCostoSerie(serie){ let x=inventario.find(v=>v.serie===serie) || facturas.find(v=>v.serie===serie); return x ? (parseFloat(x.precioCosto||0)) : 0; }
 function calcularCompraAuto(){
   let m=document.getElementById('fSerieManejadora').value;
   let c=document.getElementById('fSerieCondensadora').value;
   let cap=document.getElementById('fCapacidadTrabajo').value;
   let err=validarSeries(m,c,cap);
   let errEl=document.getElementById('errorSeries');
-  if(m && c){
-    if(err){ errEl.innerText=err; errEl.classList.remove('hidden'); }
-    else errEl.classList.add('hidden');
-  } else errEl.classList.add('hidden');
-  let costoM=(inventario.find(x=>x.serie===m)||{}).precioCosto||0;
-  let costoC=(inventario.find(x=>x.serie===c)||{}).precioCosto||0;
-  let compra=parseFloat(costoM)+parseFloat(costoC);
+  if(m && c){ if(err){ errEl.innerText=err; errEl.classList.remove('hidden'); } else errEl.classList.add('hidden'); } else errEl.classList.add('hidden');
+  let compra=getCostoSerie(m)+getCostoSerie(c);
   document.getElementById('txtCompraAuto').innerText='$'+compra;
   let venta=parseFloat(document.getElementById('fMonto').value||0);
   document.getElementById('txtGananciaAuto').innerText='$'+(venta-compra);
   return {compra, err};
 }
 document.addEventListener('input',e=>{ if(e.target.id==='fMonto') calcularCompraAuto(); });
-
-// --- CATALOGO ---
 function leerCatForm(){ return { modelo:document.getElementById('catModelo').value.trim(), desc:document.getElementById('catDesc').value.trim(), cap:document.getElementById('catCap').value.trim(), marca:document.getElementById('catMarca').value.trim() }; }
 function validarCat(c){ if(!c.modelo) return alert('Poné el Modelo'),false; if(!c.desc) return alert('Poné la Descripción'),false; if(!c.cap) return alert('Poné la Capacidad'),false; if(!c.marca) return alert('Poné la Marca'),false; return true; }
 function agregarCatalogo(){ let c=leerCatForm(); if(!validarCat(c)) return; CATALOGO.unshift(c); cancelarEditarCat(); save(); alert('✅ Agregado: '+c.modelo); }
@@ -341,51 +329,64 @@ function cargarCatalogo(){
   let sel=document.getElementById('invModelo'); if(!sel) return;
   if(CATALOGO.length===0){ sel.innerHTML='<option value="">-- Primero agregá en Catálogo --</option>'; }
   else { let actual=sel.value; sel.innerHTML=CATALOGO.map(c=>`<option value="${c.modelo}">${c.modelo} - ${c.cap}</option>`).join(''); if(actual && CATALOGO.some(c=>c.modelo===actual)) sel.value=actual; autollenarCatalogo(); }
-  document.getElementById('listaCatalogo').innerHTML=CATALOGO.length?CATALOGO.map((c,i)=>`<div class="border p-2 rounded-xl text-xs"><b>${c.modelo}</b><br>${c.desc}<br>${c.cap} - ${c.marca}<br><div class="flex gap-2 mt-1"><button onclick="editarCatalogo(${i})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-bold">✏️ Editar</button><button onclick="borrarCatalogo(${i})" class="bg-red-100 px-3 py-1 rounded-full text-xs font-bold">🗑️ Borrar</button></div></div>`).join(''):'<p class="text-xs text-gray-400">Catálogo vacío.</p>';
+  document.getElementById('listaCatalogo').innerHTML=CATALOGO.length?CATALOGO.map((c,i)=>`<div class="border p-2 rounded-xl text-xs"><b>${c.modelo}</b><br>${c.desc}<br>${c.cap} - ${c.marca}<br><div class="flex gap-2 mt-1"><button onclick="editarCatalogo(${i})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-black">✏️ Editar</button><button onclick="borrarCatalogo(${i})" class="bg-red-100 px-3 py-1 rounded-full text-xs font-black">🗑️ Borrar</button></div></div>`).join(''):'<p class="text-xs text-gray-400">Catálogo vacío.</p>';
 }
 function autollenarCatalogo(){ let modelo=document.getElementById('invModelo').value; let c=CATALOGO.find(x=>x.modelo===modelo); if(!c) return; document.getElementById('invDesc').value=c.desc; document.getElementById('invCap').value=c.cap; document.getElementById('invMarca2').value=c.marca; }
-
-// --- FACTURA / INVENTARIO ---
 function mostrarModoAgregar(){ document.getElementById('btnAgregarInv').classList.remove('hidden'); document.getElementById('btnEditarInv').classList.add('hidden'); document.getElementById('editandoInv').classList.add('hidden'); }
 function mostrarModoEditar(){ document.getElementById('btnAgregarInv').classList.add('hidden'); document.getElementById('btnEditarInv').classList.remove('hidden'); document.getElementById('editandoInv').classList.remove('hidden'); }
 function guardarInventarioNuevo(){
   if(CATALOGO.length===0) return alert('Primero agregá en Catálogo');
   let serie=document.getElementById('invSerie').value.trim();
   if(!serie) return alert('Te faltó la Serie');
-  if(inventario.some(i=>i.serie===serie)) return alert('Esa Serie '+serie+' ya está.');
-  inventario.unshift({modelo:document.getElementById('invModelo').value,descripcion:document.getElementById('invDesc').value,serie:serie,capacidad:document.getElementById('invCap').value,marca:document.getElementById('invMarca2').value,precioCosto:parseFloat(document.getElementById('invPrecioCosto').value||0),fecha:document.getElementById('invFecha').value,tipoFactura:document.getElementById('invTipoFactura').value,factura:document.getElementById('invFactura').value,garantia:document.getElementById('invGarantia').value,sucursal:document.getElementById('invSucursal').value});
-  save(); document.getElementById('invSerie').value=''; document.getElementById('invPrecioCosto').value=''; mostrarModoAgregar(); alert('✅ Agregado Serie '+serie);
+  if(facturas.some(i=>i.serie===serie)) return alert('Esa Serie '+serie+' ya está en Factura.');
+  let nuevo={modelo:document.getElementById('invModelo').value,descripcion:document.getElementById('invDesc').value,serie:serie,capacidad:document.getElementById('invCap').value,marca:document.getElementById('invMarca2').value,precioCosto:parseFloat(document.getElementById('invPrecioCosto').value||0),fecha:document.getElementById('invFecha').value,tipoFactura:document.getElementById('invTipoFactura').value,factura:document.getElementById('invFactura').value,garantia:document.getElementById('invGarantia').value,sucursal:document.getElementById('invSucursal').value};
+  facturas.unshift({...nuevo}); inventario.unshift({...nuevo});
+  save(); document.getElementById('invSerie').value=''; document.getElementById('invPrecioCosto').value=''; mostrarModoAgregar(); alert('✅ Agregado en Factura Y en Inventario - Serie '+serie);
 }
 function editarInventario(i){
-  let x=inventario[i]; editandoInvIndex=i;
+  let x=facturas[i]; editandoInvIndex=i; editandoInvSerieOld=x.serie;
   document.getElementById('invFecha').value=x.fecha||''; document.getElementById('invTipoFactura').value=x.tipoFactura||''; document.getElementById('invFactura').value=x.factura||''; document.getElementById('invGarantia').value=x.garantia||''; document.getElementById('invSucursal').value=x.sucursal||''; document.getElementById('invModelo').value=x.modelo; document.getElementById('invDesc').value=x.descripcion; document.getElementById('invSerie').value=x.serie; document.getElementById('invCap').value=x.capacidad; document.getElementById('invMarca2').value=x.marca; document.getElementById('invPrecioCosto').value=x.precioCosto||'';
   mostrarModoEditar(); showTab('factura'); window.scrollTo(0,0);
 }
 function guardarEdicionInventario(){
   if(editandoInvIndex<0) return alert('Primero tocá ✏️ Editar');
   let serie=document.getElementById('invSerie').value.trim(); if(!serie) return alert('Te faltó la Serie');
-  if(inventario.some((x,idx)=>idx!==editandoInvIndex && x.serie===serie)) return alert('Esa Serie ya está en otra fila.');
-  inventario[editandoInvIndex]={modelo:document.getElementById('invModelo').value,descripcion:document.getElementById('invDesc').value,serie:serie,capacidad:document.getElementById('invCap').value,marca:document.getElementById('invMarca2').value,precioCosto:parseFloat(document.getElementById('invPrecioCosto').value||0),fecha:document.getElementById('invFecha').value,tipoFactura:document.getElementById('invTipoFactura').value,factura:document.getElementById('invFactura').value,garantia:document.getElementById('invGarantia').value,sucursal:document.getElementById('invSucursal').value};
-  alert('✅ Editado'); cancelarEditarInv(); save();
+  if(facturas.some((x,idx)=>idx!==editandoInvIndex && x.serie===serie)) return alert('Esa Serie ya está en otra fila.');
+  let actualizado={modelo:document.getElementById('invModelo').value,descripcion:document.getElementById('invDesc').value,serie:serie,capacidad:document.getElementById('invCap').value,marca:document.getElementById('invMarca2').value,precioCosto:parseFloat(document.getElementById('invPrecioCosto').value||0),fecha:document.getElementById('invFecha').value,tipoFactura:document.getElementById('invTipoFactura').value,factura:document.getElementById('invFactura').value,garantia:document.getElementById('invGarantia').value,sucursal:document.getElementById('invSucursal').value};
+  facturas[editandoInvIndex]=actualizado;
+  let idxInv=inventario.findIndex(x=>x.serie===editandoInvSerieOld);
+  if(idxInv>=0) inventario[idxInv]=actualizado;
+  alert('✅ Editado en Factura Y en Inventario'); cancelarEditarInv(); save();
 }
-function cancelarEditarInv(){ editandoInvIndex=-1; document.getElementById('editandoInv').classList.add('hidden'); document.getElementById('invSerie').value=''; mostrarModoAgregar(); }
-
-// --- PAGO CON 2 SERIES ---
-function abrirPago(idx){
+function cancelarEditarInv(){ editandoInvIndex=-1; editandoInvSerieOld=''; document.getElementById('editandoInv').classList.add('hidden'); document.getElementById('invSerie').value=''; mostrarModoAgregar(); }
+function abrirModalSeries(idx, modo){
   let d=datos[idx];
+  modoModal=modo; pagandoIndex=idx;
   let cap=d.capacidadTrabajo||'';
   let filtrados=inventario.filter(x=>!cap || normCap(x.capacidad)===normCap(cap));
-  if(filtrados.length<2) return alert('No tenés 2 equipos con esa Capacidad '+cap+' en Inventario. No se puede pagar, faltan Series.');
-  pagandoIndex=idx;
-  document.getElementById('modalSerieTexto').innerText='Cliente: '+d.cliente+' - Capacidad: '+cap+' - Sistema: '+(d.sistema||'-')+' - Venta: $'+d.monto;
+  if(d.serieManejadora){ let f=facturas.find(x=>x.serie===d.serieManejadora); if(f && !filtrados.some(x=>x.serie===f.serie)) filtrados.unshift(f); }
+  if(d.serieCondensadora){ let f=facturas.find(x=>x.serie===d.serieCondensadora); if(f && !filtrados.some(x=>x.serie===f.serie)) filtrados.unshift(f); }
+  if(filtrados.length<2 && modo==='pago') return alert('No tenés 2 equipos con esa Capacidad '+cap+' en Inventario. No se puede pagar.');
+  if(filtrados.length===0) return alert('No hay equipos con esa Capacidad en Inventario.');
+  if(modo==='pendiente'){
+    document.getElementById('modalTitulo').innerText='⏳ PENDIENTE DE PAGAR - Elegí las Series y quedan guardadas';
+    document.getElementById('btnModalConfirmar').innerText='💾 Guardar Series en Pendiente';
+  } else {
+    document.getElementById('modalTitulo').innerText='¿Qué Series le diste? - Se descuenta SOLO de Inventario';
+    document.getElementById('btnModalConfirmar').innerText='✅ Confirmar Pago';
+  }
+  document.getElementById('modalSerieTexto').innerText='Cliente: '+d.cliente+' - Capacidad: '+cap+' - Sistema: '+(d.sistema||'-')+' - Venta: $'+d.monto+' - Factura NO se borra, solo Inventario.';
   document.getElementById('modalVenta').innerText='$'+d.monto;
   let opts='<option value="">Elegir Serie ▼</option>'+filtrados.map(x=>`<option value="${x.serie}">${x.serie} - ${x.modelo} - ${x.capacidad} - Costo $${x.precioCosto||0}</option>`).join('');
   document.getElementById('selectSerieManejadora').innerHTML=opts;
   document.getElementById('selectSerieCondensadora').innerHTML=opts;
-  document.getElementById('modalCompra').innerText='$0'; document.getElementById('modalGanancia').innerText='$0';
-  document.getElementById('modalError').classList.add('hidden');
+  if(d.serieManejadora) document.getElementById('selectSerieManejadora').value=d.serieManejadora;
+  if(d.serieCondensadora) document.getElementById('selectSerieCondensadora').value=d.serieCondensadora;
+  calcularCompraModal();
   document.getElementById('modalSerie').classList.remove('hidden');
 }
+function abrirPago(idx){ abrirModalSeries(idx,'pago'); }
+function abrirPendiente(idx){ abrirModalSeries(idx,'pendiente'); }
 function calcularCompraModal(){
   if(pagandoIndex<0) return;
   let d=datos[pagandoIndex];
@@ -394,9 +395,7 @@ function calcularCompraModal(){
   let err=validarSeries(m,c,d.capacidadTrabajo);
   let el=document.getElementById('modalError');
   if(m && c && err){ el.innerText=err; el.classList.remove('hidden'); } else el.classList.add('hidden');
-  let costoM=(inventario.find(x=>x.serie===m)||{}).precioCosto||0;
-  let costoC=(inventario.find(x=>x.serie===c)||{}).precioCosto||0;
-  let compra=parseFloat(costoM)+parseFloat(costoC);
+  let compra=getCostoSerie(m)+getCostoSerie(c);
   document.getElementById('modalCompra').innerText='$'+compra;
   document.getElementById('modalGanancia').innerText='$'+(parseFloat(d.monto||0)-compra);
 }
@@ -407,25 +406,21 @@ function confirmarPagoConSeries(){
   let m=document.getElementById('selectSerieManejadora').value;
   let c=document.getElementById('selectSerieCondensadora').value;
   let err=validarSeries(m,c,d.capacidadTrabajo);
-  if(err) return alert(err+'\n\nNO SE DESCONTÓ NADA.');
-  // Descontar las 2
-  inventario=inventario.filter(x=>x.serie!==m && x.serie!==c);
-  let costoM=(datos[pagandoIndex].precioCompraM||0);
-  // recalcular compra real antes de borrar
-  let invM = inventario.find(x=>x.serie===m); // ya no está, por eso buscamos antes
-  d.estado='pagado';
-  d.serieManejadora=m; d.serieCondensadora=c;
-  // Guardar compra calculada del modal
-  let compraTexto=document.getElementById('modalCompra').innerText.replace('$','');
-  d.precioCompra=parseFloat(compraTexto||0);
-  d.ganancia=parseFloat(d.monto||0)-d.precioCompra;
-  d.fechaPago=new Date().toISOString();
-  cerrarModalSerie(); save();
-  alert('✅ Pagado\nManejadora: '+m+'\nCondensadora: '+c+'\nCompra: $'+d.precioCompra+'\nVenta: $'+d.monto+'\nGanancia: $'+d.ganancia+'\nYa se descontaron las 2 de Inventario.');
+  if(err) return alert(err+'\n\nNO SE HIZO NADA.');
+  let compra=getCostoSerie(m)+getCostoSerie(c);
+  d.serieManejadora=m; d.serieCondensadora=c; d.precioCompra=compra; d.ganancia=parseFloat(d.monto||0)-compra;
+  if(modoModal==='pendiente'){
+    d.estado='pendiente';
+    cerrarModalSerie(); save();
+    alert('💾 Guardado en PENDIENTE DE PAGAR\nManejadora: '+m+'\nCondensadora: '+c+'\nCompra: $'+compra+'\nTodavía NO se descontó de Inventario. Cuando pague, le das a Pagado y ahí sí se descuenta SOLO de Inventario.');
+  } else {
+    d.estado='pagado'; d.fechaPago=new Date().toISOString();
+    // SOLO de Inventario, NUNCA de Factura
+    inventario=inventario.filter(x=>x.serie!==m && x.serie!==c);
+    cerrarModalSerie(); save();
+    alert('✅ Pagado\nManejadora: '+m+'\nCondensadora: '+c+'\nCompra: $'+compra+'\nVenta: $'+d.monto+'\nGanancia: $'+d.ganancia+'\nSe descontó SOLO de Inventario. Factura quedó intacta.');
+  }
 }
-function marcarPagadoSinInventario(idx){ if(!confirm('¿Marcar Pagado sin descontar? Solo para servicio sin equipo.')) return; datos[idx].estado='pagado'; save(); }
-
-// --- TRABAJOS ---
 function generarVista(){
   let esPagado=document.getElementById('fEstado').value==='pagado';
   let monto = esPagado ? parseFloat(document.getElementById('fMonto').value||0) : parseFloat(document.getElementById('fMontoPendiente').value||0);
@@ -447,13 +442,13 @@ function generarVista(){
     let calc=calcularCompraAuto();
     if(calc.err) return alert(calc.err+'\n\nNO SE GUARDÓ COMO PAGADO.');
     d.precioCompra=calc.compra; d.ganancia=d.monto-d.precioCompra;
-    if(!confirm('Lo vas a guardar ya como PAGADO y se van a descontar:\nManejadora '+mSerie+'\nCondensadora '+cSerie+'\nCompra $'+d.precioCompra+' - Venta $'+d.monto)) return;
-    // Validar y descontar ahora mismo
+    if(!confirm('Lo vas a guardar ya como PAGADO y se van a descontar SOLO de Inventario:\nManejadora '+mSerie+'\nCondensadora '+cSerie+'\nCompra $'+d.precioCompra+' - Venta $'+d.monto+'\nFactura NO se borra.')) return;
+    // SOLO Inventario
     inventario=inventario.filter(x=>x.serie!==mSerie && x.serie!==cSerie);
   }
   datosTemp=d;
   document.getElementById('vistaPrevia').classList.remove('hidden');
-  document.getElementById('vistaPrevia').innerHTML=`<p class="text-sm"><b>Cliente:</b> ${d.cliente} - ${d.telefono} - ${d.departamento}</p><p class="text-sm"><b>Fecha instalación:</b> ${d.fechaTrabajo} • <b>Capacidad:</b> ${d.capacidadTrabajo} • <b>Sistema:</b> ${d.sistema}</p><p class="text-sm"><b>Trabajador:</b> ${d.trabajador} • <b>Mantenimiento:</b> Cada ${d.frecuencia} meses • <b>Estado:</b> ${d.estado}</p><p class="text-sm"><b>Garantía hasta:</b> ${d.garantiaProv}</p>${esPagado?`<p class="text-sm"><b>Compra:</b> $${d.precioCompra} • <b>Venta:</b> $${d.monto} • <b>Ganancia:</b> $${d.ganancia}</p><p class="text-xs text-gray-500">Series internas: M ${mSerie} / C ${cSerie} - se descontarán al guardar</p>`:`<p class="text-sm"><b>Venta:</b> $${d.monto} • Pendiente, sin descontar todavía</p>`}<div class="flex gap-2 mt-3"><button onclick="confirmarGuardar()" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-bold">✅ Guardar Así</button><button onclick="document.getElementById('vistaPrevia').classList.add('hidden')" class="flex-1 bg-gray-200 py-3 rounded-xl font-bold">✏️ Corregir</button></div>`;
+  document.getElementById('vistaPrevia').innerHTML=`<p class="text-sm font-bold"><b class="font-black">Cliente:</b> ${d.cliente} - ${d.telefono} - ${d.departamento}</p><p class="text-sm font-bold"><b class="font-black">Fecha instalación:</b> ${d.fechaTrabajo} • <b class="font-black">Capacidad:</b> ${d.capacidadTrabajo} • <b class="font-black">Sistema:</b> ${d.sistema}</p><p class="text-sm font-bold"><b class="font-black">Trabajador:</b> ${d.trabajador} • <b class="font-black">Mantenimiento:</b> Cada ${d.frecuencia} meses • <b class="font-black">Estado:</b> ${d.estado==='pendiente'?'PENDIENTE DE PAGAR':'Pagado'}</p><p class="text-sm font-bold"><b class="font-black">Garantía hasta:</b> ${d.garantiaProv}</p>${esPagado?`<p class="text-sm font-bold"><b class="font-black">Compra:</b> $${d.precioCompra} • <b class="font-black">Venta:</b> $${d.monto} • <b class="font-black">Ganancia:</b> $${d.ganancia}</p>`:`<p class="text-sm font-bold"><b class="font-black">Venta:</b> $${d.monto} • PENDIENTE DE PAGAR, sin descontar todavía</p>`}<div class="flex gap-2 mt-3"><button onclick="confirmarGuardar()" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-black">✅ Guardar Así</button><button onclick="document.getElementById('vistaPrevia').classList.add('hidden')" class="flex-1 bg-gray-200 py-3 rounded-xl font-black">✏️ Corregir</button></div>`;
   document.getElementById('vistaPrevia').scrollIntoView({behavior:'smooth'});
 }
 function confirmarGuardar(){
@@ -467,12 +462,12 @@ function confirmarGuardar(){
 function guardarGasto(){ gastos.unshift({desc:gDesc.value,monto:parseFloat(gMonto.value||0),tipo:gTipo.value,fecha:new Date().toISOString()}); save(); gDesc.value=''; gMonto.value=''; }
 function guardarTrabajador(){ trabajadores.unshift({nombre:tNombre.value,clave:tClave.value}); save(); alert('Trabajador agregado: '+tClave.value); }
 function cierreDia(){ const hoy=new Date().toDateString(); const entr=datos.filter(d=>new Date(d.fecha).toDateString()===hoy&&d.estado==='pagado').reduce((s,d)=>s+d.monto,0); const sal=gastos.filter(g=>new Date(g.fecha).toDateString()===hoy).reduce((s,g)=>s+g.monto,0); document.getElementById('cierre').innerText=`Entró: $${entr} - Salió: $${sal} - Quedó: $${entr-sal}`; alert(`Cierre\nEntró: $${entr}\nSalió: $${sal}\nQuedó: $${entr-sal}`); }
-function buscarSerie(){ const s=prompt('Escribí la Serie:'); if(!s)return; const r=datos.filter(d=>((d.serieManejadora||'')+(d.serieCondensadora||'')).toLowerCase().includes(s.toLowerCase())); const r2=inventario.filter(d=>(d.serie||'').toLowerCase().includes(s.toLowerCase())); alert(r.length?r.map(x=>`${x.cliente} - $${x.monto} - M ${x.serieManejadora} C ${x.serieCondensadora}`).join('\n'):(r2.length?r2.map(x=>`${x.modelo} - Serie ${x.serie} - ${x.marca} - Factura ${x.factura}`).join('\n'):'No se encontró')); }
-function exportar(){ const blob=new Blob([JSON.stringify({catalogo:CATALOGO,trabajos:datos,inventario,gastos,trabajadores},null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='copia-climaserv.json'; a.click(); }
+function buscarSerie(){ const s=prompt('Escribí la Serie:'); if(!s)return; const r=datos.filter(d=>((d.serieManejadora||'')+(d.serieCondensadora||'')).toLowerCase().includes(s.toLowerCase())); const r2=facturas.filter(d=>(d.serie||'').toLowerCase().includes(s.toLowerCase())); alert(r.length?r.map(x=>`${x.cliente} - $${x.monto} - M ${x.serieManejadora} C ${x.serieCondensadora}`).join('\n'):(r2.length?r2.map(x=>`${x.modelo} - Serie ${x.serie} - ${x.marca} - Factura ${x.factura}`).join('\n'):'No se encontró')); }
+function exportar(){ const blob=new Blob([JSON.stringify({catalogo:CATALOGO,trabajos:datos,inventario,facturas,gastos,trabajadores},null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='copia-climaserv.json'; a.click(); }
 function cotizar(){ const msg=`Hola ${cCliente.value}, cotización Climaserv El Paraíso:\n${cDetalle.value} - $${cMonto.value}`; window.open('https://wa.me/?text='+encodeURIComponent(msg)); }
 function factura(){ alert(`FACTURA CLIMASERV\nCliente: ${cCliente.value}\nDetalle: ${cDetalle.value}\nMonto: $${cMonto.value}\nGarantía 30 días`); }
-function generarReporte(tipo){ const total=datos.reduce((s,d)=>s+d.monto,0); const pend=datos.filter(d=>d.estado==='pendiente').reduce((s,d)=>s+d.monto,0); document.getElementById('reporteBox').innerHTML=`Reporte ${tipo}<br>Total: $${total}<br>Pendiente: $${pend}<br>Cobrado: $${total-pend}<br>Trabajos: ${datos.length}<br>Inventario: ${inventario.length} equipos`; }
-function renderCal(){ const f=document.getElementById('fechaCal').value||new Date().toISOString().slice(0,10); const lista=datos.filter(d=>(d.fechaTrabajo||d.fecha.slice(0,10))===f); document.getElementById('listaCal').innerHTML=lista.length?lista.map(d=>`<div class="border p-2 rounded-xl text-sm">${d.cliente} - ${d.capacidadTrabajo} - $${d.monto}</div>`).join(''):'Sin trabajos ese día.'; }
+function generarReporte(tipo){ const total=datos.reduce((s,d)=>s+d.monto,0); const pend=datos.filter(d=>d.estado==='pendiente').reduce((s,d)=>s+d.monto,0); document.getElementById('reporteBox').innerHTML=`Reporte ${tipo}<br>Total: $${total}<br>Pendiente de Pagar: $${pend}<br>Cobrado: $${total-pend}<br>Trabajos: ${datos.length}<br>Inventario: ${inventario.length} equipos - Factura historial: ${facturas.length}`; }
+function renderCal(){ const f=document.getElementById('fechaCal').value||new Date().toISOString().slice(0,10); const lista=datos.filter(d=>(d.fechaTrabajo||d.fecha.slice(0,10))===f); document.getElementById('listaCal').innerHTML=lista.length?lista.map(d=>`<div class="border p-2 rounded-xl text-sm font-bold">${d.cliente} - ${d.capacidadTrabajo} - $${d.monto}</div>`).join(''):'Sin trabajos ese día.'; }
 function editar(idx){
   const d=datos[idx];
   fCliente.value=d.cliente||''; fTelefono.value=d.telefono||''; fCumple.value=d.cumple||'';
@@ -487,7 +482,7 @@ function render(){
   cargarCatalogo(); cargarCapacidades();
   const user=localStorage.getItem('climaserv_user')||'Jefe';
   const q=document.getElementById('buscador').value.toLowerCase();
-  let lista=datos.filter(d=>(d.cliente||'').toLowerCase().includes(q)||(d.telefono||'').includes(q)||(d.capacidadTrabajo||'').toLowerCase().includes(q)||(d.sistema||'').toLowerCase().includes(q)||(d.trabajador||'').toLowerCase().includes(q));
+  let lista=datos.filter(d=>(d.cliente||'').toLowerCase().includes(q)||(d.telefono||'').includes(q)||(d.capacidadTrabajo||'').toLowerCase().includes(q)||(d.sistema||'').toLowerCase().includes(q)||(d.trabajador||'').toLowerCase().includes(q)||((d.serieManejadora||'')+(d.serieCondensadora||'')).toLowerCase().includes(q));
   if(user!=='Jefe') lista=lista.filter(d=>(d.trabajador||'').toLowerCase()===user.toLowerCase());
   if(filtro==='pendiente') lista=lista.filter(d=>d.estado==='pendiente');
   if(filtro==='pagado') lista=lista.filter(d=>d.estado==='pagado');
@@ -496,22 +491,22 @@ function render(){
   document.getElementById('statTotal').innerText='$'+total; document.getElementById('statPend').innerText='$'+pend; document.getElementById('statCob').innerText='$'+(total-pend);
   const hoy=new Date().toISOString().slice(5,10);
   const cumples=datos.filter(d=>d.cumple&&d.cumple.slice(5,10)===hoy);
-  document.getElementById('alertas').innerText=(pend>0?`${datos.filter(d=>d.estado==='pendiente').length} pendientes • `:'Todo al día • ')+`Usuario: ${user}`;
+  document.getElementById('alertas').innerText=(pend>0?`${datos.filter(d=>d.estado==='pendiente').length} pendientes de pagar • `:'Todo al día • ')+`Usuario: ${user}`;
   document.getElementById('alertasCumple').innerText=cumples.length?`🎂 Hoy cumple: ${cumples.map(c=>c.cliente).join(', ')}`:'Sin cumpleaños hoy.';
-  document.getElementById('lista').innerHTML=lista.map((d)=>{ let idx=datos.indexOf(d); return `<div class="bg-white p-4 rounded-2xl shadow"><p class="font-bold">${d.cliente} - ${d.telefono}</p><p class="text-xs text-gray-500">${d.departamento} • Fecha instalación: ${d.fechaTrabajo||'-'} • Capacidad: ${d.capacidadTrabajo} • Sistema: ${d.sistema||'-'}</p><p class="text-xs text-gray-500">Trabajador: ${d.trabajador||'-'} • Mantenimiento cada ${d.frecuencia} meses • Garantía hasta: ${d.garantiaProv||'-'}</p><p class="font-bold text-blue-600">Venta $${d.monto} ${d.precioCompra!==undefined?`• Compra $${d.precioCompra} • Ganancia $${d.ganancia||0}`:''} • ${d.estado}</p><div class="flex gap-2 mt-2 flex-wrap">${d.estado==='pendiente' ? `<button onclick="abrirPago(${idx})" class="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-bold">✅ Pagado - Elegir 2 Series</button>` : `<span class="bg-green-100 px-3 py-1 rounded-full text-xs font-bold">✅ Pagado</span>`}<button onclick="editar(${idx})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-bold">✏️ Editar</button><button onclick="datos.splice(${idx},1);save()" class="text-red-500 text-xs font-bold">Borrar</button></div></div>`; }).join('')||'<p class="text-center text-gray-400 py-6">Sin registros</p>';
-  let invFiltrado=inventario.filter(x=>(x.modelo||'').toLowerCase().includes(q)||(x.serie||'').toLowerCase().includes(q)||(x.descripcion||'').toLowerCase().includes(q)||(x.marca||'').toLowerCase().includes(q)||(x.factura||'').toLowerCase().includes(q));
-  document.getElementById('totalInv5').innerText=inventario.length+' equipos';
-  document.getElementById('listaFactura').innerHTML=invFiltrado.map((x)=>{ let idx=inventario.indexOf(x); return `<div class="border p-2 rounded-xl text-xs"><b>${x.modelo} - Serie ${x.serie}</b><br>📅 ${x.fecha||'-'} • 🧾 Factura: ${x.factura||'-'} (${x.tipoFactura||'-'}) • 🛡️ Garantía: ${x.garantia||'-'} • 🏢 ${x.sucursal||'-'}<br>${x.descripcion} • ${x.capacidad} • ${x.marca} • Costo $${x.precioCosto||0}<br><button onclick="editarInventario(${idx})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-bold mt-1">✏️ Editar</button></div>`; }).join('')||'<p class="text-xs text-gray-400">Sin facturas.</p>';
+  document.getElementById('lista').innerHTML=lista.map((d)=>{ let idx=datos.indexOf(d); let esPend=d.estado==='pendiente'; return `<div class="bg-white p-4 rounded-2xl shadow"><p class="font-black">${d.cliente} - ${d.telefono}</p><p class="text-xs text-gray-500 font-bold">${d.departamento} • Fecha instalación: ${d.fechaTrabajo||'-'} • Capacidad: ${d.capacidadTrabajo} • Sistema: ${d.sistema||'-'}</p><p class="text-xs text-gray-500 font-bold">Trabajador: ${d.trabajador||'-'} • Mantenimiento cada ${d.frecuencia} meses • Garantía hasta: ${d.garantiaProv||'-'}</p><p class="text-xs font-black ${esPend?'text-yellow-600':'text-green-600'}">${esPend?'⏳ PENDIENTE DE PAGAR':'✅ PAGADO'}</p>${d.serieManejadora?`<p class="text-sm font-black bg-yellow-50 border rounded-lg p-2 mt-1">Manejadora: ${d.serieManejadora} • Condensadora: ${d.serieCondensadora}</p>`:''}<p class="font-black text-blue-600 mt-1">Venta $${d.monto} ${d.precioCompra!==undefined?`• Compra $${d.precioCompra} • Ganancia $${d.ganancia||0}`:''}</p><div class="flex gap-2 mt-2 flex-wrap">${esPend ? `<button onclick="abrirPendiente(${idx})" class="bg-yellow-400 px-3 py-1 rounded-full text-xs font-black">⏳ PENDIENTE DE PAGAR</button><button onclick="abrirPago(${idx})" class="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-black">✅ Pagado - Descontar</button>` : `<span class="bg-green-100 px-3 py-1 rounded-full text-xs font-black">✅ PAGADO</span>`}<button onclick="editar(${idx})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-black">✏️ Editar</button><button onclick="datos.splice(${idx},1);save()" class="text-red-500 text-xs font-black">Borrar</button></div></div>`; }).join('')||'<p class="text-center text-gray-400 py-6 font-bold">Sin registros</p>';
+  let facFiltrado=facturas.filter(x=>(x.modelo||'').toLowerCase().includes(q)||(x.serie||'').toLowerCase().includes(q)||(x.descripcion||'').toLowerCase().includes(q)||(x.marca||'').toLowerCase().includes(q)||(x.factura||'').toLowerCase().includes(q));
+  document.getElementById('totalInv5').innerText=inventario.length+' equipos en bodega • '+facturas.length+' en Factura historial';
+  document.getElementById('listaFactura').innerHTML=facFiltrado.map((x)=>{ let idx=facturas.indexOf(x); let enInv=inventario.some(v=>v.serie===x.serie); return `<div class="border p-2 rounded-xl text-xs font-bold"><b class="font-black">${x.modelo} - Serie ${x.serie}</b> ${enInv?'<span class="bg-green-100 px-2 py-0.5 rounded-full text-[10px] font-black">En Inventario</span>':'<span class="bg-gray-200 px-2 py-0.5 rounded-full text-[10px] font-black">Ya vendido - Solo en Factura</span>'}<br>📅 ${x.fecha||'-'} • 🧾 Factura: ${x.factura||'-'} (${x.tipoFactura||'-'}) • 🛡️ Garantía: ${x.garantia||'-'} • 🏢 ${x.sucursal||'-'}<br>${x.descripcion} • ${x.capacidad} • ${x.marca} • Costo $${x.precioCosto||0}<br><button onclick="editarInventario(${idx})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-black mt-1">✏️ Editar</button></div>`; }).join('')||'<p class="text-xs text-gray-400">Sin facturas.</p>';
   let grupos={};
-  invFiltrado.forEach(x=>{ let key=(x.modelo||'').trim().toLowerCase(); if(!grupos[key]) grupos[key]={modelo:x.modelo,descripcion:x.descripcion,capacidad:x.capacidad,marca:x.marca,cant:0}; grupos[key].cant++; });
+  inventario.forEach(x=>{ let key=(x.modelo||'').trim().toLowerCase(); if(!grupos[key]) grupos[key]={modelo:x.modelo,descripcion:x.descripcion,capacidad:x.capacidad,marca:x.marca,cant:0}; grupos[key].cant++; });
   let gruposArr=Object.values(grupos);
   document.getElementById('listaInv').innerHTML=gruposArr.map(g=>{
     let apartados=datos.filter(d=>d.estado==='pendiente' && normCap(d.capacidadTrabajo)===normCap(g.capacidad)).length;
     let disponible=Math.max(0, g.cant - apartados);
-    return `<tr class="border-b"><td class="p-2 border text-center font-bold text-lg">${g.cant}</td><td class="p-2 border text-center font-bold text-yellow-600">${apartados}</td><td class="p-2 border text-center font-bold ${disponible===0?'text-red-600':'text-green-600'}">${disponible}</td><td class="p-2 border font-bold">${g.modelo}</td><td class="p-2 border text-[10px]">${g.descripcion}</td><td class="p-2 border">${g.capacidad}</td><td class="p-2 border">${g.marca}</td></tr>`;
-  }).join('')||'<tr><td colspan="7" class="p-2 text-center text-gray-400">Sin inventario.</td></tr>';
-  document.getElementById('listaGastos').innerHTML=gastos.map(x=>`<div class="border p-2 rounded-xl text-sm">${x.desc} - $${x.monto} - ${x.tipo}</div>`).join('');
-  document.getElementById('listaTrab').innerHTML=trabajadores.map(x=>`<div class="border p-2 rounded-xl text-sm">${x.nombre} - clave: ${x.clave}</div>`).join('');
+    return `<tr class="border-b"><td class="p-2 border text-center font-black text-lg">${g.cant}</td><td class="p-2 border text-center font-black text-yellow-600">${apartados}</td><td class="p-2 border text-center font-black ${disponible===0?'text-red-600':'text-green-600'}">${disponible}</td><td class="p-2 border font-black">${g.modelo}</td><td class="p-2 border text-[10px] font-bold">${g.descripcion}</td><td class="p-2 border font-bold">${g.capacidad}</td><td class="p-2 border font-bold">${g.marca}</td></tr>`;
+  }).join('')||'<tr><td colspan="7" class="p-2 text-center text-gray-400 font-bold">Sin inventario. En Factura sí queda el historial.</td></tr>';
+  document.getElementById('listaGastos').innerHTML=gastos.map(x=>`<div class="border p-2 rounded-xl text-sm font-bold">${x.desc} - $${x.monto} - ${x.tipo}</div>`).join('');
+  document.getElementById('listaTrab').innerHTML=trabajadores.map(x=>`<div class="border p-2 rounded-xl text-sm font-bold">${x.nombre} - clave: ${x.clave}</div>`).join('');
 }
 render(); renderCal(); mostrarModoAgregar(); toggleSeriesInternas();
 </script>
