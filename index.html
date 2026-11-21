@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -10,276 +11,320 @@
 <body class="bg-gray-100 pb-24">
 
 <div id="login" class="fixed inset-0 bg-blue-600 z-50 flex flex-col items-center justify-center p-6 text-white">
-  <h1 class="text-3xl font-black">❄️ Climaserv</h1>
-  <p class="text-xs font-bold">El Paraíso • Privado</p>
-  <input id="claveInput" type="password" placeholder="Tu clave" class="mt-6 w-full max-w-xs p-3 rounded-xl text-black text-center">
-  <button onclick="entrar()" class="mt-3 w-full max-w-xs bg-white text-blue-600 py-3 rounded-xl font-black">Entrar</button>
-  <p id="errorClave" class="text-xs mt-2 text-yellow-200"></p>
+ <h1 class="text-3xl font-black">❄️ Climaserv</h1>
+ <p class="text-xs font-bold">El Paraíso • Privado</p>
+ <input id="claveInput" type="password" placeholder="Tu clave" class="mt-6 w-full max-w-xs p-3 rounded-xl text-black text-center">
+ <button onclick="entrar()" class="mt-3 w-full max-w-xs bg-white text-blue-600 py-3 rounded-xl font-black">Entrar</button>
+ <p id="errorClave" class="text-xs mt-2 text-yellow-200"></p>
 </div>
 
 <div id="app" class="hidden">
 <header class="bg-blue-600 text-white p-4 sticky top-0 z-10">
-  <div class="flex justify-between items-center">
-    <div><h1 class="text-xl font-black">❄️ Control A/C</h1><p class="text-xs opacity-80 font-bold">Climaserv • El Paraíso</p></div>
-    <div><button onclick="exportar()" class="bg-white text-blue-600 text-xs px-3 py-2 rounded-full font-black">📤 Copia</button></div>
-  </div>
-  <input id="buscador" oninput="render()" placeholder="🔍 Buscar: cliente, serie, teléfono, capacidad..." class="w-full mt-3 p-3 rounded-xl text-black">
-  <div class="flex gap-2 mt-3 overflow-x-auto">
-    <button onclick="setFiltro('todos')" class="bg-white text-blue-600 px-3 py-1 rounded-full text-xs font-black">Todos</button>
-    <button onclick="setFiltro('pendiente')" class="bg-yellow-400 px-3 py-1 rounded-full text-xs font-black">⏳ Pendientes de Pagar</button>
-    <button onclick="setFiltro('pagado')" class="bg-green-400 px-3 py-1 rounded-full text-xs font-black">✅ Pagados</button>
-    <button onclick="buscarSerie()" class="bg-black text-white px-3 py-1 rounded-full text-xs font-black">🔎 Por Serie</button>
-  </div>
+ <div class="flex justify-between items-center">
+ <div><h1 class="text-xl font-black">❄️ Control A/C</h1><p class="text-xs opacity-80 font-bold">Climaserv • El Paraíso</p></div>
+ <div><button onclick="exportar()" class="bg-white text-blue-600 text-xs px-3 py-2 rounded-full font-black">📤 Copia</button></div>
+ </div>
+ <input id="buscador" oninput="render()" placeholder="🔍 Buscar: cliente, serie, teléfono, capacidad..." class="w-full mt-3 p-3 rounded-xl text-black">
+ <div class="flex gap-2 mt-3 overflow-x-auto">
+ <button onclick="setFiltro('todos')" class="bg-white text-blue-600 px-3 py-1 rounded-full text-xs font-black">Todos</button>
+ <button onclick="setFiltro('pendiente')" class="bg-yellow-400 px-3 py-1 rounded-full text-xs font-black">⏳ Pendientes de Pagar</button>
+ <button onclick="setFiltro('pagado')" class="bg-green-400 px-3 py-1 rounded-full text-xs font-black">✅ Pagados</button>
+ <button onclick="buscarSerie()" class="bg-black text-white px-3 py-1 rounded-full text-xs font-black">🔎 Por Serie</button>
+ </div>
 </header>
 
 <div class="grid grid-cols-3 gap-2 p-3">
-  <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs font-black">Total</p><p id="statTotal" class="font-black text-blue-600">$0</p></div>
-  <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs font-black">Pendiente de Pagar</p><p id="statPend" class="font-black text-yellow-600">$0</p></div>
-  <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs font-black">Cobrado</p><p id="statCob" class="font-black text-green-600">$0</p></div>
+ <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs font-black">Total</p><p id="statTotal" class="font-black text-blue-600">$0</p></div>
+ <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs font-black">Pendiente de Pagar</p><p id="statPend" class="font-black text-yellow-600">$0</p></div>
+ <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs font-black">Cobrado</p><p id="statCob" class="font-black text-green-600">$0</p></div>
 </div>
 
 <div class="mx-3 bg-yellow-50 border rounded-xl p-3 text-xs"><b class="font-black">🔔 Alertas:</b> <span id="alertas"></span></div>
 <div class="mx-3 mt-2 bg-blue-50 border rounded-xl p-3 text-xs"><b class="font-black">🎂 Cumpleaños:</b> <span id="alertasCumple"></span></div>
 <div class="mx-3 mt-2 bg-orange-50 border border-orange-300 rounded-xl p-3 text-xs"><b class="font-black">🔧 Mantenimientos por vencer (15 días o menos):</b> <span id="alertasMant"></span><div id="alertasMantPorDep" class="mt-2"></div></div>
+<div class="mx-3 mt-2 bg-red-50 border border-red-300 rounded-xl p-3 text-xs"><b class="font-black">🛡️ Garantías por vencer (30 días o menos):</b> <span id="alertasGarantia"></span></div>
 
 <div class="flex gap-2 p-3 overflow-x-auto">
-  <button onclick="showTab('trabajos')" class="bg-blue-600 text-white px-4 py-2 rounded-full text-xs font-black">Trabajos</button>
-  <button onclick="showTab('mantenimientos')" class="bg-orange-500 text-white px-4 py-2 rounded-full text-xs font-black">🔧 Mantenimientos</button>
-  <button onclick="showTab('catalogo')" class="bg-white px-4 py-2 rounded-full text-xs font-black border-2 border-blue-600">📋 Catálogo</button>
-  <button onclick="showTab('factura')" class="bg-white px-4 py-2 rounded-full text-xs font-black border-2 border-green-600">🧾 Factura</button>
-  <button onclick="showTab('inventario')" class="bg-white px-4 py-2 rounded-full text-xs font-black border-2 border-black">📦 Inventario</button>
-  <button onclick="showTab('gastos')" class="bg-white px-4 py-2 rounded-full text-xs font-black">Gastos</button>
-  <button onclick="showTab('calendario')" class="bg-white px-4 py-2 rounded-full text-xs font-black">Calendario</button>
-  <button onclick="showTab('reportes')" class="bg-white px-4 py-2 rounded-full text-xs font-black">Reportes</button>
-  <button onclick="showTab('precios')" class="bg-white px-4 py-2 rounded-full text-xs font-black">Precios / PDF</button>
-  <button onclick="showTab('trabajadores')" class="bg-white px-4 py-2 rounded-full text-xs font-black">Trabajadores</button>
+ <button onclick="showTab('trabajos')" class="bg-blue-600 text-white px-4 py-2 rounded-full text-xs font-black">Trabajos</button>
+ <button onclick="showTab('ruta')" class="bg-green-600 text-white px-4 py-2 rounded-full text-xs font-black">🚗 Ruta del Día</button>
+ <button onclick="showTab('garantias')" class="bg-red-500 text-white px-4 py-2 rounded-full text-xs font-black">🛡️ Garantías</button>
+ <button onclick="showTab('mantenimientos')" class="bg-orange-500 text-white px-4 py-2 rounded-full text-xs font-black">🔧 Mantenimientos</button>
+ <button onclick="showTab('catalogo')" class="bg-white px-4 py-2 rounded-full text-xs font-black border-2 border-blue-600">📋 Catálogo</button>
+ <button onclick="showTab('factura')" class="bg-white px-4 py-2 rounded-full text-xs font-black border-2 border-green-600">🧾 Factura</button>
+ <button onclick="showTab('inventario')" class="bg-white px-4 py-2 rounded-full text-xs font-black border-2 border-black">📦 Inventario</button>
+ <button onclick="showTab('gastos')" class="bg-white px-4 py-2 rounded-full text-xs font-black">Gastos</button>
+ <button onclick="showTab('calendario')" class="bg-white px-4 py-2 rounded-full text-xs font-black">Calendario</button>
+ <button onclick="showTab('reportes')" class="bg-white px-4 py-2 rounded-full text-xs font-black">Reportes</button>
+ <button onclick="showTab('precios')" class="bg-white px-4 py-2 rounded-full text-xs font-black">Precios / PDF</button>
+ <button onclick="showTab('trabajadores')" class="bg-white px-4 py-2 rounded-full text-xs font-black">Trabajadores</button>
 </div>
 
 <div id="tab-trabajos" class="tab">
-  <div class="mx-3 bg-white rounded-2xl p-4 shadow">
-    <h2 class="font-black text-lg">Registrar Trabajo - 1 equipo por venta</h2>
-    <p class="text-xs font-bold text-blue-600">Si el cliente compra 2 equipos de diferente capacidad, guardás 2 ventas con el mismo cliente. Si vuelve después, usás el botón ➕ Agregar otro equipo.</p>
-    <label class="text-xs font-black mt-2 block">Cliente</label>
-    <input id="fCliente" placeholder="Cliente" class="w-full border p-3 rounded-xl mb-2">
-    <label class="text-xs font-black">Teléfono - Esto agrupa el historial</label>
-    <input id="fTelefono" placeholder="Ej: 70001234" inputmode="numeric" class="w-full border p-3 rounded-xl mb-2">
-    <label class="text-xs font-black">Departamento de ESTE equipo ▼</label>
-    <select id="fDepartamento" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-black">
-      <option value="">Seleccionar Departamento ▼</option>
-      <option>Ahuachapán</option><option>Cabañas</option><option>Chalatenango</option><option>Cuscatlán</option><option>La Libertad</option><option>La Paz</option><option>La Unión</option><option>Morazán</option><option>San Miguel</option><option>San Salvador</option><option>San Vicente</option><option>Santa Ana</option><option>Sonsonate</option><option>Usulután</option>
-    </select>
-    <label class="text-xs font-black">Fecha de instalación</label>
-    <input id="fFechaTrabajo" type="date" class="w-full border p-3 rounded-xl mb-2">
-    <label class="text-xs font-black">Fecha cumpleaños del cliente (opcional)</label>
-    <input id="fCumple" type="date" class="w-full border p-3 rounded-xl mb-2">
-    <label class="text-xs font-black">Capacidad de ESTE equipo ▼</label>
-    <select id="fCapacidadTrabajo" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-black"></select>
-    <label class="text-xs font-black">Elegir sistema ▼</label>
-    <select id="fSistema" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-black">
-      <option value="">Elegir sistema ▼</option><option value="CONVENCIONAL">CONVENCIONAL</option><option value="INVERTER">INVERTER</option>
-    </select>
-    <label class="text-xs font-black">Trabajador que lo hizo</label>
-    <input id="fTrabajador" placeholder="Trabajador que lo hizo" class="w-full border p-3 rounded-xl mb-2">
-    <label class="text-xs font-black">Mantenimiento</label>
-    <select id="fFrecuencia" class="w-full border p-3 rounded-xl mb-2"><option value="3" selected>Cada 3 meses</option><option value="2">Cada 2 meses</option><option value="4">Cada 4 meses</option><option value="6">Cada 6 meses</option></select>
-    <label class="text-xs font-black">Estado</label>
-    <select id="fEstado" onchange="toggleSeriesInternas()" class="w-full border p-3 rounded-xl mb-2"><option value="pendiente">⏳ PENDIENTE DE PAGAR</option><option value="pagado">✅ Pagado</option></select>
-    <label class="text-xs font-black">Garantía del equipo hasta - ¿Hasta cuándo cubre?</label>
-    <input id="fGarantiaProv" type="date" class="w-full border p-3 rounded-xl mb-2">
-    <div id="boxSeriesInternas" class="hidden bg-gray-50 border rounded-xl p-3 mb-2">
-      <p class="text-xs font-black">🔒 Interno - Series que entregaste</p>
-      <label class="text-xs font-black">Serie Manejadora</label>
-      <select id="fSerieManejadora" onchange="calcularCompraAuto()" class="w-full border p-3 rounded-xl mb-2 font-mono"></select>
-      <label class="text-xs font-black">Serie Condensadora</label>
-      <select id="fSerieCondensadora" onchange="calcularCompraAuto()" class="w-full border p-3 rounded-xl mb-2 font-mono"></select>
-      <p id="errorSeries" class="text-xs text-red-600 font-black hidden"></p>
-      <div class="bg-yellow-50 border rounded-xl p-3 mt-2 text-sm">
-        <p class="font-black">Precio de compra (auto): <b id="txtCompraAuto">$0</b></p>
-        <p class="text-[11px] text-gray-500">Compra = Costo Manejadora + Costo Condensadora de Factura.</p>
-        <label class="text-xs font-black mt-2 block">Precio de venta final - Vos lo ponés</label>
-        <input id="fMonto" type="number" placeholder="Precio venta final $" class="w-full border p-3 rounded-xl mt-1">
-        <p class="font-black">Ganancia: <b id="txtGananciaAuto">$0</b></p>
-      </div>
-    </div>
-    <div id="boxVentaPendiente">
-      <label class="text-xs font-black">Precio de venta final de ESTE equipo</label>
-      <input id="fMontoPendiente" type="number" placeholder="Precio venta final $" class="w-full border p-3 rounded-xl mb-2">
-    </div>
-    <button onclick="generarVista()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-black">👁️ Generar Vista Previa</button>
-    <div id="vistaPrevia" class="hidden mt-3 border-2 border-blue-400 bg-blue-50 rounded-2xl p-4"></div>
-  </div>
-  <div id="lista" class="p-3 space-y-3"></div>
+ <div class="mx-3 bg-white rounded-2xl p-4 shadow">
+ <h2 class="font-black text-lg">Registrar Trabajo - 1 equipo por venta</h2>
+ <p class="text-xs font-bold text-blue-600">Si el cliente compra 2 equipos de diferente capacidad, guardás 2 ventas con el mismo cliente. Si vuelve después, usás el botón ➕ Agregar otro equipo.</p>
+ <label class="text-xs font-black mt-2 block">Cliente</label>
+ <input id="fCliente" placeholder="Cliente" class="w-full border p-3 rounded-xl mb-2">
+ <label class="text-xs font-black">Teléfono - Esto agrupa el historial</label>
+ <input id="fTelefono" placeholder="Ej: 70001234" inputmode="numeric" class="w-full border p-3 rounded-xl mb-2">
+ <label class="text-xs font-black">Departamento de ESTE equipo ▼</label>
+ <select id="fDepartamento" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-black">
+ <option value="">Seleccionar Departamento ▼</option>
+ <option>Ahuachapán</option><option>Cabañas</option><option>Chalatenango</option><option>Cuscatlán</option><option>La Libertad</option><option>La Paz</option><option>La Unión</option><option>Morazán</option><option>San Miguel</option><option>San Salvador</option><option>San Vicente</option><option>Santa Ana</option><option>Sonsonate</option><option>Usulután</option>
+ </select>
+ <label class="text-xs font-black">Fecha de instalación</label>
+ <input id="fFechaTrabajo" type="date" class="w-full border p-3 rounded-xl mb-2">
+ <label class="text-xs font-black">Fecha cumpleaños del cliente (opcional)</label>
+ <input id="fCumple" type="date" class="w-full border p-3 rounded-xl mb-2">
+ <label class="text-xs font-black">Capacidad de ESTE equipo ▼</label>
+ <select id="fCapacidadTrabajo" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-black"></select>
+ <label class="text-xs font-black">Elegir sistema ▼</label>
+ <select id="fSistema" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-black">
+ <option value="">Elegir sistema ▼</option><option value="CONVENCIONAL">CONVENCIONAL</option><option value="INVERTER">INVERTER</option>
+ </select>
+ <label class="text-xs font-black">Trabajador que lo hizo</label>
+ <input id="fTrabajador" placeholder="Trabajador que lo hizo" class="w-full border p-3 rounded-xl mb-2">
+ <label class="text-xs font-black">Mantenimiento</label>
+ <select id="fFrecuencia" class="w-full border p-3 rounded-xl mb-2"><option value="3" selected>Cada 3 meses</option><option value="2">Cada 2 meses</option><option value="4">Cada 4 meses</option><option value="6">Cada 6 meses</option></select>
+ <label class="text-xs font-black">Estado</label>
+ <select id="fEstado" onchange="toggleSeriesInternas()" class="w-full border p-3 rounded-xl mb-2"><option value="pendiente">⏳ PENDIENTE DE PAGAR</option><option value="pagado">✅ Pagado</option></select>
+ <label class="text-xs font-black">Garantía del equipo hasta - ¿Hasta cuándo cubre?</label>
+ <input id="fGarantiaProv" type="date" class="w-full border p-3 rounded-xl mb-2">
+ <div id="boxSeriesInternas" class="hidden bg-gray-50 border rounded-xl p-3 mb-2">
+ <p class="text-xs font-black">🔒 Interno - Series que entregaste</p>
+ <label class="text-xs font-black">Serie Manejadora</label>
+ <select id="fSerieManejadora" onchange="calcularCompraAuto()" class="w-full border p-3 rounded-xl mb-2 font-mono"></select>
+ <label class="text-xs font-black">Serie Condensadora</label>
+ <select id="fSerieCondensadora" onchange="calcularCompraAuto()" class="w-full border p-3 rounded-xl mb-2 font-mono"></select>
+ <p id="errorSeries" class="text-xs text-red-600 font-black hidden"></p>
+ <div class="bg-yellow-50 border rounded-xl p-3 mt-2 text-sm">
+ <p class="font-black">Precio de compra (auto): <b id="txtCompraAuto">$0</b></p>
+ <p class="text- text-gray-500">Compra = Costo Manejadora + Costo Condensadora de Factura.</p>
+ <label class="text-xs font-black mt-2 block">Precio de venta final - Vos lo ponés</label>
+ <input id="fMonto" type="number" placeholder="Precio venta final $" class="w-full border p-3 rounded-xl mt-1">
+ <p class="font-black">Ganancia: <b id="txtGananciaAuto">$0</b></p>
+ </div>
+ </div>
+ <div id="boxVentaPendiente">
+ <label class="text-xs font-black">Precio de venta final de ESTE equipo</label>
+ <input id="fMontoPendiente" type="number" placeholder="Precio venta final $" class="w-full border p-3 rounded-xl mb-2">
+ </div>
+ <button onclick="generarVista()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-black">👁️ Generar Vista Previa</button>
+ <div id="vistaPrevia" class="hidden mt-3 border-2 border-blue-400 bg-blue-50 rounded-2xl p-4"></div>
+ </div>
+ <div id="lista" class="p-3 space-y-3"></div>
+</div>
+
+<!-- 1. RUTA DEL DIA -->
+<div id="tab-ruta" class="tab hidden mx-3 bg-white rounded-2xl p-4">
+ <h2 class="font-black text-lg">🚗 Ruta del Día</h2>
+ <p class="text-xs font-bold text-gray-600">Elegí el día y el departamento y te arma la ruta solo con mantenimientos por vencer / vencidos. Cuando terminás uno, le das ✅ Hecho y se quita de la ruta.</p>
+ <div class="grid grid-cols-2 gap-2 mt-3">
+ <div><label class="text-xs font-black">Fecha de ruta</label><input id="rutaFecha" type="date" class="w-full border p-3 rounded-xl"></div>
+ <div><label class="text-xs font-black">Departamento de la ruta ▼</label>
+ <select id="rutaDep" onchange="render()" class="w-full border-2 border-green-500 p-3 rounded-xl bg-green-50 font-black">
+ <option value="todos">Todos los departamentos</option>
+ <option>Ahuachapán</option><option>Cabañas</option><option>Chalatenango</option><option>Cuscatlán</option><option>La Libertad</option><option>La Paz</option><option>La Unión</option><option>Morazán</option><option>San Miguel</option><option>San Salvador</option><option>San Vicente</option><option>Santa Ana</option><option>Sonsonate</option><option>Usulután</option>
+ </select>
+ </div>
+ </div>
+ <div class="flex gap-2 mt-3">
+ <button onclick="setFiltroRuta('todos')" class="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-black">Todos de la ruta</button>
+ <button onclick="setFiltroRuta('pendientes')" class="bg-yellow-400 px-3 py-1 rounded-full text-xs font-black">Pendientes hoy</button>
+ <button onclick="setFiltroRuta('hechos')" class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-black">Ya hechos hoy</button>
+ </div>
+ <div class="bg-green-50 border rounded-xl p-3 mt-3 text-sm font-black"><span id="rutaResumen">-</span></div>
+ <div id="listaRutaDia" class="mt-3 space-y-3"></div>
+ <button onclick="compartirRuta()" class="w-full mt-3 bg-green-600 text-white py-3 rounded-xl font-black">📤 Compartir ruta por WhatsApp</button>
+</div>
+
+<!-- 2. GARANTIAS -->
+<div id="tab-garantias" class="tab hidden mx-3 bg-white rounded-2xl p-4">
+ <h2 class="font-black text-lg">🛡️ Garantías</h2>
+ <p class="text-xs font-bold text-gray-600">Todas las garantías juntas. Agrupado por cliente. Te dice cuántos días le quedan y si ya venció.</p>
+ <div class="grid grid-cols-3 gap-2 mt-3 text-center">
+ <div class="bg-green-50 border rounded-xl p-2"><p class="text-xs font-black">Vigentes</p><p id="garVigentes" class="font-black text-green-600">0</p></div>
+ <div class="bg-yellow-50 border rounded-xl p-2"><p class="text-xs font-black">Por vencer 30 días</p><p id="garPorVencer" class="font-black text-yellow-600">0</p></div>
+ <div class="bg-red-50 border rounded-xl p-2"><p class="text-xs font-black">Vencidas</p><p id="garVencidas" class="font-black text-red-600">0</p></div>
+ </div>
+ <div class="flex gap-2 mt-3 overflow-x-auto">
+ <button onclick="setFiltroGar('todos')" class="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-black">Todas</button>
+ <button onclick="setFiltroGar('vigentes')" class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-black">Vigentes</button>
+ <button onclick="setFiltroGar('porvencer')" class="bg-yellow-400 px-3 py-1 rounded-full text-xs font-black">Por vencer</button>
+ <button onclick="setFiltroGar('vencidas')" class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-black">Vencidas</button>
+ </div>
+ <div id="listaGarantias" class="mt-3 space-y-3"></div>
 </div>
 
 <div id="tab-mantenimientos" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-black text-lg">🔧 Mantenimientos</h2>
-  <p class="text-xs font-bold text-gray-600">Abajo: agrupado por cliente. Arriba: ruta por departamento solo para los que están por vencer.</p>
-  <div class="bg-orange-50 border border-orange-300 rounded-2xl p-3 mt-3">
-    <h3 class="font-black text-sm">🚗 Ruta por Departamento - Solo por vencer / vencidos</h3>
-    <p class="text-[11px] font-bold text-gray-600">Esto es para armar tu ruta. Agrupado por departamento.</p>
-    <div id="listaRuta" class="mt-2 space-y-2"></div>
-  </div>
-  <div class="grid grid-cols-3 gap-2 mt-3 text-center">
-    <div class="bg-green-50 border rounded-xl p-2"><p class="text-xs font-black">Al día</p><p id="mantAlDia" class="font-black text-green-600">0</p></div>
-    <div class="bg-yellow-50 border rounded-xl p-2"><p class="text-xs font-black">Por vencer 15 días</p><p id="mantPorVencer" class="font-black text-yellow-600">0</p></div>
-    <div class="bg-red-50 border rounded-xl p-2"><p class="text-xs font-black">Vencidos</p><p id="mantVencidos" class="font-black text-red-600">0</p></div>
-  </div>
-  <div class="flex gap-2 mt-3 overflow-x-auto">
-    <button onclick="setFiltroMant('todos')" class="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-black">Todos</button>
-    <button onclick="setFiltroMant('porvencer')" class="bg-yellow-400 px-3 py-1 rounded-full text-xs font-black">Por vencer</button>
-    <button onclick="setFiltroMant('vencidos')" class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-black">Vencidos / En rojo</button>
-  </div>
-  <div id="listaMant" class="mt-3 space-y-3"></div>
+ <h2 class="font-black text-lg">🔧 Mantenimientos</h2>
+ <p class="text-xs font-bold text-gray-600">Abajo: agrupado por cliente. Arriba: ruta por departamento solo para los que están por vencer.</p>
+ <div class="bg-orange-50 border border-orange-300 rounded-2xl p-3 mt-3">
+ <h3 class="font-black text-sm">🚗 Ruta por Departamento - Solo por vencer / vencidos</h3>
+ <p class="text- font-bold text-gray-600">Esto es para armar tu ruta. Agrupado por departamento.</p>
+ <div id="listaRuta" class="mt-2 space-y-2"></div>
+ </div>
+ <div class="grid grid-cols-3 gap-2 mt-3 text-center">
+ <div class="bg-green-50 border rounded-xl p-2"><p class="text-xs font-black">Al día</p><p id="mantAlDia" class="font-black text-green-600">0</p></div>
+ <div class="bg-yellow-50 border rounded-xl p-2"><p class="text-xs font-black">Por vencer 15 días</p><p id="mantPorVencer" class="font-black text-yellow-600">0</p></div>
+ <div class="bg-red-50 border rounded-xl p-2"><p class="text-xs font-black">Vencidos</p><p id="mantVencidos" class="font-black text-red-600">0</p></div>
+ </div>
+ <div class="flex gap-2 mt-3 overflow-x-auto">
+ <button onclick="setFiltroMant('todos')" class="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-black">Todos</button>
+ <button onclick="setFiltroMant('porvencer')" class="bg-yellow-400 px-3 py-1 rounded-full text-xs font-black">Por vencer</button>
+ <button onclick="setFiltroMant('vencidos')" class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-black">Vencidos / En rojo</button>
+ </div>
+ <div id="listaMant" class="mt-3 space-y-3"></div>
 </div>
 
 <div id="tab-catalogo" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-black text-lg">📋 Catálogo</h2>
-  <p class="text-xs text-gray-500 font-bold">Vacío. Vos agregás todo.</p>
-  <div class="mt-3 bg-blue-50 p-3 rounded-xl">
-    <p id="editandoCat" class="text-xs font-black text-orange-600 hidden">✏️ Estás en modo EDITAR</p>
-    <input id="catModelo" placeholder="Modelo" class="w-full border p-3 rounded-xl mb-2 bg-white">
-    <input id="catDesc" placeholder="Descripción" class="w-full border p-3 rounded-xl mb-2 bg-white">
-    <input id="catCap" placeholder="Capacidad Ej: 12000 BTU" class="w-full border p-3 rounded-xl mb-2 bg-white">
-    <input id="catMarca" placeholder="Marca" class="w-full border p-3 rounded-xl mb-2 bg-white">
-    <div class="flex gap-2">
-      <button onclick="agregarCatalogo()" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-black">➕ Agregar</button>
-      <button onclick="guardarEdicionCatalogo()" class="flex-1 bg-yellow-400 py-3 rounded-xl font-black">✏️ Editar</button>
-      <button onclick="borrarEditandoCatalogo()" class="flex-1 bg-red-500 text-white py-3 rounded-xl font-black">🗑️ Borrar</button>
-    </div>
-    <button id="btnCancelarEdit" onclick="cancelarEditarCat()" class="w-full mt-2 bg-gray-200 py-2 rounded-xl text-xs font-black hidden">Cancelar edición</button>
-  </div>
-  <div id="listaCatalogo" class="mt-3 space-y-2"></div>
+ <h2 class="font-black text-lg">📋 Catálogo</h2>
+ <p class="text-xs text-gray-500 font-bold">Vacío. Vos agregás todo.</p>
+ <div class="mt-3 bg-blue-50 p-3 rounded-xl">
+ <p id="editandoCat" class="text-xs font-black text-orange-600 hidden">✏️ Estás en modo EDITAR</p>
+ <input id="catModelo" placeholder="Modelo" class="w-full border p-3 rounded-xl mb-2 bg-white">
+ <input id="catDesc" placeholder="Descripción" class="w-full border p-3 rounded-xl mb-2 bg-white">
+ <input id="catCap" placeholder="Capacidad Ej: 12000 BTU" class="w-full border p-3 rounded-xl mb-2 bg-white">
+ <input id="catMarca" placeholder="Marca" class="w-full border p-3 rounded-xl mb-2 bg-white">
+ <div class="flex gap-2">
+ <button onclick="agregarCatalogo()" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-black">➕ Agregar</button>
+ <button onclick="guardarEdicionCatalogo()" class="flex-1 bg-yellow-400 py-3 rounded-xl font-black">✏️ Editar</button>
+ <button onclick="borrarEditandoCatalogo()" class="flex-1 bg-red-500 text-white py-3 rounded-xl font-black">🗑️ Borrar</button>
+ </div>
+ <button id="btnCancelarEdit" onclick="cancelarEditarCat()" class="w-full mt-2 bg-gray-200 py-2 rounded-xl text-xs font-black hidden">Cancelar edición</button>
+ </div>
+ <div id="listaCatalogo" class="mt-3 space-y-2"></div>
 </div>
 
 <div id="tab-factura" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-black text-lg">🧾 Factura ⇄ Inventario</h2>
-  <p class="text-xs text-red-600 font-black">⚠️ En Factura NO se borra nada cuando se paga. Queda como historial. Solo se descuenta de Inventario.</p>
-  <div class="grid grid-cols-2 gap-2 mt-3">
-    <div><label class="text-xs font-black">Fecha</label><input id="invFecha" type="date" class="w-full border p-3 rounded-xl"></div>
-    <div><label class="text-xs font-black">Tipo Factura</label><input id="invTipoFactura" placeholder="Ej: 03CCF" class="w-full border p-3 rounded-xl"></div>
-    <div><label class="text-xs font-black">N° Factura</label><input id="invFactura" placeholder="N° Factura" class="w-full border p-3 rounded-xl"></div>
-    <div><label class="text-xs font-black">N° Garantía</label><input id="invGarantia" placeholder="N° Garantía" class="w-full border p-3 rounded-xl"></div>
-    <div class="col-span-2"><label class="text-xs font-black">Sucursal</label><input id="invSucursal" placeholder="Sucursal" class="w-full border p-3 rounded-xl"></div>
-  </div>
-  <hr class="my-3">
-  <p id="editandoInv" class="text-xs font-black text-orange-600 hidden">✏️ Estás EDITANDO</p>
-  <label class="text-xs font-black">Modelo ▼</label>
-  <select id="invModelo" onchange="autollenarCatalogo()" class="w-full border-2 border-blue-400 p-3 rounded-xl my-2 bg-blue-50 font-black"></select>
-  <label class="text-xs font-black">Descripción (auto)</label>
-  <input id="invDesc" readonly class="w-full border p-3 rounded-xl mb-2 bg-gray-100">
-  <label class="text-xs font-black">Serie - 1 Serie = 1 equipo</label>
-  <input id="invSerie" placeholder="Ej: 370581" maxlength="6" inputmode="numeric" class="w-full border-2 border-red-400 p-3 rounded-xl mb-2 font-mono font-black">
-  <label class="text-xs font-black">Capacidad (auto)</label>
-  <input id="invCap" readonly class="w-full border p-3 rounded-xl mb-2 bg-gray-100">
-  <label class="text-xs font-black">Marca (auto)</label>
-  <input id="invMarca2" readonly class="w-full border p-3 rounded-xl mb-2 bg-gray-100">
-  <div class="bg-yellow-50 border rounded-xl p-3 mb-2">
-    <label class="text-xs font-black">Precio Costo - Interno, para sumar la compra después</label>
-    <input id="invPrecioCosto" type="number" placeholder="Precio Costo $ de ESTE equipo" class="w-full border p-3 rounded-xl mt-1">
-  </div>
-  <button id="btnAgregarInv" onclick="guardarInventarioNuevo()" class="w-full bg-green-600 text-white py-3 rounded-xl font-black">✅ AGREGAR PRODUCTO NUEVO</button>
-  <button id="btnEditarInv" onclick="guardarEdicionInventario()" class="w-full bg-yellow-400 py-3 rounded-xl font-black hidden">✏️ GUARDAR CAMBIOS</button>
-  <button onclick="cancelarEditarInv()" class="w-full mt-2 bg-gray-200 py-2 rounded-xl text-xs font-black">Cancelar edición</button>
-  <button onclick="showTab('inventario')" class="w-full mt-2 bg-black text-white py-3 rounded-xl font-black">📦 Ver Inventario</button>
-  <div class="mt-4"><h3 class="font-black text-sm">🧾 Lista Factura - Historial, NO se borra al pagar, Solo Editar</h3><div id="listaFactura" class="mt-2 space-y-2"></div></div>
+ <h2 class="font-black text-lg">🧾 Factura ⇄ Inventario</h2>
+ <p class="text-xs text-red-600 font-black">⚠️ En Factura NO se borra nada cuando se paga. Queda como historial. Solo se descuenta de Inventario.</p>
+ <div class="grid grid-cols-2 gap-2 mt-3">
+ <div><label class="text-xs font-black">Fecha</label><input id="invFecha" type="date" class="w-full border p-3 rounded-xl"></div>
+ <div><label class="text-xs font-black">Tipo Factura</label><input id="invTipoFactura" placeholder="Ej: 03CCF" class="w-full border p-3 rounded-xl"></div>
+ <div><label class="text-xs font-black">N° Factura</label><input id="invFactura" placeholder="N° Factura" class="w-full border p-3 rounded-xl"></div>
+ <div><label class="text-xs font-black">N° Garantía</label><input id="invGarantia" placeholder="N° Garantía" class="w-full border p-3 rounded-xl"></div>
+ <div class="col-span-2"><label class="text-xs font-black">Sucursal</label><input id="invSucursal" placeholder="Sucursal" class="w-full border p-3 rounded-xl"></div>
+ </div>
+ <hr class="my-3">
+ <p id="editandoInv" class="text-xs font-black text-orange-600 hidden">✏️ Estás EDITANDO</p>
+ <label class="text-xs font-black">Modelo ▼</label>
+ <select id="invModelo" onchange="autollenarCatalogo()" class="w-full border-2 border-blue-400 p-3 rounded-xl my-2 bg-blue-50 font-black"></select>
+ <label class="text-xs font-black">Descripción (auto)</label>
+ <input id="invDesc" readonly class="w-full border p-3 rounded-xl mb-2 bg-gray-100">
+ <label class="text-xs font-black">Serie - 1 Serie = 1 equipo</label>
+ <input id="invSerie" placeholder="Ej: 370581" maxlength="6" inputmode="numeric" class="w-full border-2 border-red-400 p-3 rounded-xl mb-2 font-mono font-black">
+ <label class="text-xs font-black">Capacidad (auto)</label>
+ <input id="invCap" readonly class="w-full border p-3 rounded-xl mb-2 bg-gray-100">
+ <label class="text-xs font-black">Marca (auto)</label>
+ <input id="invMarca2" readonly class="w-full border p-3 rounded-xl mb-2 bg-gray-100">
+ <div class="bg-yellow-50 border rounded-xl p-3 mb-2">
+ <label class="text-xs font-black">Precio Costo - Interno, para sumar la compra después</label>
+ <input id="invPrecioCosto" type="number" placeholder="Precio Costo $ de ESTE equipo" class="w-full border p-3 rounded-xl mt-1">
+ </div>
+ <button id="btnAgregarInv" onclick="guardarInventarioNuevo()" class="w-full bg-green-600 text-white py-3 rounded-xl font-black">✅ AGREGAR PRODUCTO NUEVO</button>
+ <button id="btnEditarInv" onclick="guardarEdicionInventario()" class="w-full bg-yellow-400 py-3 rounded-xl font-black hidden">✏️ GUARDAR CAMBIOS</button>
+ <button onclick="cancelarEditarInv()" class="w-full mt-2 bg-gray-200 py-2 rounded-xl text-xs font-black">Cancelar edición</button>
+ <button onclick="showTab('inventario')" class="w-full mt-2 bg-black text-white py-3 rounded-xl font-black">📦 Ver Inventario</button>
+ <div class="mt-4"><h3 class="font-black text-sm">🧾 Lista Factura - Historial, NO se borra al pagar, Solo Editar</h3><div id="listaFactura" class="mt-2 space-y-2"></div></div>
 </div>
 
 <div id="tab-inventario" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-black text-lg">📦 Inventario</h2>
-  <p class="text-xs font-black mt-2">Total en bodega: <span id="totalInv5">0</span> equipos</p>
-  <p class="text-xs font-bold">De aquí SÍ se descuenta cuando se paga. De Factura NO.</p>
-  <div class="overflow-x-auto mt-3">
-    <table class="w-full text-[11px] border">
-      <tr class="bg-gray-100"><th class="p-2 border font-black">Cantidad</th><th class="p-2 border font-black">Apartado</th><th class="p-2 border font-black">Disponible</th><th class="p-2 border font-black">Modelo</th><th class="p-2 border font-black">Descripción</th><th class="p-2 border font-black">Capacidad</th><th class="p-2 border font-black">Marca</th></tr>
-      <tbody id="listaInv"></tbody>
-    </table>
-  </div>
-  <button onclick="showTab('factura')" class="w-full mt-3 bg-blue-600 text-white py-3 rounded-xl font-black">⬅️ Volver a Factura</button>
+ <h2 class="font-black text-lg">📦 Inventario</h2>
+ <p class="text-xs font-black mt-2">Total en bodega: <span id="totalInv5">0</span> equipos</p>
+ <p class="text-xs font-bold">De aquí SÍ se descuenta cuando se paga. De Factura NO.</p>
+ <div class="overflow-x-auto mt-3">
+ <table class="w-full text- border">
+ <tr class="bg-gray-100"><th class="p-2 border font-black">Cantidad</th><th class="p-2 border font-black">Apartado</th><th class="p-2 border font-black">Disponible</th><th class="p-2 border font-black">Modelo</th><th class="p-2 border font-black">Descripción</th><th class="p-2 border font-black">Capacidad</th><th class="p-2 border font-black">Marca</th></tr>
+ <tbody id="listaInv"></tbody>
+ </table>
+ </div>
+ <button onclick="showTab('factura')" class="w-full mt-3 bg-blue-600 text-white py-3 rounded-xl font-black">⬅️ Volver a Factura</button>
 </div>
 
 <div id="tab-gastos" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-black text-lg">💰 Gastos + Cierre</h2>
-  <input id="gDesc" placeholder="Ej: Gasolina" class="w-full border p-3 rounded-xl my-2">
-  <input id="gMonto" type="number" placeholder="Monto $" class="w-full border p-3 rounded-xl mb-2">
-  <select id="gTipo" class="w-full border p-3 rounded-xl mb-2"><option value="negocio">Negocio</option><option value="casa">Casa</option></select>
-  <button onclick="guardarGasto()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-black">Guardar Gasto</button>
-  <div class="mt-4 bg-gray-50 p-3 rounded-xl text-sm"><b class="font-black">Cierre:</b><p id="cierre">Entró: $0 - Salió: $0 - Quedó: $0</p><button onclick="cierreDia()" class="mt-2 bg-green-600 text-white px-4 py-2 rounded-xl text-xs font-black">Hacer Cierre</button></div>
-  <div id="listaGastos" class="mt-3 space-y-2"></div>
+ <h2 class="font-black text-lg">💰 Gastos + Cierre</h2>
+ <input id="gDesc" placeholder="Ej: Gasolina" class="w-full border p-3 rounded-xl my-2">
+ <input id="gMonto" type="number" placeholder="Monto $" class="w-full border p-3 rounded-xl mb-2">
+ <select id="gTipo" class="w-full border p-3 rounded-xl mb-2"><option value="negocio">Negocio</option><option value="casa">Casa</option></select>
+ <button onclick="guardarGasto()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-black">Guardar Gasto</button>
+ <div class="mt-4 bg-gray-50 p-3 rounded-xl text-sm"><b class="font-black">Cierre:</b><p id="cierre">Entró: $0 - Salió: $0 - Quedó: $0</p><button onclick="cierreDia()" class="mt-2 bg-green-600 text-white px-4 py-2 rounded-xl text-xs font-black">Hacer Cierre</button></div>
+ <div id="listaGastos" class="mt-3 space-y-2"></div>
 </div>
 
 <div id="tab-calendario" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-black text-lg">📅 Calendario</h2>
-  <input type="date" id="fechaCal" onchange="renderCal()" class="w-full border p-3 rounded-xl mt-2">
-  <div id="listaCal" class="mt-3"></div>
+ <h2 class="font-black text-lg">📅 Calendario</h2>
+ <input type="date" id="fechaCal" onchange="renderCal()" class="w-full border p-3 rounded-xl mt-2">
+ <div id="listaCal" class="mt-3"></div>
 </div>
 
 <div id="tab-reportes" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-black text-lg">📊 Reportes</h2>
-  <div class="flex gap-2 my-2">
-    <button onclick="generarReporte('dia')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-black">Día</button>
-    <button onclick="generarReporte('semana')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-black">Semana</button>
-    <button onclick="generarReporte('mes')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-black">Mes</button>
-    <button onclick="generarReporte('anio')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-black">Año</button>
-  </div>
-  <div id="reporteBox" class="mt-3 bg-blue-50 p-3 rounded-xl text-sm">Tocá un botón</div>
+ <h2 class="font-black text-lg">📊 Reportes</h2>
+ <div class="flex gap-2 my-2">
+ <button onclick="generarReporte('dia')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-black">Día</button>
+ <button onclick="generarReporte('semana')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-black">Semana</button>
+ <button onclick="generarReporte('mes')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-black">Mes</button>
+ <button onclick="generarReporte('anio')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-black">Año</button>
+ </div>
+ <div id="reporteBox" class="mt-3 bg-blue-50 p-3 rounded-xl text-sm">Tocá un botón</div>
 </div>
 
 <div id="tab-precios" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-black text-lg">🧾 Cotización + PDF</h2>
-  <p class="text-xs font-bold">Mantenimiento $25 • Instalación $80 • Reparación $40 • Gas $60</p>
-  <input id="cCliente" placeholder="Cliente cotización" class="w-full border p-3 rounded-xl my-2">
-  <input id="cDetalle" placeholder="Detalle" class="w-full border p-3 rounded-xl mb-2">
-  <input id="cMonto" type="number" placeholder="Monto $" class="w-full border p-3 rounded-xl mb-2">
-  <button onclick="cotizar()" class="w-full bg-green-600 text-white py-3 rounded-xl font-black">Cotización por WhatsApp</button>
-  <button onclick="factura()" class="w-full mt-2 bg-blue-600 text-white py-3 rounded-xl font-black">Generar Factura / Garantía</button>
-  <button onclick="window.print()" class="w-full mt-2 bg-black text-white py-3 rounded-xl font-black">Imprimir PDF</button>
+ <h2 class="font-black text-lg">🧾 Cotización + PDF</h2>
+ <p class="text-xs font-bold">Mantenimiento $25 • Instalación $80 • Reparación $40 • Gas $60</p>
+ <input id="cCliente" placeholder="Cliente cotización" class="w-full border p-3 rounded-xl my-2">
+ <input id="cDetalle" placeholder="Detalle" class="w-full border p-3 rounded-xl mb-2">
+ <input id="cMonto" type="number" placeholder="Monto $" class="w-full border p-3 rounded-xl mb-2">
+ <button onclick="cotizar()" class="w-full bg-green-600 text-white py-3 rounded-xl font-black">Cotización por WhatsApp</button>
+ <button onclick="factura()" class="w-full mt-2 bg-blue-600 text-white py-3 rounded-xl font-black">Generar Factura / Garantía</button>
+ <button onclick="window.print()" class="w-full mt-2 bg-black text-white py-3 rounded-xl font-black">Imprimir PDF</button>
 </div>
 
 <div id="tab-trabajadores" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-black text-lg">👷 Trabajadores</h2>
-  <input id="tNombre" placeholder="Nombre trabajador" class="w-full border p-3 rounded-xl my-2">
-  <input id="tClave" placeholder="Clave Ej: juan123" class="w-full border p-3 rounded-xl mb-2">
-  <button onclick="guardarTrabajador()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-black">Agregar Trabajador</button>
-  <div id="listaTrab" class="mt-3 space-y-2"></div>
+ <h2 class="font-black text-lg">👷 Trabajadores</h2>
+ <input id="tNombre" placeholder="Nombre trabajador" class="w-full border p-3 rounded-xl my-2">
+ <input id="tClave" placeholder="Clave Ej: juan123" class="w-full border p-3 rounded-xl mb-2">
+ <button onclick="guardarTrabajador()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-black">Agregar Trabajador</button>
+ <div id="listaTrab" class="mt-3 space-y-2"></div>
 </div>
 </div>
 
 <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 text-xs font-black">
-  <button onclick="showTab('trabajos')">👥 Clientes</button>
-  <button onclick="showTab('mantenimientos')">🔧 Mant.</button>
-  <button onclick="showTab('factura')">🧾 Factura</button>
-  <button onclick="showTab('inventario')">📦 Inventario</button>
+ <button onclick="showTab('trabajos')">👥 Clientes</button>
+ <button onclick="showTab('ruta')">🚗 Ruta</button>
+ <button onclick="showTab('garantias')">🛡️ Gar.</button>
+ <button onclick="showTab('mantenimientos')">🔧 Mant.</button>
 </nav>
 
 <div id="modalSerie" class="hidden fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4">
-  <div class="bg-white rounded-2xl p-4 w-full max-w-sm">
-    <h3 id="modalTitulo" class="font-black">⏳ PENDIENTE DE PAGAR - Elegí las Series</h3>
-    <p id="modalSerieTexto" class="text-xs text-gray-500 mt-1 font-bold"></p>
-    <label class="text-xs font-black mt-2 block">Serie Manejadora</label>
-    <select id="selectSerieManejadora" onchange="calcularCompraModal()" class="w-full border-2 border-red-400 p-3 rounded-xl my-1 font-mono font-black"></select>
-    <label class="text-xs font-black block">Serie Condensadora</label>
-    <select id="selectSerieCondensadora" onchange="calcularCompraModal()" class="w-full border-2 border-red-400 p-3 rounded-xl my-1 font-mono font-black"></select>
-    <div class="bg-yellow-50 p-3 rounded-xl text-sm mt-2 font-bold">
-      <p>Compra auto: <b id="modalCompra">$0</b></p>
-      <p>Venta: <b id="modalVenta">$0</b></p>
-      <p>Ganancia: <b id="modalGanancia">$0</b></p>
-    </div>
-    <p id="modalError" class="text-xs text-red-600 font-black hidden mt-2"></p>
-    <div class="flex gap-2 mt-3">
-      <button id="btnModalConfirmar" onclick="confirmarPagoConSeries()" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-black">💰 PAGAR</button>
-      <button onclick="cerrarModalSerie()" class="flex-1 bg-gray-200 py-3 rounded-xl font-black">Cancelar</button>
-    </div>
-  </div>
+ <div class="bg-white rounded-2xl p-4 w-full max-w-sm">
+ <h3 id="modalTitulo" class="font-black">⏳ PENDIENTE DE PAGAR - Elegí las Series</h3>
+ <p id="modalSerieTexto" class="text-xs text-gray-500 mt-1 font-bold"></p>
+ <label class="text-xs font-black mt-2 block">Serie Manejadora</label>
+ <select id="selectSerieManejadora" onchange="calcularCompraModal()" class="w-full border-2 border-red-400 p-3 rounded-xl my-1 font-mono font-black"></select>
+ <label class="text-xs font-black block">Serie Condensadora</label>
+ <select id="selectSerieCondensadora" onchange="calcularCompraModal()" class="w-full border-2 border-red-400 p-3 rounded-xl my-1 font-mono font-black"></select>
+ <div class="bg-yellow-50 p-3 rounded-xl text-sm mt-2 font-bold">
+ <p>Compra auto: <b id="modalCompra">$0</b></p>
+ <p>Venta: <b id="modalVenta">$0</b></p>
+ <p>Ganancia: <b id="modalGanancia">$0</b></p>
+ </div>
+ <p id="modalError" class="text-xs text-red-600 font-black hidden mt-2"></p>
+ <div class="flex gap-2 mt-3">
+ <button id="btnModalConfirmar" onclick="confirmarPagoConSeries()" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-black">💰 PAGAR</button>
+ <button onclick="cerrarModalSerie()" class="flex-1 bg-gray-200 py-3 rounded-xl font-black">Cancelar</button>
+ </div>
+ </div>
 </div>
 
 <script>
 const CLAVE="Friosreina";
 function entrar(){
-  let v=document.getElementById('claveInput').value;
-  let trabs=JSON.parse(localStorage.getItem('climaserv_trabs')||'[]');
-  let esTrab=trabs.find(t=>t.clave===v);
-  if(v===CLAVE || esTrab){ localStorage.setItem('climaserv_login','ok'); localStorage.setItem('climaserv_user', esTrab ? esTrab.nombre : 'Jefe'); document.getElementById('login').style.display='none'; document.getElementById('app').classList.remove('hidden'); render(); }
-  else { document.getElementById('errorClave').innerText='Clave incorrecta'; }
+ let v=document.getElementById('claveInput').value;
+ let trabs=JSON.parse(localStorage.getItem('climaserv_trabs')||'[]');
+ let esTrab=trabs.find(t=>t.clave===v);
+ if(v===CLAVE || esTrab){ localStorage.setItem('climaserv_login','ok'); localStorage.setItem('climaserv_user', esTrab ? esTrab.nombre: 'Jefe'); document.getElementById('login').style.display='none'; document.getElementById('app').classList.remove('hidden'); render(); }
+ else { document.getElementById('errorClave').innerText='Clave incorrecta'; }
 }
 if(localStorage.getItem('climaserv_login')==='ok'){ document.getElementById('login').style.display='none'; document.getElementById('app').classList.remove('hidden'); }
 let CATALOGO=JSON.parse(localStorage.getItem('climaserv_catalogo')||'[]');
@@ -289,82 +334,124 @@ let facturas=JSON.parse(localStorage.getItem('climaserv_facturas')||'[]');
 if(facturas.length===0 && inventario.length>0){ facturas=[...inventario]; }
 let gastos=JSON.parse(localStorage.getItem('climaserv_gastos')||'[]');
 let trabajadores=JSON.parse(localStorage.getItem('climaserv_trabs')||'[]');
-let filtro='todos'; let filtroMant='todos'; let datosTemp=null; let editandoCatIndex=-1; let editandoInvIndex=-1; let editandoInvSerieOld=''; let pagandoIndex=-1;
+let filtro='todos'; let filtroMant='todos'; let filtroGar='todos'; let filtroRuta='pendientes';
+let datosTemp=null; let editandoCatIndex=-1; let editandoInvIndex=-1; let editandoInvSerieOld=''; let pagandoIndex=-1;
 function save(){ localStorage.setItem('climaserv_catalogo',JSON.stringify(CATALOGO)); localStorage.setItem('climaserv_trabajos',JSON.stringify(datos)); localStorage.setItem('climaserv_inv_5',JSON.stringify(inventario)); localStorage.setItem('climaserv_facturas',JSON.stringify(facturas)); localStorage.setItem('climaserv_gastos',JSON.stringify(gastos)); localStorage.setItem('climaserv_trabs',JSON.stringify(trabajadores)); render(); renderCal(); }
 function setFiltro(f){filtro=f;render();}
 function setFiltroMant(f){filtroMant=f;render();}
+function setFiltroGar(f){filtroGar=f;render();}
+function setFiltroRuta(f){filtroRuta=f;render();}
 function showTab(t){ document.querySelectorAll('.tab').forEach(e=>e.classList.add('hidden')); document.getElementById('tab-'+t).classList.remove('hidden'); }
 function normCap(s){ return (s||'').toString().toLowerCase().replace(/[^0-9]/g,''); }
 function parseFecha(s){ if(!s) return null; let d=new Date(s+'T12:00:00'); return isNaN(d)?null:d; }
 function fmtFecha(d){ if(!d) return '-'; return d.toISOString().slice(0,10); }
 function sumarDias(fecha,dias){ let d=new Date(fecha); d.setDate(d.getDate()+dias); return d; }
 function infoMant(d){
-  let baseStr = d.ultimoMant || d.fechaTrabajo || d.fecha;
-  let base = parseFecha(baseStr ? baseStr.slice(0,10) : null);
-  if(!base) return null;
-  let vence = sumarDias(base, 90);
-  let hoy = new Date(); hoy.setHours(12,0,0,0);
-  let dias = Math.round((vence - hoy)/(1000*60*60*24));
-  return {base, vence, dias, baseStr: fmtFecha(base), venceStr: fmtFecha(vence)};
+ let baseStr = d.ultimoMant || d.fechaTrabajo || d.fecha;
+ let base = parseFecha(baseStr ? baseStr.slice(0,10): null);
+ if(!base) return null;
+ let vence = sumarDias(base, 90);
+ let hoy = new Date(); hoy.setHours(12,0,0,0);
+ let dias = Math.round((vence - hoy)/(1000*60*60*24));
+ return {base, vence, dias, baseStr: fmtFecha(base), venceStr: fmtFecha(vence)};
+}
+function infoGarantia(d){
+ if(!d.garantiaProv) return null;
+ let vence = parseFecha(d.garantiaProv.slice(0,10));
+ if(!vence) return null;
+ let hoy = new Date(); hoy.setHours(12,0,0,0);
+ let dias = Math.round((vence - hoy)/(1000*60*60*24));
+ return {vence, dias, venceStr: fmtFecha(vence)};
 }
 function hacerMantenimiento(idx){
-  let d=datos[idx]; let info=infoMant(d); if(!info) return;
-  let costoStr = prompt('¿Costo del mantenimiento para '+d.cliente+' - '+d.capacidadTrabajo+'?\nEj: 25\nSi fue gratis poné 0');
-  if(costoStr===null) return;
-  let costo = parseFloat(costoStr||0);
-  let hoyStr = new Date().toISOString().slice(0,10);
-  if(!d.historialMant) d.historialMant=[];
-  d.historialMant.unshift({fecha: hoyStr, costo: costo, baseAnterior: info.baseStr, vencimientoAnterior: info.venceStr});
-  d.ultimoMant = hoyStr;
-  d.ultimoCostoMant = costo;
-  save();
-  alert('✅ Mantenimiento hecho guardado aparte\nCliente: '+d.cliente+'\nFecha: '+hoyStr+'\nCosto: $'+costo+'\nPróximo: en 90 días');
+ let d=datos[idx]; let info=infoMant(d); if(!info) return;
+ let costoStr = prompt('¿Costo del mantenimiento para '+d.cliente+' - '+d.capacidadTrabajo+'?\nEj: 25\nSi fue gratis poné 0');
+ if(costoStr===null) return;
+ let costo = parseFloat(costoStr||0);
+ let hoyStr = new Date().toISOString().slice(0,10);
+ if(!d.historialMant) d.historialMant=[];
+ d.historialMant.unshift({fecha: hoyStr, costo: costo, baseAnterior: info.baseStr, vencimientoAnterior: info.venceStr});
+ d.ultimoMant = hoyStr;
+ d.ultimoCostoMant = costo;
+ // Marcar hecho en ruta de hoy
+ let fechaRuta = document.getElementById('rutaFecha').value || hoyStr;
+ if(!d.rutaHecha) d.rutaHecha={};
+ d.rutaHecha[fechaRuta]=true;
+ save();
+ alert('✅ Mantenimiento hecho guardado aparte\nCliente: '+d.cliente+'\nFecha: '+hoyStr+'\nCosto: $'+costo+'\nPróximo: en 90 días');
+}
+function marcarRutaHecha(idx){
+ let fechaRuta = document.getElementById('rutaFecha').value || new Date().toISOString().slice(0,10);
+ let d=datos[idx];
+ if(!d.rutaHecha) d.rutaHecha={};
+ d.rutaHecha[fechaRuta]=true;
+ save();
+}
+function desmarcarRuta(idx){
+ let fechaRuta = document.getElementById('rutaFecha').value || new Date().toISOString().slice(0,10);
+ let d=datos[idx];
+ if(d.rutaHecha) delete d.rutaHecha[fechaRuta];
+ save();
+}
+function avisarWhatsApp(d){
+ let tel = (d.telefono||'').replace(/[^0-9]/g,'');
+ let msg = `Hola ${d.cliente}, soy de Climaserv ❄️. Hoy paso a hacerle el mantenimiento a su aire ${d.capacidadTrabajo} en ${d.departamento}. ¿A qué hora le queda bien?`;
+ window.open('https://wa.me/503'+tel+'?text='+encodeURIComponent(msg));
+}
+function compartirRuta(){
+ let fechaRuta = document.getElementById('rutaFecha').value || new Date().toISOString().slice(0,10);
+ let dep = document.getElementById('rutaDep').value;
+ let items = datos.map(d=>({d, info: infoMant(d)})).filter(x=>x.info && x.info.dias<=15);
+ if(dep!=='todos') items = items.filter(x=>x.d.departamento===dep);
+ if(!items.length) return alert('No hay ruta para compartir.');
+ let texto = `🚗 RUTA ${fechaRuta} - ${dep==='todos'?'Todos':dep}\n` + items.map((x,i)=>`${i+1}. ${x.d.cliente} - ${x.d.telefono} - ${x.d.departamento} - ${x.d.capacidadTrabajo} - ${x.info.dias<0?Math.abs(x.info.dias)+' días sin mant.':x.info.dias+' días'}`).join('\n');
+ window.open('https://wa.me/?text='+encodeURIComponent(texto));
 }
 function cargarCapacidades(){
-  let sel=document.getElementById('fCapacidadTrabajo'); if(!sel) return;
-  let caps=[]; inventario.forEach(x=>{ let c=(x.capacidad||'').trim(); if(c && !caps.some(y=>normCap(y)===normCap(c))) caps.push(c); });
-  facturas.forEach(x=>{ let c=(x.capacidad||'').trim(); if(c && !caps.some(y=>normCap(y)===normCap(c))) caps.push(c); });
-  let actual=sel.value;
-  if(caps.length===0){ sel.innerHTML='<option value="">-- Primero agregá en Factura / Inventario --</option>'; }
-  else { sel.innerHTML='<option value="">Elegir capacidad ▼</option>'+caps.map(c=>`<option value="${c}">${c}</option>`).join(''); if(actual) sel.value=actual; }
+ let sel=document.getElementById('fCapacidadTrabajo'); if(!sel) return;
+ let caps=[]; inventario.forEach(x=>{ let c=(x.capacidad||'').trim(); if(c && !caps.some(y=>normCap(y)===normCap(c))) caps.push(c); });
+ facturas.forEach(x=>{ let c=(x.capacidad||'').trim(); if(c && !caps.some(y=>normCap(y)===normCap(c))) caps.push(c); });
+ let actual=sel.value;
+ if(caps.length===0){ sel.innerHTML='<option value="">-- Primero agregá en Factura / Inventario --</option>'; }
+ else { sel.innerHTML='<option value="">Elegir capacidad ▼</option>'+caps.map(c=>`<option value="${c}">${c}</option>`).join(''); if(actual) sel.value=actual; }
 }
 function toggleSeriesInternas(){
-  let esPagado=document.getElementById('fEstado').value==='pagado';
-  document.getElementById('boxSeriesInternas').classList.toggle('hidden',!esPagado);
-  document.getElementById('boxVentaPendiente').classList.toggle('hidden',esPagado);
-  if(esPagado){ llenarSeriesTrabajo(); calcularCompraAuto(); }
+ let esPagado=document.getElementById('fEstado').value==='pagado';
+ document.getElementById('boxSeriesInternas').classList.toggle('hidden',!esPagado);
+ document.getElementById('boxVentaPendiente').classList.toggle('hidden',esPagado);
+ if(esPagado){ llenarSeriesTrabajo(); calcularCompraAuto(); }
 }
 function llenarSeriesTrabajo(){
-  let cap=document.getElementById('fCapacidadTrabajo').value;
-  let filtrados=inventario.filter(x=>!cap || normCap(x.capacidad)===normCap(cap));
-  let opts='<option value="">Elegir Serie ▼</option>'+filtrados.map(x=>`<option value="${x.serie}">${x.serie} - ${x.modelo} - ${x.capacidad} - Costo $${x.precioCosto||0}</option>`).join('');
-  document.getElementById('fSerieManejadora').innerHTML=opts;
-  document.getElementById('fSerieCondensadora').innerHTML=opts;
+ let cap=document.getElementById('fCapacidadTrabajo').value;
+ let filtrados=inventario.filter(x=>!cap || normCap(x.capacidad)===normCap(cap));
+ let opts='<option value="">Elegir Serie ▼</option>'+filtrados.map(x=>`<option value="${x.serie}">${x.serie} - ${x.modelo} - ${x.capacidad} - Costo $${x.precioCosto||0}</option>`).join('');
+ document.getElementById('fSerieManejadora').innerHTML=opts;
+ document.getElementById('fSerieCondensadora').innerHTML=opts;
 }
 function validarSeries(mSerie,cSerie,capEsperada){
-  if(!mSerie || !cSerie) return 'Te faltan las 2 Series. Sin las 2 no se puede pagar.';
-  if(mSerie===cSerie) return '❌ La Manejadora y la Condensadora NO pueden ser la misma Serie.';
-  let m=inventario.find(x=>x.serie===mSerie) || facturas.find(x=>x.serie===mSerie);
-  let c=inventario.find(x=>x.serie===cSerie) || facturas.find(x=>x.serie===cSerie);
-  if(!m) return '❌ Manejadora '+mSerie+' NO está en Inventario / Factura.';
-  if(!c) return '❌ Condensadora '+cSerie+' NO está en Inventario / Factura.';
-  if(normCap(m.capacidad)!==normCap(c.capacidad)) return '❌ Capacidad no coincide: Manejadora '+m.capacidad+' vs Condensadora '+c.capacidad+'.';
-  if(capEsperada && normCap(m.capacidad)!==normCap(capEsperada)) return '❌ Capacidad no coincide con el trabajo: Trabajo '+capEsperada+' vs Equipo '+m.capacidad+'.';
-  return '';
+ if(!mSerie || !cSerie) return 'Te faltan las 2 Series. Sin las 2 no se puede pagar.';
+ if(mSerie===cSerie) return '❌ La Manejadora y la Condensadora NO pueden ser la misma Serie.';
+ let m=inventario.find(x=>x.serie===mSerie) || facturas.find(x=>x.serie===mSerie);
+ let c=inventario.find(x=>x.serie===cSerie) || facturas.find(x=>x.serie===cSerie);
+ if(!m) return '❌ Manejadora '+mSerie+' NO está en Inventario / Factura.';
+ if(!c) return '❌ Condensadora '+cSerie+' NO está en Inventario / Factura.';
+ if(normCap(m.capacidad)!==normCap(c.capacidad)) return '❌ Capacidad no coincide: Manejadora '+m.capacidad+' vs Condensadora '+c.capacidad+'.';
+ if(capEsperada && normCap(m.capacidad)!==normCap(capEsperada)) return '❌ Capacidad no coincide con el trabajo: Trabajo '+capEsperada+' vs Equipo '+m.capacidad+'.';
+ return '';
 }
-function getCostoSerie(serie){ let x=inventario.find(v=>v.serie===serie) || facturas.find(v=>v.serie===serie); return x ? (parseFloat(x.precioCosto||0)) : 0; }
+function getCostoSerie(serie){ let x=inventario.find(v=>v.serie===serie) || facturas.find(v=>v.serie===serie); return x ? (parseFloat(x.precioCosto||0)): 0; }
 function calcularCompraAuto(){
-  let m=document.getElementById('fSerieManejadora').value;
-  let c=document.getElementById('fSerieCondensadora').value;
-  let cap=document.getElementById('fCapacidadTrabajo').value;
-  let err=validarSeries(m,c,cap);
-  let errEl=document.getElementById('errorSeries');
-  if(m && c){ if(err){ errEl.innerText=err; errEl.classList.remove('hidden'); } else errEl.classList.add('hidden'); } else errEl.classList.add('hidden');
-  let compra=getCostoSerie(m)+getCostoSerie(c);
-  document.getElementById('txtCompraAuto').innerText='$'+compra;
-  let venta=parseFloat(document.getElementById('fMonto').value||0);
-  document.getElementById('txtGananciaAuto').innerText='$'+(venta-compra);
-  return {compra, err};
+ let m=document.getElementById('fSerieManejadora').value;
+ let c=document.getElementById('fSerieCondensadora').value;
+ let cap=document.getElementById('fCapacidadTrabajo').value;
+ let err=validarSeries(m,c,cap);
+ let errEl=document.getElementById('errorSeries');
+ if(m && c){ if(err){ errEl.innerText=err; errEl.classList.remove('hidden'); } else errEl.classList.add('hidden'); } else errEl.classList.add('hidden');
+ let compra=getCostoSerie(m)+getCostoSerie(c);
+ document.getElementById('txtCompraAuto').innerText='$'+compra;
+ let venta=parseFloat(document.getElementById('fMonto').value||0);
+ document.getElementById('txtGananciaAuto').innerText='$'+(venta-compra);
+ return {compra, err};
 }
 document.addEventListener('input',e=>{ if(e.target.id==='fMonto') calcularCompraAuto(); });
 function leerCatForm(){ return { modelo:document.getElementById('catModelo').value.trim(), desc:document.getElementById('catDesc').value.trim(), cap:document.getElementById('catCap').value.trim(), marca:document.getElementById('catMarca').value.trim() }; }
@@ -376,129 +463,129 @@ function editarCatalogo(i){ let c=CATALOGO[i]; editandoCatIndex=i; document.getE
 function borrarCatalogo(i){ if(!confirm('¿Borrar '+CATALOGO[i].modelo+'?')) return; CATALOGO.splice(i,1); if(editandoCatIndex===i) cancelarEditarCat(); save(); }
 function cancelarEditarCat(){ editandoCatIndex=-1; ['catModelo','catDesc','catCap','catMarca'].forEach(id=>document.getElementById(id).value=''); document.getElementById('editandoCat').classList.add('hidden'); document.getElementById('btnCancelarEdit').classList.add('hidden'); }
 function cargarCatalogo(){
-  let sel=document.getElementById('invModelo'); if(!sel) return;
-  if(CATALOGO.length===0){ sel.innerHTML='<option value="">-- Primero agregá en Catálogo --</option>'; }
-  else { let actual=sel.value; sel.innerHTML=CATALOGO.map(c=>`<option value="${c.modelo}">${c.modelo} - ${c.cap}</option>`).join(''); if(actual && CATALOGO.some(c=>c.modelo===actual)) sel.value=actual; autollenarCatalogo(); }
-  document.getElementById('listaCatalogo').innerHTML=CATALOGO.length?CATALOGO.map((c,i)=>`<div class="border p-2 rounded-xl text-xs"><b>${c.modelo}</b><br>${c.desc}<br>${c.cap} - ${c.marca}<br><div class="flex gap-2 mt-1"><button onclick="editarCatalogo(${i})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-black">✏️ Editar</button><button onclick="borrarCatalogo(${i})" class="bg-red-100 px-3 py-1 rounded-full text-xs font-black">🗑️ Borrar</button></div></div>`).join(''):'<p class="text-xs text-gray-400">Catálogo vacío.</p>';
+ let sel=document.getElementById('invModelo'); if(!sel) return;
+ if(CATALOGO.length===0){ sel.innerHTML='<option value="">-- Primero agregá en Catálogo --</option>'; }
+ else { let actual=sel.value; sel.innerHTML=CATALOGO.map(c=>`<option value="${c.modelo}">${c.modelo} - ${c.cap}</option>`).join(''); if(actual && CATALOGO.some(c=>c.modelo===actual)) sel.value=actual; autollenarCatalogo(); }
+ document.getElementById('listaCatalogo').innerHTML=CATALOGO.length?CATALOGO.map((c,i)=>`<div class="border p-2 rounded-xl text-xs"><b>${c.modelo}</b><br>${c.desc}<br>${c.cap} - ${c.marca}<br><div class="flex gap-2 mt-1"><button onclick="editarCatalogo(${i})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-black">✏️ Editar</button><button onclick="borrarCatalogo(${i})" class="bg-red-100 px-3 py-1 rounded-full text-xs font-black">🗑️ Borrar</button></div></div>`).join(''):'<p class="text-xs text-gray-400">Catálogo vacío.</p>';
 }
 function autollenarCatalogo(){ let modelo=document.getElementById('invModelo').value; let c=CATALOGO.find(x=>x.modelo===modelo); if(!c) return; document.getElementById('invDesc').value=c.desc; document.getElementById('invCap').value=c.cap; document.getElementById('invMarca2').value=c.marca; }
 function mostrarModoAgregar(){ document.getElementById('btnAgregarInv').classList.remove('hidden'); document.getElementById('btnEditarInv').classList.add('hidden'); document.getElementById('editandoInv').classList.add('hidden'); }
 function mostrarModoEditar(){ document.getElementById('btnAgregarInv').classList.add('hidden'); document.getElementById('btnEditarInv').classList.remove('hidden'); document.getElementById('editandoInv').classList.remove('hidden'); }
 function guardarInventarioNuevo(){
-  if(CATALOGO.length===0) return alert('Primero agregá en Catálogo');
-  let serie=document.getElementById('invSerie').value.trim();
-  if(!serie) return alert('Te faltó la Serie');
-  if(facturas.some(i=>i.serie===serie)) return alert('Esa Serie '+serie+' ya está en Factura.');
-  let nuevo={modelo:document.getElementById('invModelo').value,descripcion:document.getElementById('invDesc').value,serie:serie,capacidad:document.getElementById('invCap').value,marca:document.getElementById('invMarca2').value,precioCosto:parseFloat(document.getElementById('invPrecioCosto').value||0),fecha:document.getElementById('invFecha').value,tipoFactura:document.getElementById('invTipoFactura').value,factura:document.getElementById('invFactura').value,garantia:document.getElementById('invGarantia').value,sucursal:document.getElementById('invSucursal').value};
-  facturas.unshift({...nuevo}); inventario.unshift({...nuevo});
-  save(); document.getElementById('invSerie').value=''; document.getElementById('invPrecioCosto').value=''; mostrarModoAgregar(); alert('✅ Agregado en Factura Y en Inventario - Serie '+serie);
+ if(CATALOGO.length===0) return alert('Primero agregá en Catálogo');
+ let serie=document.getElementById('invSerie').value.trim();
+ if(!serie) return alert('Te faltó la Serie');
+ if(facturas.some(i=>i.serie===serie)) return alert('Esa Serie '+serie+' ya está en Factura.');
+ let nuevo={modelo:document.getElementById('invModelo').value,descripcion:document.getElementById('invDesc').value,serie:serie,capacidad:document.getElementById('invCap').value,marca:document.getElementById('invMarca2').value,precioCosto:parseFloat(document.getElementById('invPrecioCosto').value||0),fecha:document.getElementById('invFecha').value,tipoFactura:document.getElementById('invTipoFactura').value,factura:document.getElementById('invFactura').value,garantia:document.getElementById('invGarantia').value,sucursal:document.getElementById('invSucursal').value};
+ facturas.unshift({...nuevo}); inventario.unshift({...nuevo});
+ save(); document.getElementById('invSerie').value=''; document.getElementById('invPrecioCosto').value=''; mostrarModoAgregar(); alert('✅ Agregado en Factura Y en Inventario - Serie '+serie);
 }
 function editarInventario(i){
-  let x=facturas[i]; editandoInvIndex=i; editandoInvSerieOld=x.serie;
-  document.getElementById('invFecha').value=x.fecha||''; document.getElementById('invTipoFactura').value=x.tipoFactura||''; document.getElementById('invFactura').value=x.factura||''; document.getElementById('invGarantia').value=x.garantia||''; document.getElementById('invSucursal').value=x.sucursal||''; document.getElementById('invModelo').value=x.modelo; document.getElementById('invDesc').value=x.descripcion; document.getElementById('invSerie').value=x.serie; document.getElementById('invCap').value=x.capacidad; document.getElementById('invMarca2').value=x.marca; document.getElementById('invPrecioCosto').value=x.precioCosto||'';
-  mostrarModoEditar(); showTab('factura'); window.scrollTo(0,0);
+ let x=facturas[i]; editandoInvIndex=i; editandoInvSerieOld=x.serie;
+ document.getElementById('invFecha').value=x.fecha||''; document.getElementById('invTipoFactura').value=x.tipoFactura||''; document.getElementById('invFactura').value=x.factura||''; document.getElementById('invGarantia').value=x.garantia||''; document.getElementById('invSucursal').value=x.sucursal||''; document.getElementById('invModelo').value=x.modelo; document.getElementById('invDesc').value=x.descripcion; document.getElementById('invSerie').value=x.serie; document.getElementById('invCap').value=x.capacidad; document.getElementById('invMarca2').value=x.marca; document.getElementById('invPrecioCosto').value=x.precioCosto||'';
+ mostrarModoEditar(); showTab('factura'); window.scrollTo(0,0);
 }
 function guardarEdicionInventario(){
-  if(editandoInvIndex<0) return alert('Primero tocá ✏️ Editar');
-  let serie=document.getElementById('invSerie').value.trim(); if(!serie) return alert('Te faltó la Serie');
-  if(facturas.some((x,idx)=>idx!==editandoInvIndex && x.serie===serie)) return alert('Esa Serie ya está en otra fila.');
-  let actualizado={modelo:document.getElementById('invModelo').value,descripcion:document.getElementById('invDesc').value,serie:serie,capacidad:document.getElementById('invCap').value,marca:document.getElementById('invMarca2').value,precioCosto:parseFloat(document.getElementById('invPrecioCosto').value||0),fecha:document.getElementById('invFecha').value,tipoFactura:document.getElementById('invTipoFactura').value,factura:document.getElementById('invFactura').value,garantia:document.getElementById('invGarantia').value,sucursal:document.getElementById('invSucursal').value};
-  facturas[editandoInvIndex]=actualizado;
-  let idxInv=inventario.findIndex(x=>x.serie===editandoInvSerieOld);
-  if(idxInv>=0) inventario[idxInv]=actualizado;
-  alert('✅ Editado en Factura Y en Inventario'); cancelarEditarInv(); save();
+ if(editandoInvIndex<0) return alert('Primero tocá ✏️ Editar');
+ let serie=document.getElementById('invSerie').value.trim(); if(!serie) return alert('Te faltó la Serie');
+ if(facturas.some((x,idx)=>idx!==editandoInvIndex && x.serie===serie)) return alert('Esa Serie ya está en otra fila.');
+ let actualizado={modelo:document.getElementById('invModelo').value,descripcion:document.getElementById('invDesc').value,serie:serie,capacidad:document.getElementById('invCap').value,marca:document.getElementById('invMarca2').value,precioCosto:parseFloat(document.getElementById('invPrecioCosto').value||0),fecha:document.getElementById('invFecha').value,tipoFactura:document.getElementById('invTipoFactura').value,factura:document.getElementById('invFactura').value,garantia:document.getElementById('invGarantia').value,sucursal:document.getElementById('invSucursal').value};
+ facturas[editandoInvIndex]=actualizado;
+ let idxInv=inventario.findIndex(x=>x.serie===editandoInvSerieOld);
+ if(idxInv>=0) inventario[idxInv]=actualizado;
+ alert('✅ Editado en Factura Y en Inventario'); cancelarEditarInv(); save();
 }
 function cancelarEditarInv(){ editandoInvIndex=-1; editandoInvSerieOld=''; document.getElementById('editandoInv').classList.add('hidden'); document.getElementById('invSerie').value=''; mostrarModoAgregar(); }
 function agregarOtroEquipo(telefono){
-  let ultimo=datos.find(d=>d.telefono===telefono);
-  if(!ultimo) return;
-  fCliente.value=ultimo.cliente||''; fTelefono.value=ultimo.telefono||''; fCumple.value=ultimo.cumple||'';
-  document.getElementById('fDepartamento').value='';
-  document.getElementById('fFechaTrabajo').value=''; document.getElementById('fCapacidadTrabajo').value=''; document.getElementById('fSistema').value=''; fTrabajador.value=ultimo.trabajador||''; fFrecuencia.value=ultimo.frecuencia||'3'; document.getElementById('fEstado').value='pendiente'; fGarantiaProv.value=''; document.getElementById('fMonto').value=''; document.getElementById('fMontoPendiente').value='';
-  toggleSeriesInternas();
-  window.scrollTo(0,0);
-  alert('Listo para agregar otro equipo a '+ultimo.cliente+'\nYa te llené nombre, teléfono y cumpleaños. Vos elegís el nuevo departamento, capacidad, fecha y precio.');
+ let ultimo=datos.find(d=>d.telefono===telefono);
+ if(!ultimo) return;
+ fCliente.value=ultimo.cliente||''; fTelefono.value=ultimo.telefono||''; fCumple.value=ultimo.cumple||'';
+ document.getElementById('fDepartamento').value='';
+ document.getElementById('fFechaTrabajo').value=''; document.getElementById('fCapacidadTrabajo').value=''; document.getElementById('fSistema').value=''; fTrabajador.value=ultimo.trabajador||''; fFrecuencia.value=ultimo.frecuencia||'3'; document.getElementById('fEstado').value='pendiente'; fGarantiaProv.value=''; document.getElementById('fMonto').value=''; document.getElementById('fMontoPendiente').value='';
+ toggleSeriesInternas();
+ window.scrollTo(0,0);
+ alert('Listo para agregar otro equipo a '+ultimo.cliente+'\nYa te llené nombre, teléfono y cumpleaños. Vos elegís el nuevo departamento, capacidad, fecha y precio.');
 }
 function abrirPago(idx){
-  let d=datos[idx];
-  pagandoIndex=idx;
-  let cap=d.capacidadTrabajo||'';
-  let filtrados=inventario.filter(x=>!cap || normCap(x.capacidad)===normCap(cap));
-  if(filtrados.length<2) return alert('No tenés 2 equipos con esa Capacidad '+cap+' en Inventario. No se puede pagar.');
-  document.getElementById('modalTitulo').innerText='⏳ PENDIENTE DE PAGAR - Elegí las Series';
-  document.getElementById('modalSerieTexto').innerText='Cliente: '+d.cliente+' - Capacidad: '+cap+' - Sistema: '+(d.sistema||'-')+' - Venta: $'+d.monto+' - Factura NO se borra, solo Inventario.';
-  document.getElementById('modalVenta').innerText='$'+d.monto;
-  let opts='<option value="">Elegir Serie ▼</option>'+filtrados.map(x=>`<option value="${x.serie}">${x.serie} - ${x.modelo} - ${x.capacidad} - Costo $${x.precioCosto||0}</option>`).join('');
-  document.getElementById('selectSerieManejadora').innerHTML=opts;
-  document.getElementById('selectSerieCondensadora').innerHTML=opts;
-  if(d.serieManejadora) document.getElementById('selectSerieManejadora').value=d.serieManejadora;
-  if(d.serieCondensadora) document.getElementById('selectSerieCondensadora').value=d.serieCondensadora;
-  calcularCompraModal();
-  document.getElementById('modalSerie').classList.remove('hidden');
+ let d=datos[idx];
+ pagandoIndex=idx;
+ let cap=d.capacidadTrabajo||'';
+ let filtrados=inventario.filter(x=>!cap || normCap(x.capacidad)===normCap(cap));
+ if(filtrados.length<2) return alert('No tenés 2 equipos con esa Capacidad '+cap+' en Inventario. No se puede pagar.');
+ document.getElementById('modalTitulo').innerText='⏳ PENDIENTE DE PAGAR - Elegí las Series';
+ document.getElementById('modalSerieTexto').innerText='Cliente: '+d.cliente+' - Capacidad: '+cap+' - Sistema: '+(d.sistema||'-')+' - Venta: $'+d.monto+' - Factura NO se borra, solo Inventario.';
+ document.getElementById('modalVenta').innerText='$'+d.monto;
+ let opts='<option value="">Elegir Serie ▼</option>'+filtrados.map(x=>`<option value="${x.serie}">${x.serie} - ${x.modelo} - ${x.capacidad} - Costo $${x.precioCosto||0}</option>`).join('');
+ document.getElementById('selectSerieManejadora').innerHTML=opts;
+ document.getElementById('selectSerieCondensadora').innerHTML=opts;
+ if(d.serieManejadora) document.getElementById('selectSerieManejadora').value=d.serieManejadora;
+ if(d.serieCondensadora) document.getElementById('selectSerieCondensadora').value=d.serieCondensadora;
+ calcularCompraModal();
+ document.getElementById('modalSerie').classList.remove('hidden');
 }
 function calcularCompraModal(){
-  if(pagandoIndex<0) return;
-  let d=datos[pagandoIndex];
-  let m=document.getElementById('selectSerieManejadora').value;
-  let c=document.getElementById('selectSerieCondensadora').value;
-  let err=validarSeries(m,c,d.capacidadTrabajo);
-  let el=document.getElementById('modalError');
-  if(m && c && err){ el.innerText=err; el.classList.remove('hidden'); } else el.classList.add('hidden');
-  let compra=getCostoSerie(m)+getCostoSerie(c);
-  document.getElementById('modalCompra').innerText='$'+compra;
-  document.getElementById('modalGanancia').innerText='$'+(parseFloat(d.monto||0)-compra);
+ if(pagandoIndex<0) return;
+ let d=datos[pagandoIndex];
+ let m=document.getElementById('selectSerieManejadora').value;
+ let c=document.getElementById('selectSerieCondensadora').value;
+ let err=validarSeries(m,c,d.capacidadTrabajo);
+ let el=document.getElementById('modalError');
+ if(m && c && err){ el.innerText=err; el.classList.remove('hidden'); } else el.classList.add('hidden');
+ let compra=getCostoSerie(m)+getCostoSerie(c);
+ document.getElementById('modalCompra').innerText='$'+compra;
+ document.getElementById('modalGanancia').innerText='$'+(parseFloat(d.monto||0)-compra);
 }
 function cerrarModalSerie(){ pagandoIndex=-1; document.getElementById('modalSerie').classList.add('hidden'); }
 function confirmarPagoConSeries(){
-  if(pagandoIndex<0) return;
-  let d=datos[pagandoIndex];
-  let m=document.getElementById('selectSerieManejadora').value;
-  let c=document.getElementById('selectSerieCondensadora').value;
-  let err=validarSeries(m,c,d.capacidadTrabajo);
-  if(err) return alert(err+'\n\nNO SE HIZO NADA.');
-  let compra=getCostoSerie(m)+getCostoSerie(c);
-  d.serieManejadora=m; d.serieCondensadora=c; d.precioCompra=compra; d.ganancia=parseFloat(d.monto||0)-compra;
-  d.estado='pagado'; d.fechaPago=new Date().toISOString();
-  inventario=inventario.filter(x=>x.serie!==m && x.serie!==c);
-  cerrarModalSerie(); save();
-  alert('✅ Pagado\nManejadora: '+m+'\nCondensadora: '+c+'\nCompra: $'+compra+'\nVenta: $'+d.monto+'\nGanancia: $'+d.ganancia+'\nSe descontó SOLO de Inventario. Factura quedó intacta.');
+ if(pagandoIndex<0) return;
+ let d=datos[pagandoIndex];
+ let m=document.getElementById('selectSerieManejadora').value;
+ let c=document.getElementById('selectSerieCondensadora').value;
+ let err=validarSeries(m,c,d.capacidadTrabajo);
+ if(err) return alert(err+'\n\nNO SE HIZO NADA.');
+ let compra=getCostoSerie(m)+getCostoSerie(c);
+ d.serieManejadora=m; d.serieCondensadora=c; d.precioCompra=compra; d.ganancia=parseFloat(d.monto||0)-compra;
+ d.estado='pagado'; d.fechaPago=new Date().toISOString();
+ inventario=inventario.filter(x=>x.serie!==m && x.serie!==c);
+ cerrarModalSerie(); save();
+ alert('✅ Pagado\nManejadora: '+m+'\nCondensadora: '+c+'\nCompra: $'+compra+'\nVenta: $'+d.monto+'\nGanancia: $'+d.ganancia+'\nSe descontó SOLO de Inventario. Factura quedó intacta.');
 }
 function generarVista(){
-  let esPagado=document.getElementById('fEstado').value==='pagado';
-  let monto = esPagado ? parseFloat(document.getElementById('fMonto').value||0) : parseFloat(document.getElementById('fMontoPendiente').value||0);
-  let mSerie = esPagado ? document.getElementById('fSerieManejadora').value : '';
-  let cSerie = esPagado ? document.getElementById('fSerieCondensadora').value : '';
-  let cap=document.getElementById('fCapacidadTrabajo').value;
-  const d={ cliente:fCliente.value.trim(), telefono:fTelefono.value.trim(), departamento:document.getElementById('fDepartamento').value, fechaTrabajo:document.getElementById('fFechaTrabajo').value, cumple:fCumple.value, capacidadTrabajo:cap, sistema:document.getElementById('fSistema').value, trabajador:fTrabajador.value.trim(), frecuencia:fFrecuencia.value, estado:document.getElementById('fEstado').value, garantiaProv:fGarantiaProv.value, monto:monto, serieManejadora:mSerie, serieCondensadora:cSerie, fecha:new Date().toISOString() };
-  if(!d.cliente) return alert('Te faltó el Cliente');
-  if(!d.telefono) return alert('Te faltó el Teléfono');
-  if(!/^[0-9]+$/.test(d.telefono)) return alert('Teléfono solo números');
-  if(!d.departamento) return alert('Elegí Departamento');
-  if(!d.fechaTrabajo) return alert('Elegí Fecha de instalación');
-  if(!d.capacidadTrabajo) return alert('Elegí Capacidad');
-  if(!d.sistema) return alert('Elegí Sistema CONVENCIONAL o INVERTER');
-  if(!d.trabajador) return alert('Poné quién lo hizo');
-  if(!d.garantiaProv) return alert('Poné Garantía del equipo hasta cuándo cubre');
-  if(!d.monto || d.monto<=0) return alert('Poné el Precio de venta final');
-  if(esPagado){
-    let calc=calcularCompraAuto();
-    if(calc.err) return alert(calc.err+'\n\nNO SE GUARDÓ COMO PAGADO.');
-    d.precioCompra=calc.compra; d.ganancia=d.monto-d.precioCompra;
-    if(!confirm('Lo vas a guardar ya como PAGADO y se van a descontar SOLO de Inventario:\nManejadora '+mSerie+'\nCondensadora '+cSerie+'\nCompra $'+d.precioCompra+' - Venta $'+d.monto+'\nFactura NO se borra.')) return;
-    inventario=inventario.filter(x=>x.serie!==mSerie && x.serie!==cSerie);
-  }
-  datosTemp=d;
-  document.getElementById('vistaPrevia').classList.remove('hidden');
-  document.getElementById('vistaPrevia').innerHTML=`<p class="text-sm font-bold"><b class="font-black">Cliente:</b> ${d.cliente} - ${d.telefono} - ${d.departamento}</p><p class="text-sm font-bold"><b class="font-black">Fecha instalación:</b> ${d.fechaTrabajo} • <b class="font-black">Capacidad:</b> ${d.capacidadTrabajo} • <b class="font-black">Sistema:</b> ${d.sistema}</p><p class="text-sm font-bold"><b class="font-black">Trabajador:</b> ${d.trabajador} • <b class="font-black">Mantenimiento:</b> Cada ${d.frecuencia} meses • <b class="font-black">Estado:</b> ${d.estado==='pendiente'?'PENDIENTE DE PAGAR':'Pagado'}</p><p class="text-sm font-bold"><b class="font-black">Garantía hasta:</b> ${d.garantiaProv}</p>${esPagado?`<p class="text-sm font-bold"><b class="font-black">Compra:</b> $${d.precioCompra} • <b class="font-black">Venta:</b> $${d.monto} • <b class="font-black">Ganancia:</b> $${d.ganancia}</p>`:`<p class="text-sm font-bold"><b class="font-black">Venta:</b> $${d.monto} • PENDIENTE DE PAGAR, sin descontar todavía</p>`}<div class="flex gap-2 mt-3"><button onclick="confirmarGuardar()" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-black">✅ Guardar Así</button><button onclick="document.getElementById('vistaPrevia').classList.add('hidden')" class="flex-1 bg-gray-200 py-3 rounded-xl font-black">✏️ Corregir</button></div>`;
-  document.getElementById('vistaPrevia').scrollIntoView({behavior:'smooth'});
+ let esPagado=document.getElementById('fEstado').value==='pagado';
+ let monto = esPagado ? parseFloat(document.getElementById('fMonto').value||0): parseFloat(document.getElementById('fMontoPendiente').value||0);
+ let mSerie = esPagado ? document.getElementById('fSerieManejadora').value: '';
+ let cSerie = esPagado ? document.getElementById('fSerieCondensadora').value: '';
+ let cap=document.getElementById('fCapacidadTrabajo').value;
+ const d={ cliente:fCliente.value.trim(), telefono:fTelefono.value.trim(), departamento:document.getElementById('fDepartamento').value, fechaTrabajo:document.getElementById('fFechaTrabajo').value, cumple:fCumple.value, capacidadTrabajo:cap, sistema:document.getElementById('fSistema').value, trabajador:fTrabajador.value.trim(), frecuencia:fFrecuencia.value, estado:document.getElementById('fEstado').value, garantiaProv:fGarantiaProv.value, monto:monto, serieManejadora:mSerie, serieCondensadora:cSerie, fecha:new Date().toISOString() };
+ if(!d.cliente) return alert('Te faltó el Cliente');
+ if(!d.telefono) return alert('Te faltó el Teléfono');
+ if(!/^[0-9]+$/.test(d.telefono)) return alert('Teléfono solo números');
+ if(!d.departamento) return alert('Elegí Departamento');
+ if(!d.fechaTrabajo) return alert('Elegí Fecha de instalación');
+ if(!d.capacidadTrabajo) return alert('Elegí Capacidad');
+ if(!d.sistema) return alert('Elegí Sistema CONVENCIONAL o INVERTER');
+ if(!d.trabajador) return alert('Poné quién lo hizo');
+ if(!d.garantiaProv) return alert('Poné Garantía del equipo hasta cuándo cubre');
+ if(!d.monto || d.monto<=0) return alert('Poné el Precio de venta final');
+ if(esPagado){
+ let calc=calcularCompraAuto();
+ if(calc.err) return alert(calc.err+'\n\nNO SE GUARDÓ COMO PAGADO.');
+ d.precioCompra=calc.compra; d.ganancia=d.monto-d.precioCompra;
+ if(!confirm('Lo vas a guardar ya como PAGADO y se van a descontar SOLO de Inventario:\nManejadora '+mSerie+'\nCondensadora '+cSerie+'\nCompra $'+d.precioCompra+' - Venta $'+d.monto+'\nFactura NO se borra.')) return;
+ inventario=inventario.filter(x=>x.serie!==mSerie && x.serie!==cSerie);
+ }
+ datosTemp=d;
+ document.getElementById('vistaPrevia').classList.remove('hidden');
+ document.getElementById('vistaPrevia').innerHTML=`<p class="text-sm font-bold"><b class="font-black">Cliente:</b> ${d.cliente} - ${d.telefono} - ${d.departamento}</p><p class="text-sm font-bold"><b class="font-black">Fecha instalación:</b> ${d.fechaTrabajo} • <b class="font-black">Capacidad:</b> ${d.capacidadTrabajo} • <b class="font-black">Sistema:</b> ${d.sistema}</p><p class="text-sm font-bold"><b class="font-black">Trabajador:</b> ${d.trabajador} • <b class="font-black">Mantenimiento:</b> Cada ${d.frecuencia} meses • <b class="font-black">Estado:</b> ${d.estado==='pendiente'?'PENDIENTE DE PAGAR':'Pagado'}</p><p class="text-sm font-bold"><b class="font-black">Garantía hasta:</b> ${d.garantiaProv}</p>${esPagado?`<p class="text-sm font-bold"><b class="font-black">Compra:</b> $${d.precioCompra} • <b class="font-black">Venta:</b> $${d.monto} • <b class="font-black">Ganancia:</b> $${d.ganancia}</p>`:`<p class="text-sm font-bold"><b class="font-black">Venta:</b> $${d.monto} • PENDIENTE DE PAGAR, sin descontar todavía</p>`}<div class="flex gap-2 mt-3"><button onclick="confirmarGuardar()" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-black">✅ Guardar Así</button><button onclick="document.getElementById('vistaPrevia').classList.add('hidden')" class="flex-1 bg-gray-200 py-3 rounded-xl font-black">✏️ Corregir</button></div>`;
+ document.getElementById('vistaPrevia').scrollIntoView({behavior:'smooth'});
 }
 function confirmarGuardar(){
-  if(!datosTemp) return;
-  datos.unshift(datosTemp);
-  datosTemp=null;
-  document.getElementById('vistaPrevia').classList.add('hidden');
-  fCliente.value=''; fTelefono.value=''; document.getElementById('fDepartamento').value=''; document.getElementById('fFechaTrabajo').value=''; fCumple.value=''; document.getElementById('fCapacidadTrabajo').value=''; document.getElementById('fSistema').value=''; fTrabajador.value=''; fFrecuencia.value='3'; document.getElementById('fEstado').value='pendiente'; fGarantiaProv.value=''; document.getElementById('fMonto').value=''; document.getElementById('fMontoPendiente').value=''; toggleSeriesInternas();
-  save(); alert('✅ Guardado');
+ if(!datosTemp) return;
+ datos.unshift(datosTemp);
+ datosTemp=null;
+ document.getElementById('vistaPrevia').classList.add('hidden');
+ fCliente.value=''; fTelefono.value=''; document.getElementById('fDepartamento').value=''; document.getElementById('fFechaTrabajo').value=''; fCumple.value=''; document.getElementById('fCapacidadTrabajo').value=''; document.getElementById('fSistema').value=''; fTrabajador.value=''; fFrecuencia.value='3'; document.getElementById('fEstado').value='pendiente'; fGarantiaProv.value=''; document.getElementById('fMonto').value=''; document.getElementById('fMontoPendiente').value=''; toggleSeriesInternas();
+ save(); alert('✅ Guardado');
 }
 function guardarGasto(){ gastos.unshift({desc:gDesc.value,monto:parseFloat(gMonto.value||0),tipo:gTipo.value,fecha:new Date().toISOString()}); save(); gDesc.value=''; gMonto.value=''; }
 function guardarTrabajador(){ trabajadores.unshift({nombre:tNombre.value,clave:tClave.value}); save(); alert('Trabajador agregado: '+tClave.value); }
@@ -510,115 +597,170 @@ function factura(){ alert(`FACTURA CLIMASERV\nCliente: ${cCliente.value}\nDetall
 function generarReporte(tipo){ const total=datos.reduce((s,d)=>s+d.monto,0); const pend=datos.filter(d=>d.estado==='pendiente').reduce((s,d)=>s+d.monto,0); document.getElementById('reporteBox').innerHTML=`Reporte ${tipo}<br>Total: $${total}<br>Pendiente de Pagar: $${pend}<br>Cobrado: $${total-pend}<br>Trabajos: ${datos.length}<br>Inventario: ${inventario.length} equipos - Factura historial: ${facturas.length}`; }
 function renderCal(){ const f=document.getElementById('fechaCal').value||new Date().toISOString().slice(0,10); const lista=datos.filter(d=>(d.fechaTrabajo||d.fecha.slice(0,10))===f); document.getElementById('listaCal').innerHTML=lista.length?lista.map(d=>`<div class="border p-2 rounded-xl text-sm font-bold">${d.cliente} - ${d.capacidadTrabajo} - $${d.monto}</div>`).join(''):'Sin trabajos ese día.'; }
 function editar(idx){
-  const d=datos[idx];
-  fCliente.value=d.cliente||''; fTelefono.value=d.telefono||''; fCumple.value=d.cumple||'';
-  document.getElementById('fDepartamento').value=d.departamento||''; document.getElementById('fFechaTrabajo').value=d.fechaTrabajo||'';
-  document.getElementById('fCapacidadTrabajo').value=d.capacidadTrabajo||''; document.getElementById('fSistema').value=d.sistema||'';
-  fTrabajador.value=d.trabajador||''; fFrecuencia.value=d.frecuencia||'3'; document.getElementById('fEstado').value=d.estado||'pendiente'; fGarantiaProv.value=d.garantiaProv||'';
-  if(d.estado==='pendiente') document.getElementById('fMontoPendiente').value=d.monto||''; else document.getElementById('fMonto').value=d.monto||'';
-  toggleSeriesInternas();
-  datos.splice(idx,1); save(); window.scrollTo(0,0); alert('Ahora corregí arriba y dale Generar Vista Previa - Ojo: si era un equipo de un cliente con varios, solo editás ese equipo, el historial de los otros queda.');
+ const d=datos[idx];
+ fCliente.value=d.cliente||''; fTelefono.value=d.telefono||''; fCumple.value=d.cumple||'';
+ document.getElementById('fDepartamento').value=d.departamento||''; document.getElementById('fFechaTrabajo').value=d.fechaTrabajo||'';
+ document.getElementById('fCapacidadTrabajo').value=d.capacidadTrabajo||''; document.getElementById('fSistema').value=d.sistema||'';
+ fTrabajador.value=d.trabajador||''; fFrecuencia.value=d.frecuencia||'3'; document.getElementById('fEstado').value=d.estado||'pendiente'; fGarantiaProv.value=d.garantiaProv||'';
+ if(d.estado==='pendiente') document.getElementById('fMontoPendiente').value=d.monto||''; else document.getElementById('fMonto').value=d.monto||'';
+ toggleSeriesInternas();
+ datos.splice(idx,1); save(); window.scrollTo(0,0); alert('Ahora corregí arriba y dale Generar Vista Previa - Ojo: si era un equipo de un cliente con varios, solo editás ese equipo, el historial de los otros queda.');
 }
 function render(){
-  cargarCatalogo(); cargarCapacidades();
-  const user=localStorage.getItem('climaserv_user')||'Jefe';
-  const q=document.getElementById('buscador').value.toLowerCase();
-  let lista=datos.filter(d=>(d.cliente||'').toLowerCase().includes(q)||(d.telefono||'').includes(q)||(d.capacidadTrabajo||'').toLowerCase().includes(q)||(d.sistema||'').toLowerCase().includes(q)||(d.trabajador||'').toLowerCase().includes(q)||((d.serieManejadora||'')+(d.serieCondensadora||'')).toLowerCase().includes(q));
-  if(user!=='Jefe') lista=lista.filter(d=>(d.trabajador||'').toLowerCase()===user.toLowerCase());
-  if(filtro==='pendiente') lista=lista.filter(d=>d.estado==='pendiente');
-  if(filtro==='pagado') lista=lista.filter(d=>d.estado==='pagado');
-  const total=datos.reduce((s,d)=>s+(d.monto||0),0);
-  const pend=datos.filter(d=>d.estado==='pendiente').reduce((s,d)=>s+(d.monto||0),0);
-  document.getElementById('statTotal').innerText='$'+total; document.getElementById('statPend').innerText='$'+pend; document.getElementById('statCob').innerText='$'+(total-pend);
-  const hoy=new Date().toISOString().slice(5,10);
-  const cumples=datos.filter(d=>d.cumple&&d.cumple.slice(5,10)===hoy);
-  document.getElementById('alertas').innerText=(pend>0?`${datos.filter(d=>d.estado==='pendiente').length} pendientes de pagar • `:'Todo al día • ')+`Usuario: ${user}`;
-  document.getElementById('alertasCumple').innerText=cumples.length?`🎂 Hoy cumple: ${cumples.map(c=>c.cliente).join(', ')}`:'Sin cumpleaños hoy.';
-  let infosMant = datos.map(d=>({d, info: infoMant(d)})).filter(x=>x.info);
-  let porVencerMant = infosMant.filter(x=>x.info.dias<=15 && x.info.dias>=0);
-  let vencidosMant = infosMant.filter(x=>x.info.dias<0);
-  document.getElementById('alertasMant').innerText = (porVencerMant.length||vencidosMant.length) ? `${porVencerMant.length} por vencer en 15 días • ${vencidosMant.length} vencidos en rojo` : 'Ninguno por vencer.';
-  // ALERTAS AGRUPADAS POR DEPARTAMENTO PARA LA RUTA - SOLO AQUI
-  let alertasPorDep={};
-  [...porVencerMant, ...vencidosMant].forEach(x=>{ let dep=x.d.departamento||'Sin departamento'; if(!alertasPorDep[dep]) alertasPorDep[dep]=[]; alertasPorDep[dep].push(x); });
-  document.getElementById('alertasMantPorDep').innerHTML = Object.keys(alertasPorDep).length ? Object.keys(alertasPorDep).map(dep=>{
-    let items = alertasPorDep[dep].map(({d,info})=>`• ${d.cliente} - ${d.telefono} - ${d.capacidadTrabajo} - ${info.dias<0?Math.abs(info.dias)+' días sin mant.':info.dias+' días'}`).join('<br>');
-    return `<div class="mt-1"><b>📍 ${dep} - ${alertasPorDep[dep].length} equipos:</b><br>${items}</div>`;
-  }).join('') : '';
-  document.getElementById('mantAlDia').innerText = infosMant.filter(x=>x.info.dias>15).length;
-  document.getElementById('mantPorVencer').innerText = porVencerMant.length;
-  document.getElementById('mantVencidos').innerText = vencidosMant.length;
-  // RUTA POR DEPARTAMENTO - SOLO POR VENCER / VENCIDOS
-  let rutaItems = [...porVencerMant, ...vencidosMant].sort((a,b)=>a.info.dias-b.info.dias);
-  let gruposRuta={};
-  rutaItems.forEach(x=>{ let dep=x.d.departamento||'Sin departamento'; if(!gruposRuta[dep]) gruposRuta[dep]=[]; gruposRuta[dep].push(x); });
-  document.getElementById('listaRuta').innerHTML = Object.keys(gruposRuta).length ? Object.keys(gruposRuta).map(dep=>{
-    let items = gruposRuta[dep].map(({d,info})=>{
-      let idx=datos.indexOf(d);
-      let texto = info.dias>0 ? `${info.dias} días para mantenimiento` : (info.dias===0 ? `HOY toca` : `${Math.abs(info.dias)} días sin mantenimiento`);
-      return `<div class="bg-white border rounded-xl p-2 flex justify-between items-center"><div><p class="text-xs font-black">${d.cliente} - ${d.telefono} - ${d.capacidadTrabajo} - ${d.sistema||''}</p><p class="text-[11px] font-bold">🔢 ${d.serieManejadora||'Sin serie'} / ${d.serieCondensadora||'Sin serie'} • ${texto}</p></div><button onclick="hacerMantenimiento(${idx})" class="bg-green-600 text-white px-3 py-1 rounded-full text-[11px] font-black">✅ Hecho</button></div>`;
-    }).join('');
-    return `<div class="border rounded-xl p-2"><h4 class="font-black text-sm">📍 ${dep} - ${gruposRuta[dep].length} equipos</h4>${items}</div>`;
-  }).join('') : '<p class="text-xs font-bold text-gray-500">Ninguno por vencer. No tenés ruta pendiente.</p>';
-  // MANTENIMIENTOS AGRUPADO POR CLIENTE
-  let listaMant = infosMant.slice().sort((a,b)=>a.info.dias-b.info.dias);
-  if(filtroMant==='porvencer') listaMant = listaMant.filter(x=>x.info.dias<=15 && x.info.dias>=0);
-  if(filtroMant==='vencidos') listaMant = listaMant.filter(x=>x.info.dias<0);
-  let gruposMant={};
-  listaMant.forEach(x=>{ let key=(x.d.telefono||x.d.cliente||'').trim()||x.d.cliente; if(!gruposMant[key]) gruposMant[key]=[]; gruposMant[key].push(x); });
-  document.getElementById('listaMant').innerHTML = Object.values(gruposMant).map(grupo=>{
-    let primero=grupo[0].d;
-    let equiposHtml = grupo.map(({d,info})=>{
-      let idx=datos.indexOf(d);
-      let color = info.dias<0 ? 'bg-red-50 border-red-300' : (info.dias<=15 ? 'bg-yellow-50 border-yellow-300' : 'bg-green-50 border-green-300');
-      let textoDias = info.dias>0 ? `${info.dias} días para mantenimiento` : (info.dias===0 ? `HOY toca mantenimiento` : `${Math.abs(info.dias)} días sin mantenimiento`);
-      let hist = (d.historialMant||[]).map(h=>`${h.fecha} - $${h.costo}`).join(' • ');
-      return `<div class="border ${color} rounded-xl p-3 mt-2">
-        <p class="text-xs font-black">📍 Ubicación: ${d.departamento||'Sin departamento'} • ${d.capacidadTrabajo} • ${d.sistema||''} • Instalado: ${info.baseStr}</p>
-        <p class="text-xs font-black">🔢 Serie Manejadora: ${d.serieManejadora||'Sin serie todavía'} • Serie Condensadora: ${d.serieCondensadora||'Sin serie todavía'}</p>
-        <p class="text-xs font-black">Toca: ${info.venceStr}</p>
-        <p class="text-sm font-black ${info.dias<0?'text-red-600':info.dias<=15?'text-yellow-600':'text-green-600'}">${textoDias}</p>
-        <p class="text-xs font-bold">Último mantenimiento hecho: ${d.ultimoMant||'Ninguno todavía - cuenta desde instalación'} ${d.ultimoCostoMant!==undefined?' - Costo $'+d.ultimoCostoMant:''}</p>
-        ${hist?`<p class="text-[11px] text-gray-600 font-bold">Historial aparte: ${hist}</p>`:''}
-        <button onclick="hacerMantenimiento(${idx})" class="mt-2 bg-green-600 text-white px-4 py-2 rounded-full text-xs font-black">✅ Mantenimiento hecho</button>
-      </div>`;
-    }).join('');
-    return `<div class="bg-white p-4 rounded-2xl shadow border"><p class="font-black text-lg">${primero.cliente} - ${primero.telefono}</p><p class="text-xs text-gray-500 font-bold">Equipos: ${grupo.length} • Cumple: ${primero.cumple||'-'}</p>${equiposHtml}</div>`;
-  }).join('') || '<p class="text-center text-gray-400 py-6 font-bold">Sin mantenimientos todavía. Agregá una venta.</p>';
-  let grupos={};
-  lista.forEach(d=>{ let key=(d.telefono||d.cliente||'').trim()||d.cliente; if(!grupos[key]) grupos[key]=[]; grupos[key].push(d); });
-  document.getElementById('lista').innerHTML=Object.values(grupos).map(grupo=>{
-    let primero=grupo[0];
-    let totalCliente=grupo.reduce((s,d)=>s+(d.monto||0),0);
-    let equiposHtml=grupo.map(d=>{
-      let idx=datos.indexOf(d); let esPend=d.estado==='pendiente';
-      let im=infoMant(d);
-      let mantTxt = im ? (im.dias<0?`🔴 ${Math.abs(im.dias)} días sin mantenimiento` : im.dias<=15?`🟡 ${im.dias} días para mantenimiento` : `🟢 ${im.dias} días para mantenimiento`) : '';
-      let histMant = (d.historialMant||[]).map(h=>`${h.fecha} $${h.costo}`).join(' • ');
-      return `<div class="border rounded-xl p-3 mt-2 ${esPend?'bg-yellow-50':'bg-green-50'}">
-        <p class="text-xs font-black">📅 ${d.fechaTrabajo||'-'} • ${d.departamento||'-'} • ${d.capacidadTrabajo} • ${d.sistema||'-'} • ${d.trabajador||'-'} • Garantía hasta: ${d.garantiaProv||'-'}</p>
-        <p class="text-xs font-black ${esPend?'text-yellow-600':'text-green-600'}">${esPend?'⏳ PENDIENTE DE PAGAR':'✅ PAGADO'} - Venta $${d.monto} ${d.precioCompra!==undefined?`• Compra $${d.precioCompra} • Ganancia $${d.ganancia||0}`:''}</p>
-        <p class="text-xs font-black">🔧 ${mantTxt} - Toca: ${im?im.venceStr:'-'}</p>
-        ${histMant?`<p class="text-[11px] font-bold text-gray-600">Historial mant. aparte: ${histMant}</p>`:''}
-        ${d.serieManejadora?`<p class="text-sm font-black">Manejadora: ${d.serieManejadora} • Condensadora: ${d.serieCondensadora}</p>`:`<p class="text-xs text-gray-500 font-bold">Sin series todavía - Apretá PENDIENTE DE PAGAR para elegirlas</p>`}
-        <div class="flex gap-2 mt-2 flex-wrap">${esPend ? `<button onclick="abrirPago(${idx})" class="bg-yellow-400 px-4 py-2 rounded-full text-xs font-black">⏳ PENDIENTE DE PAGAR</button>` : `<span class="bg-green-100 px-3 py-1 rounded-full text-xs font-black">✅ PAGADO</span>`}<button onclick="editar(${idx})" class="bg-white border px-3 py-1 rounded-full text-xs font-black">✏️ Editar este equipo</button></div>
-      </div>`;
-    }).join('');
-    return `<div class="bg-white p-4 rounded-2xl shadow"><p class="font-black text-lg">${primero.cliente} - ${primero.telefono}</p><p class="text-xs text-gray-500 font-bold">Cumple: ${primero.cumple||'-'} • Total comprado: $${totalCliente} • Equipos: ${grupo.length}</p><button onclick="agregarOtroEquipo('${primero.telefono}')" class="w-full mt-2 bg-blue-600 text-white py-2 rounded-xl text-xs font-black">➕ Agregar otro equipo a este cliente</button>${equiposHtml}</div>`;
-  }).join('')||'<p class="text-center text-gray-400 py-6 font-bold">Sin registros</p>';
-  let facFiltrado=facturas.filter(x=>(x.modelo||'').toLowerCase().includes(q)||(x.serie||'').toLowerCase().includes(q)||(x.descripcion||'').toLowerCase().includes(q)||(x.marca||'').toLowerCase().includes(q)||(x.factura||'').toLowerCase().includes(q));
-  document.getElementById('totalInv5').innerText=inventario.length+' equipos en bodega • '+facturas.length+' en Factura historial';
-  document.getElementById('listaFactura').innerHTML=facFiltrado.map((x)=>{ let idx=facturas.indexOf(x); let enInv=inventario.some(v=>v.serie===x.serie); return `<div class="border p-2 rounded-xl text-xs font-bold"><b class="font-black">${x.modelo} - Serie ${x.serie}</b> ${enInv?'<span class="bg-green-100 px-2 py-0.5 rounded-full text-[10px] font-black">En Inventario</span>':'<span class="bg-gray-200 px-2 py-0.5 rounded-full text-[10px] font-black">Ya vendido - Solo en Factura</span>'}<br>📅 ${x.fecha||'-'} • 🧾 Factura: ${x.factura||'-'} (${x.tipoFactura||'-'}) • 🛡️ Garantía: ${x.garantia||'-'} • 🏢 ${x.sucursal||'-'}<br>${x.descripcion} • ${x.capacidad} • ${x.marca} • Costo $${x.precioCosto||0}<br><button onclick="editarInventario(${idx})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-black mt-1">✏️ Editar</button></div>`; }).join('')||'<p class="text-xs text-gray-400">Sin facturas.</p>';
-  let gruposInv={};
-  inventario.forEach(x=>{ let key=(x.modelo||'').trim().toLowerCase(); if(!gruposInv[key]) gruposInv[key]={modelo:x.modelo,descripcion:x.descripcion,capacidad:x.capacidad,marca:x.marca,cant:0}; gruposInv[key].cant++; });
-  let gruposArr=Object.values(gruposInv);
-  document.getElementById('listaInv').innerHTML=gruposArr.map(g=>{
-    let apartados=datos.filter(d=>d.estado==='pendiente' && normCap(d.capacidadTrabajo)===normCap(g.capacidad)).length;
-    let disponible=Math.max(0, g.cant - apartados);
-    return `<tr class="border-b"><td class="p-2 border text-center font-black text-lg">${g.cant}</td><td class="p-2 border text-center font-black text-yellow-600">${apartados}</td><td class="p-2 border text-center font-black ${disponible===0?'text-red-600':'text-green-600'}">${disponible}</td><td class="p-2 border font-black">${g.modelo}</td><td class="p-2 border text-[10px] font-bold">${g.descripcion}</td><td class="p-2 border font-bold">${g.capacidad}</td><td class="p-2 border font-bold">${g.marca}</td></tr>`;
-  }).join('')||'<tr><td colspan="7" class="p-2 text-center text-gray-400 font-bold">Sin inventario. En Factura sí queda el historial.</td></tr>';
-  document.getElementById('listaGastos').innerHTML=gastos.map(x=>`<div class="border p-2 rounded-xl text-sm font-bold">${x.desc} - $${x.monto} - ${x.tipo}</div>`).join('');
-  document.getElementById('listaTrab').innerHTML=trabajadores.map(x=>`<div class="border p-2 rounded-xl text-sm font-bold">${x.nombre} - clave: ${x.clave}</div>`).join('');
+ cargarCatalogo(); cargarCapacidades();
+ if(!document.getElementById('rutaFecha').value) document.getElementById('rutaFecha').value = new Date().toISOString().slice(0,10);
+ const user=localStorage.getItem('climaserv_user')||'Jefe';
+ const q=document.getElementById('buscador').value.toLowerCase();
+ let lista=datos.filter(d=>(d.cliente||'').toLowerCase().includes(q)||(d.telefono||'').includes(q)||(d.capacidadTrabajo||'').toLowerCase().includes(q)||(d.sistema||'').toLowerCase().includes(q)||(d.trabajador||'').toLowerCase().includes(q)||((d.serieManejadora||'')+(d.serieCondensadora||'')).toLowerCase().includes(q));
+ if(user!=='Jefe') lista=lista.filter(d=>(d.trabajador||'').toLowerCase()===user.toLowerCase());
+ if(filtro==='pendiente') lista=lista.filter(d=>d.estado==='pendiente');
+ if(filtro==='pagado') lista=lista.filter(d=>d.estado==='pagado');
+ const total=datos.reduce((s,d)=>s+(d.monto||0),0);
+ const pend=datos.filter(d=>d.estado==='pendiente').reduce((s,d)=>s+(d.monto||0),0);
+ document.getElementById('statTotal').innerText='$'+total; document.getElementById('statPend').innerText='$'+pend; document.getElementById('statCob').innerText='$'+(total-pend);
+ const hoy=new Date().toISOString().slice(5,10);
+ const cumples=datos.filter(d=>d.cumple&&d.cumple.slice(5,10)===hoy);
+ document.getElementById('alertas').innerText=(pend>0?`${datos.filter(d=>d.estado==='pendiente').length} pendientes de pagar • `:'Todo al día • ')+`Usuario: ${user}`;
+ document.getElementById('alertasCumple').innerText=cumples.length?`🎂 Hoy cumple: ${cumples.map(c=>c.cliente).join(', ')}`:'Sin cumpleaños hoy.';
+ let infosMant = datos.map(d=>({d, info: infoMant(d)})).filter(x=>x.info);
+ let porVencerMant = infosMant.filter(x=>x.info.dias<=15 && x.info.dias>=0);
+ let vencidosMant = infosMant.filter(x=>x.info.dias<0);
+ document.getElementById('alertasMant').innerText = (porVencerMant.length||vencidosMant.length) ? `${porVencerMant.length} por vencer en 15 días • ${vencidosMant.length} vencidos en rojo`: 'Ninguno por vencer.';
+ let alertasPorDep={};
+ [...porVencerMant,...vencidosMant].forEach(x=>{ let dep=x.d.departamento||'Sin departamento'; if(!alertasPorDep[dep]) alertasPorDep[dep]=[]; alertasPorDep[dep].push(x); });
+ document.getElementById('alertasMantPorDep').innerHTML = Object.keys(alertasPorDep).length ? Object.keys(alertasPorDep).map(dep=>{
+ let items = alertasPorDep[dep].map(({d,info})=>`• ${d.cliente} - ${d.telefono} - ${d.capacidadTrabajo} - ${info.dias<0?Math.abs(info.dias)+' días sin mant.':info.dias+' días'}`).join('<br>');
+ return `<div class="mt-1"><b>📍 ${dep} - ${alertasPorDep[dep].length} equipos:</b><br>${items}</div>`;
+ }).join(''): '';
+ // ALERTAS GARANTIA
+ let infosGar = datos.map(d=>({d, info: infoGarantia(d)})).filter(x=>x.info);
+ let garPorVencer = infosGar.filter(x=>x.info.dias<=30 && x.info.dias>=0);
+ let garVencidas = infosGar.filter(x=>x.info.dias<0);
+ document.getElementById('alertasGarantia').innerText = (garPorVencer.length||garVencidas.length) ? `${garPorVencer.length} por vencer en 30 días • ${garVencidas.length} vencidas`: 'Ninguna por vencer.';
+ document.getElementById('garVigentes').innerText = infosGar.filter(x=>x.info.dias>30).length;
+ document.getElementById('garPorVencer').innerText = garPorVencer.length;
+ document.getElementById('garVencidas').innerText = garVencidas.length;
+ // GARANTIAS LISTA - AGRUPADO POR CLIENTE
+ let listaGar = infosGar.slice().sort((a,b)=>a.info.dias-b.info.dias);
+ if(filtroGar==='vigentes') listaGar = listaGar.filter(x=>x.info.dias>30);
+ if(filtroGar==='porvencer') listaGar = listaGar.filter(x=>x.info.dias<=30 && x.info.dias>=0);
+ if(filtroGar==='vencidas') listaGar = listaGar.filter(x=>x.info.dias<0);
+ let gruposGar={};
+ listaGar.forEach(x=>{ let key=(x.d.telefono||x.d.cliente||'').trim()||x.d.cliente; if(!gruposGar[key]) gruposGar[key]=[]; gruposGar[key].push(x); });
+ document.getElementById('listaGarantias').innerHTML = Object.values(gruposGar).map(grupo=>{
+ let primero=grupo[0].d;
+ let equiposHtml = grupo.map(({d,info})=>{
+ let idx=datos.indexOf(d);
+ let color = info.dias<0 ? 'bg-red-50 border-red-300': (info.dias<=30 ? 'bg-yellow-50 border-yellow-300': 'bg-green-50 border-green-300');
+ let texto = info.dias>0 ? `Le quedan ${info.dias} días de garantía`: (info.dias===0 ? `HOY vence la garantía`: `Vencida hace ${Math.abs(info.dias)} días`);
+ return `<div class="border ${color} rounded-xl p-3 mt-2">
+ <p class="text-xs font-black">📍 ${d.departamento||'-'} • ${d.capacidadTrabajo} • ${d.sistema||''} • Instalado: ${d.fechaTrabajo||'-'}</p>
+ <p class="text-xs font-black">🔢 Serie Manejadora: ${d.serieManejadora||'Sin serie'} • Condensadora: ${d.serieCondensadora||'Sin serie'}</p>
+ <p class="text-xs font-black">Garantía hasta: ${info.venceStr}</p>
+ <p class="text-sm font-black ${info.dias<0?'text-red-600':info.dias<=30?'text-yellow-600':'text-green-600'}">${info.dias<0?'🔴 ':'🟢 '}${texto}</p>
+ <p class="text-xs font-bold">${info.dias>=0?'✅ Todavía cubre - Si falla, lo cubrís vos':'❌ Ya NO cubre - Si lo arreglás, se cobra'}</p>
+ </div>`;
+ }).join('');
+ return `<div class="bg-white p-4 rounded-2xl shadow border"><p class="font-black text-lg">${primero.cliente} - ${primero.telefono}</p><p class="text-xs text-gray-500 font-bold">Equipos con garantía: ${grupo.length}</p>${equiposHtml}</div>`;
+ }).join('') || '<p class="text-center text-gray-400 py-6 font-bold">Sin garantías todavía. Poné la fecha de garantía cuando registrás la venta.</p>';
+ // RUTA DEL DIA
+ let fechaRuta = document.getElementById('rutaFecha').value || new Date().toISOString().slice(0,10);
+ let depRuta = document.getElementById('rutaDep').value || 'todos';
+ let rutaItems = infosMant.filter(x=>x.info.dias<=15);
+ if(depRuta!=='todos') rutaItems = rutaItems.filter(x=>x.d.departamento===depRuta);
+ rutaItems = rutaItems.sort((a,b)=>a.info.dias-b.info.dias);
+ let hechosRuta = rutaItems.filter(x=>x.d.rutaHecha && x.d.rutaHecha[fechaRuta]);
+ let pendientesRuta = rutaItems.filter(x=>!(x.d.rutaHecha && x.d.rutaHecha[fechaRuta]));
+ let mostrarRuta = filtroRuta==='hechos' ? hechosRuta: (filtroRuta==='pendientes' ? pendientesRuta: rutaItems);
+ document.getElementById('rutaResumen').innerText = `📍 ${depRuta==='todos'?'Todos los departamentos':depRuta} • ${fechaRuta} • Total ruta: ${rutaItems.length} • Pendientes: ${pendientesRuta.length} • Hechos: ${hechosRuta.length}`;
+ document.getElementById('listaRutaDia').innerHTML = mostrarRuta.map(({d,info},i)=>{
+ let idx=datos.indexOf(d);
+ let hecho = d.rutaHecha && d.rutaHecha[fechaRuta];
+ let texto = info.dias>0 ? `${info.dias} días para mantenimiento`: (info.dias===0 ? `HOY toca`: `${Math.abs(info.dias)} días sin mantenimiento`);
+ return `<div class="border ${hecho?'bg-green-50 border-green-300 opacity-70':'bg-white'} rounded-2xl p-3">
+ <div class="flex justify-between"><p class="font-black text-lg">${i+1}. ${d.cliente} - ${d.telefono}</p><span class="text-xs font-black ${info.dias<0?'text-red-600':'text-yellow-600'}">${texto}</span></div>
+ <p class="text-xs font-bold">📍 ${d.departamento} • ${d.capacidadTrabajo} • ${d.sistema||''} • Toca: ${info.venceStr}</p>
+ <p class="text-xs font-bold">🔢 ${d.serieManejadora||'Sin serie'} / ${d.serieCondensadora||'Sin serie'}</p>
+ <div class="flex gap-2 mt-2 flex-wrap">
+ ${!hecho ? `<button onclick="marcarRutaHecha(${idx})" class="bg-blue-600 text-white px-3 py-2 rounded-full text-xs font-black">✅ Marcar hecho en ruta</button><button onclick="avisarWhatsApp(datos[${idx}])" class="bg-green-500 text-white px-3 py-2 rounded-full text-xs font-black">💬 Ya voy</button><button onclick="hacerMantenimiento(${idx})" class="bg-green-600 text-white px-3 py-2 rounded-full text-xs font-black">🔧 Mant. hecho + $</button>`: `<button onclick="desmarcarRuta(${idx})" class="bg-gray-200 px-3 py-2 rounded-full text-xs font-black">↩️ Quitar hecho</button>`}
+ </div>
+ </div>`;
+ }).join('') || '<p class="text-center text-gray-400 py-6 font-bold">No hay ruta para este departamento / fecha. Cambiá el departamento a Todos.</p>';
+ document.getElementById('mantAlDia').innerText = infosMant.filter(x=>x.info.dias>15).length;
+ document.getElementById('mantPorVencer').innerText = porVencerMant.length;
+ document.getElementById('mantVencidos').innerText = vencidosMant.length;
+ let rutaItemsOld = [...porVencerMant,...vencidosMant].sort((a,b)=>a.info.dias-b.info.dias);
+ let gruposRuta={};
+ rutaItemsOld.forEach(x=>{ let dep=x.d.departamento||'Sin departamento'; if(!gruposRuta[dep]) gruposRuta[dep]=[]; gruposRuta[dep].push(x); });
+ document.getElementById('listaRuta').innerHTML = Object.keys(gruposRuta).length ? Object.keys(gruposRuta).map(dep=>{
+ let items = gruposRuta[dep].map(({d,info})=>{
+ let idx=datos.indexOf(d);
+ let texto = info.dias>0 ? `${info.dias} días para mantenimiento`: (info.dias===0 ? `HOY toca`: `${Math.abs(info.dias)} días sin mantenimiento`);
+ return `<div class="bg-white border rounded-xl p-2 flex justify-between items-center"><div><p class="text-xs font-black">${d.cliente} - ${d.telefono} - ${d.capacidadTrabajo} - ${d.sistema||''}</p><p class="text- font-bold">🔢 ${d.serieManejadora||'Sin serie'} / ${d.serieCondensadora||'Sin serie'} • ${texto}</p></div><button onclick="hacerMantenimiento(${idx})" class="bg-green-600 text-white px-3 py-1 rounded-full text- font-black">✅ Hecho</button></div>`;
+ }).join('');
+ return `<div class="border rounded-xl p-2"><h4 class="font-black text-sm">📍 ${dep} - ${gruposRuta[dep].length} equipos</h4>${items}</div>`;
+ }).join(''): '<p class="text-xs font-bold text-gray-500">Ninguno por vencer. No tenés ruta pendiente.</p>';
+ let listaMant = infosMant.slice().sort((a,b)=>a.info.dias-b.info.dias);
+ if(filtroMant==='porvencer') listaMant = listaMant.filter(x=>x.info.dias<=15 && x.info.dias>=0);
+ if(filtroMant==='vencidos') listaMant = listaMant.filter(x=>x.info.dias<0);
+ let gruposMant={};
+ listaMant.forEach(x=>{ let key=(x.d.telefono||x.d.cliente||'').trim()||x.d.cliente; if(!gruposMant[key]) gruposMant[key]=[]; gruposMant[key].push(x); });
+ document.getElementById('listaMant').innerHTML = Object.values(gruposMant).map(grupo=>{
+ let primero=grupo[0].d;
+ let equiposHtml = grupo.map(({d,info})=>{
+ let idx=datos.indexOf(d);
+ let color = info.dias<0 ? 'bg-red-50 border-red-300': (info.dias<=15 ? 'bg-yellow-50 border-yellow-300': 'bg-green-50 border-green-300');
+ let textoDias = info.dias>0 ? `${info.dias} días para mantenimiento`: (info.dias===0 ? `HOY toca mantenimiento`: `${Math.abs(info.dias)} días sin mantenimiento`);
+ let hist = (d.historialMant||[]).map(h=>`${h.fecha} - $${h.costo}`).join(' • ');
+ return `<div class="border ${color} rounded-xl p-3 mt-2">
+ <p class="text-xs font-black">📍 Ubicación: ${d.departamento||'Sin departamento'} • ${d.capacidadTrabajo} • ${d.sistema||''} • Instalado: ${info.baseStr}</p>
+ <p class="text-xs font-black">🔢 Serie Manejadora: ${d.serieManejadora||'Sin serie todavía'} • Serie Condensadora: ${d.serieCondensadora||'Sin serie todavía'}</p>
+ <p class="text-xs font-black">Toca: ${info.venceStr}</p>
+ <p class="text-sm font-black ${info.dias<0?'text-red-600':info.dias<=15?'text-yellow-600':'text-green-600'}">${textoDias}</p>
+ <p class="text-xs font-bold">Último mantenimiento hecho: ${d.ultimoMant||'Ninguno todavía - cuenta desde instalación'} ${d.ultimoCostoMant!==undefined?' - Costo $'+d.ultimoCostoMant:''}</p>
+ ${hist?`<p class="text- text-gray-600 font-bold">Historial aparte: ${hist}</p>`:''}
+ <button onclick="hacerMantenimiento(${idx})" class="mt-2 bg-green-600 text-white px-4 py-2 rounded-full text-xs font-black">✅ Mantenimiento hecho</button>
+ </div>`;
+ }).join('');
+ return `<div class="bg-white p-4 rounded-2xl shadow border"><p class="font-black text-lg">${primero.cliente} - ${primero.telefono}</p><p class="text-xs text-gray-500 font-bold">Equipos: ${grupo.length} • Cumple: ${primero.cumple||'-'}</p>${equiposHtml}</div>`;
+ }).join('') || '<p class="text-center text-gray-400 py-6 font-bold">Sin mantenimientos todavía. Agregá una venta.</p>';
+ let grupos={};
+ lista.forEach(d=>{ let key=(d.telefono||d.cliente||'').trim()||d.cliente; if(!grupos[key]) grupos[key]=[]; grupos[key].push(d); });
+ document.getElementById('lista').innerHTML=Object.values(grupos).map(grupo=>{
+ let primero=grupo[0];
+ let totalCliente=grupo.reduce((s,d)=>s+(d.monto||0),0);
+ let equiposHtml=grupo.map(d=>{
+ let idx=datos.indexOf(d); let esPend=d.estado==='pendiente';
+ let im=infoMant(d);
+ let mantTxt = im ? (im.dias<0?`🔴 ${Math.abs(im.dias)} días sin mantenimiento`: im.dias<=15?`🟡 ${im.dias} días para mantenimiento`: `🟢 ${im.dias} días para mantenimiento`): '';
+ let histMant = (d.historialMant||[]).map(h=>`${h.fecha} $${h.costo}`).join(' • ');
+ let ig=infoGarantia(d);
+ let garTxt = ig ? (ig.dias<0?`🔴 Garantía vencida hace ${Math.abs(ig.dias)} días`: ig.dias<=30?`🟡 Garantía vence en ${ig.dias} días (${ig.venceStr})`: `🟢 Garantía hasta ${ig.venceStr}`): 'Sin garantía';
+ return `<div class="border rounded-xl p-3 mt-2 ${esPend?'bg-yellow-50':'bg-green-50'}">
+ <p class="text-xs font-black">📅 ${d.fechaTrabajo||'-'} • ${d.departamento||'-'} • ${d.capacidadTrabajo} • ${d.sistema||'-'} • ${d.trabajador||'-'} • Garantía hasta: ${d.garantiaProv||'-'}</p>
+ <p class="text-xs font-black ${esPend?'text-yellow-600':'text-green-600'}">${esPend?'⏳ PENDIENTE DE PAGAR':'✅ PAGADO'} - Venta $${d.monto} ${d.precioCompra!==undefined?`• Compra $${d.precioCompra} • Ganancia $${d.ganancia||0}`:''}</p>
+ <p class="text-xs font-black">🔧 ${mantTxt} - Toca: ${im?im.venceStr:'-'}</p>
+ <p class="text-xs font-black">🛡️ ${garTxt}</p>
+ ${histMant?`<p class="text- font-bold text-gray-600">Historial mant. aparte: ${histMant}</p>`:''}
+ ${d.serieManejadora?`<p class="text-sm font-black">Manejadora: ${d.serieManejadora} • Condensadora: ${d.serieCondensadora}</p>`:`<p class="text-xs text-gray-500 font-bold">Sin series todavía - Apretá PENDIENTE DE PAGAR para elegirlas</p>`}
+ <div class="flex gap-2 mt-2 flex-wrap">${esPend ? `<button onclick="abrirPago(${idx})" class="bg-yellow-400 px-4 py-2 rounded-full text-xs font-black">⏳ PENDIENTE DE PAGAR</button>`: `<span class="bg-green-100 px-3 py-1 rounded-full text-xs font-black">✅ PAGADO</span>`}<button onclick="editar(${idx})" class="bg-white border px-3 py-1 rounded-full text-xs font-black">✏️ Editar este equipo</button></div>
+ </div>`;
+ }).join('');
+ return `<div class="bg-white p-4 rounded-2xl shadow"><p class="font-black text-lg">${primero.cliente} - ${primero.telefono}</p><p class="text-xs text-gray-500 font-bold">Cumple: ${primero.cumple||'-'} • Total comprado: $${totalCliente} • Equipos: ${grupo.length}</p><button onclick="agregarOtroEquipo('${primero.telefono}')" class="w-full mt-2 bg-blue-600 text-white py-2 rounded-xl text-xs font-black">➕ Agregar otro equipo a este cliente</button>${equiposHtml}</div>`;
+ }).join('')||'<p class="text-center text-gray-400 py-6 font-bold">Sin registros</p>';
+ let facFiltrado=facturas.filter(x=>(x.modelo||'').toLowerCase().includes(q)||(x.serie||'').toLowerCase().includes(q)||(x.descripcion||'').toLowerCase().includes(q)||(x.marca||'').toLowerCase().includes(q)||(x.factura||'').toLowerCase().includes(q));
+ document.getElementById('totalInv5').innerText=inventario.length+' equipos en bodega • '+facturas.length+' en Factura historial';
+ document.getElementById('listaFactura').innerHTML=facFiltrado.map((x)=>{ let idx=facturas.indexOf(x); let enInv=inventario.some(v=>v.serie===x.serie); return `<div class="border p-2 rounded-xl text-xs font-bold"><b class="font-black">${x.modelo} - Serie ${x.serie}</b> ${enInv?'<span class="bg-green-100 px-2 py-0.5 rounded-full text- font-black">En Inventario</span>':'<span class="bg-gray-200 px-2 py-0.5 rounded-full text- font-black">Ya vendido - Solo en Factura</span>'}<br>📅 ${x.fecha||'-'} • 🧾 Factura: ${x.factura||'-'} (${x.tipoFactura||'-'}) • 🛡️ Garantía: ${x.garantia||'-'} • 🏢 ${x.sucursal||'-'}<br>${x.descripcion} • ${x.capacidad} • ${x.marca} • Costo $${x.precioCosto||0}<br><button onclick="editarInventario(${idx})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-black mt-1">✏️ Editar</button></div>`; }).join('')||'<p class="text-xs text-gray-400">Sin facturas.</p>';
+ let gruposInv={};
+ inventario.forEach(x=>{ let key=(x.modelo||'').trim().toLowerCase(); if(!gruposInv[key]) gruposInv[key]={modelo:x.modelo,descripcion:x.descripcion,capacidad:x.capacidad,marca:x.marca,cant:0}; gruposInv[key].cant++; });
+ let gruposArr=Object.values(gruposInv);
+ document.getElementById('listaInv').innerHTML=gruposArr.map(g=>{
+ let apartados=datos.filter(d=>d.estado==='pendiente' && normCap(d.capacidadTrabajo)===normCap(g.capacidad)).length;
+ let disponible=Math.max(0, g.cant - apartados);
+ return `<tr class="border-b"><td class="p-2 border text-center font-black text-lg">${g.cant}</td><td class="p-2 border text-center font-black text-yellow-600">${apartados}</td><td class="p-2 border text-center font-black ${disponible===0?'text-red-600':'text-green-600'}">${disponible}</td><td class="p-2 border font-black">${g.modelo}</td><td class="p-2 border text- font-bold">${g.descripcion}</td><td class="p-2 border font-bold">${g.capacidad}</td><td class="p-2 border font-bold">${g.marca}</td></tr>`;
+ }).join('')||'<tr><td colspan="7" class="p-2 text-center text-gray-400 font-bold">Sin inventario. En Factura sí queda el historial.</td></tr>';
+ document.getElementById('listaGastos').innerHTML=gastos.map(x=>`<div class="border p-2 rounded-xl text-sm font-bold">${x.desc} - $${x.monto} - ${x.tipo}</div>`).join('');
+ document.getElementById('listaTrab').innerHTML=trabajadores.map(x=>`<div class="border p-2 rounded-xl text-sm font-bold">${x.nombre} - clave: ${x.clave}</div>`).join('');
 }
 render(); renderCal(); mostrarModoAgregar(); toggleSeriesInternas();
 </script>
