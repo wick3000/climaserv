@@ -40,7 +40,7 @@
 
 <div class="mx-3 bg-yellow-50 border rounded-xl p-3 text-xs"><b class="font-black">🔔 Alertas:</b> <span id="alertas"></span></div>
 <div class="mx-3 mt-2 bg-blue-50 border rounded-xl p-3 text-xs"><b class="font-black">🎂 Cumpleaños:</b> <span id="alertasCumple"></span></div>
-<div class="mx-3 mt-2 bg-orange-50 border border-orange-300 rounded-xl p-3 text-xs"><b class="font-black">🔧 Mantenimientos por vencer (15 días o menos):</b> <span id="alertasMant"></span></div>
+<div class="mx-3 mt-2 bg-orange-50 border border-orange-300 rounded-xl p-3 text-xs"><b class="font-black">🔧 Mantenimientos por vencer (15 días o menos):</b> <span id="alertasMant"></span><div id="alertasMantPorDep" class="mt-2"></div></div>
 
 <div class="flex gap-2 p-3 overflow-x-auto">
   <button onclick="showTab('trabajos')" class="bg-blue-600 text-white px-4 py-2 rounded-full text-xs font-black">Trabajos</button>
@@ -113,7 +113,12 @@
 
 <div id="tab-mantenimientos" class="tab hidden mx-3 bg-white rounded-2xl p-4">
   <h2 class="font-black text-lg">🔧 Mantenimientos</h2>
-  <p class="text-xs font-bold text-gray-600">Agrupado por cliente igual que en Clientes. Sale de las ventas. Cada 90 días. A los 15 días avisa. Si pasa de 0, cuenta en rojo días sin mantenimiento.</p>
+  <p class="text-xs font-bold text-gray-600">Abajo: agrupado por cliente. Arriba: ruta por departamento solo para los que están por vencer.</p>
+  <div class="bg-orange-50 border border-orange-300 rounded-2xl p-3 mt-3">
+    <h3 class="font-black text-sm">🚗 Ruta por Departamento - Solo por vencer / vencidos</h3>
+    <p class="text-[11px] font-bold text-gray-600">Esto es para armar tu ruta. Agrupado por departamento.</p>
+    <div id="listaRuta" class="mt-2 space-y-2"></div>
+  </div>
   <div class="grid grid-cols-3 gap-2 mt-3 text-center">
     <div class="bg-green-50 border rounded-xl p-2"><p class="text-xs font-black">Al día</p><p id="mantAlDia" class="font-black text-green-600">0</p></div>
     <div class="bg-yellow-50 border rounded-xl p-2"><p class="text-xs font-black">Por vencer 15 días</p><p id="mantPorVencer" class="font-black text-yellow-600">0</p></div>
@@ -533,10 +538,29 @@ function render(){
   let porVencerMant = infosMant.filter(x=>x.info.dias<=15 && x.info.dias>=0);
   let vencidosMant = infosMant.filter(x=>x.info.dias<0);
   document.getElementById('alertasMant').innerText = (porVencerMant.length||vencidosMant.length) ? `${porVencerMant.length} por vencer en 15 días • ${vencidosMant.length} vencidos en rojo` : 'Ninguno por vencer.';
+  // ALERTAS AGRUPADAS POR DEPARTAMENTO PARA LA RUTA - SOLO AQUI
+  let alertasPorDep={};
+  [...porVencerMant, ...vencidosMant].forEach(x=>{ let dep=x.d.departamento||'Sin departamento'; if(!alertasPorDep[dep]) alertasPorDep[dep]=[]; alertasPorDep[dep].push(x); });
+  document.getElementById('alertasMantPorDep').innerHTML = Object.keys(alertasPorDep).length ? Object.keys(alertasPorDep).map(dep=>{
+    let items = alertasPorDep[dep].map(({d,info})=>`• ${d.cliente} - ${d.telefono} - ${d.capacidadTrabajo} - ${info.dias<0?Math.abs(info.dias)+' días sin mant.':info.dias+' días'}`).join('<br>');
+    return `<div class="mt-1"><b>📍 ${dep} - ${alertasPorDep[dep].length} equipos:</b><br>${items}</div>`;
+  }).join('') : '';
   document.getElementById('mantAlDia').innerText = infosMant.filter(x=>x.info.dias>15).length;
   document.getElementById('mantPorVencer').innerText = porVencerMant.length;
   document.getElementById('mantVencidos').innerText = vencidosMant.length;
-  // MANTENIMIENTOS AGRUPADO POR CLIENTE IGUAL QUE CLIENTES - NO POR CIUDAD
+  // RUTA POR DEPARTAMENTO - SOLO POR VENCER / VENCIDOS
+  let rutaItems = [...porVencerMant, ...vencidosMant].sort((a,b)=>a.info.dias-b.info.dias);
+  let gruposRuta={};
+  rutaItems.forEach(x=>{ let dep=x.d.departamento||'Sin departamento'; if(!gruposRuta[dep]) gruposRuta[dep]=[]; gruposRuta[dep].push(x); });
+  document.getElementById('listaRuta').innerHTML = Object.keys(gruposRuta).length ? Object.keys(gruposRuta).map(dep=>{
+    let items = gruposRuta[dep].map(({d,info})=>{
+      let idx=datos.indexOf(d);
+      let texto = info.dias>0 ? `${info.dias} días para mantenimiento` : (info.dias===0 ? `HOY toca` : `${Math.abs(info.dias)} días sin mantenimiento`);
+      return `<div class="bg-white border rounded-xl p-2 flex justify-between items-center"><div><p class="text-xs font-black">${d.cliente} - ${d.telefono} - ${d.capacidadTrabajo} - ${d.sistema||''}</p><p class="text-[11px] font-bold">🔢 ${d.serieManejadora||'Sin serie'} / ${d.serieCondensadora||'Sin serie'} • ${texto}</p></div><button onclick="hacerMantenimiento(${idx})" class="bg-green-600 text-white px-3 py-1 rounded-full text-[11px] font-black">✅ Hecho</button></div>`;
+    }).join('');
+    return `<div class="border rounded-xl p-2"><h4 class="font-black text-sm">📍 ${dep} - ${gruposRuta[dep].length} equipos</h4>${items}</div>`;
+  }).join('') : '<p class="text-xs font-bold text-gray-500">Ninguno por vencer. No tenés ruta pendiente.</p>';
+  // MANTENIMIENTOS AGRUPADO POR CLIENTE
   let listaMant = infosMant.slice().sort((a,b)=>a.info.dias-b.info.dias);
   if(filtroMant==='porvencer') listaMant = listaMant.filter(x=>x.info.dias<=15 && x.info.dias>=0);
   if(filtroMant==='vencidos') listaMant = listaMant.filter(x=>x.info.dias<0);
