@@ -2,518 +2,615 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Climaserv - El Paraíso</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ClimaServ | Gestión</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { background:#f1f5f9; font-family:system-ui,-apple-system,sans-serif; padding-bottom:90px; }
+  .tab { display:none; }
+  .tab.active { display:block; }
+  input, select, textarea { background:white; border:1px solid #cbd5e1; border-radius:10px; padding:10px; width:100%; font-size:14px; }
+  label { font-size:11px; font-weight:800; color:#475569; text-transform:uppercase; }
+  .card { background:white; border-radius:16px; padding:14px; box-shadow:0 2px 8px rgba(0,0,0,.06); }
+  .btn-nav { padding:10px 4px; font-size:11px; font-weight:800; color:#64748b; border-radius:12px; text-align:center; }
+  .btn-nav.active { background:#0f172a; color:white; }
+  .hidden { display:none!important; }
+  .boleta { border:2px dashed #cbd5e1; border-radius:12px; padding:12px; background:#fff; }
+</style>
 </head>
-<body class="bg-gray-100 pb-24">
+<body>
+<div class="max-w-md mx-auto p-3">
 
-<div id="login" class="fixed inset-0 bg-blue-600 z-50 flex flex-col items-center justify-center p-6 text-white">
-  <h1 class="text-3xl font-bold">❄️ Climaserv</h1>
-  <p class="text-xs">El Paraíso • Privado</p>
-  <input id="claveInput" type="password" placeholder="Tu clave" class="mt-6 w-full max-w-xs p-3 rounded-xl text-black text-center">
-  <button onclick="entrar()" class="mt-3 w-full max-w-xs bg-white text-blue-600 py-3 rounded-xl font-bold">Entrar</button>
-  <p id="errorClave" class="text-xs mt-2 text-yellow-200"></p>
-</div>
-
-<div id="app" class="hidden">
-<header class="bg-blue-600 text-white p-4 sticky top-0 z-10">
-  <div class="flex justify-between items-center">
-    <div><h1 class="text-xl font-bold">❄️ Control A/C</h1><p class="text-xs opacity-80">Climaserv • El Paraíso</p></div>
-    <div><button onclick="exportar()" class="bg-white text-blue-600 text-xs px-3 py-2 rounded-full font-bold">📤 Copia</button></div>
-  </div>
-  <input id="buscador" oninput="render()" placeholder="🔍 Buscar todo: cliente, serie, teléfono, aire, marca..." class="w-full mt-3 p-3 rounded-xl text-black">
-  <div class="flex gap-2 mt-3 overflow-x-auto">
-    <button onclick="setFiltro('todos')" class="bg-white text-blue-600 px-3 py-1 rounded-full text-xs font-bold">Todos</button>
-    <button onclick="setFiltro('pendiente')" class="bg-yellow-400 px-3 py-1 rounded-full text-xs font-bold">⏳ Pendientes</button>
-    <button onclick="setFiltro('pagado')" class="bg-green-400 px-3 py-1 rounded-full text-xs font-bold">✅ Pagados</button>
-    <button onclick="buscarSerie()" class="bg-black text-white px-3 py-1 rounded-full text-xs font-bold">🔎 Por Serie</button>
-    <button onclick="buscarTelefono()" class="bg-white px-3 py-1 rounded-full text-xs font-bold">📞 Por Teléfono</button>
-  </div>
-</header>
-
-<div class="grid grid-cols-3 gap-2 p-3">
-  <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs">Total</p><p id="statTotal" class="font-bold text-blue-600">$0</p></div>
-  <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs">Pendiente</p><p id="statPend" class="font-bold text-yellow-600">$0</p></div>
-  <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs">Cobrado</p><p id="statCob" class="font-bold text-green-600">$0</p></div>
-</div>
-
-<div class="mx-3 bg-yellow-50 border rounded-xl p-3 text-xs"><b>🔔 Alertas:</b> <span id="alertas"></span></div>
-<div class="mx-3 mt-2 bg-blue-50 border rounded-xl p-3 text-xs"><b>🎂 Cumpleaños:</b> <span id="alertasCumple"></span></div>
-
-<div class="flex gap-2 p-3 overflow-x-auto">
-  <button onclick="showTab('trabajos')" class="bg-blue-600 text-white px-4 py-2 rounded-full text-xs font-bold">Trabajos</button>
-  <button onclick="showTab('catalogo')" class="bg-white px-4 py-2 rounded-full text-xs font-bold border-2 border-blue-600">📋 Catálogo</button>
-  <button onclick="showTab('factura')" class="bg-white px-4 py-2 rounded-full text-xs font-bold border-2 border-green-600">🧾 Factura ⇄ Inventario</button>
-  <button onclick="showTab('inventario')" class="bg-white px-4 py-2 rounded-full text-xs font-bold border-2 border-black">📦 Inventario ⇄ Factura</button>
-  <button onclick="showTab('gastos')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Gastos</button>
-  <button onclick="showTab('calendario')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Calendario</button>
-  <button onclick="showTab('reportes')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Reportes</button>
-  <button onclick="showTab('precios')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Precios / PDF</button>
-  <button onclick="showTab('trabajadores')" class="bg-white px-4 py-2 rounded-full text-xs font-bold">Trabajadores</button>
-</div>
-
-<div id="tab-trabajos" class="tab">
-  <div class="mx-3 bg-white rounded-2xl p-4 shadow">
-    <h2 class="font-bold mb-2">Registrar Producto / Trabajo</h2>
-    <input id="fCliente" placeholder="Cliente - Solo tu control" class="w-full border p-3 rounded-xl mb-2">
-    <input id="fTelefono" placeholder="Teléfono WhatsApp Ej: 70001234 - Contacto" class="w-full border p-3 rounded-xl mb-2">
-    <!-- NUEVO: DEPARTAMENTO DESPLEGABLE 14 + FACTURA Y FECHA SEPARADOS -->
-    <label class="text-xs font-bold">Departamento ▼</label>
-    <select id="fDepartamento" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-bold">
-      <option value="">Seleccionar Departamento ▼</option>
-      <option>Ahuachapán</option><option>Cabañas</option><option>Chalatenango</option><option>Cuscatlán</option><option>La Libertad</option><option>La Paz</option><option>La Unión</option><option>Morazán</option><option>San Miguel</option><option>San Salvador</option><option>San Vicente</option><option>Santa Ana</option><option>Sonsonate</option><option>Usulután</option>
-    </select>
-    <label class="text-xs font-bold">Factura - Solo número</label>
-    <input id="fFacturaTrabajo" placeholder="Ej: FAC-001" class="w-full border p-3 rounded-xl mb-2">
-    <label class="text-xs font-bold">Fecha - Solo fecha</label>
-    <input id="fFechaTrabajo" type="date" class="w-full border p-3 rounded-xl mb-2">
-    <input id="fCumple" type="date" class="w-full border p-3 rounded-xl mb-2">
-    <label class="text-xs text-gray-500">Fecha cumpleaños del cliente</label>
-    <label class="text-xs font-bold mt-2 block">❄️ Aire / Trabajo - Elegí de la lista:</label>
-    <select id="fAire" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-bold"></select>
-    <label class="text-xs font-bold mt-2 block">📦 Modelo que le vas a vender - De Inventario (sin Serie todavía):</label>
-    <select id="fModeloVenta" class="w-full border-2 border-green-500 p-3 rounded-xl mb-2 bg-green-50 font-bold"></select>
-    <p class="text-[11px] text-gray-500 mb-2">La Serie la elegís después, cuando pague. Agarrás cualquiera del mismo Modelo.</p>
-    <!-- NUEVO: CASILLAS MANEJADORA / CONDENSADORA + SERIES + CAPACIDAD -->
-    <div class="bg-gray-50 border rounded-xl p-3 mb-2">
-      <p class="text-xs font-bold">Equipo para este Trabajo - Marcá lo que lleva:</p>
-      <label class="flex items-center gap-2 text-sm mt-2"><input type="checkbox" id="checkManejadora" checked class="w-5 h-5"> 🧊 MANEJADORA</label>
-      <input id="fSerieManejadora" placeholder="Serie MANEJADORA" class="w-full border p-3 rounded-xl mt-1 font-mono">
-      <label class="flex items-center gap-2 text-sm mt-2"><input type="checkbox" id="checkCondensadora" checked class="w-5 h-5"> 🔥 CONDENSADORA</label>
-      <input id="fSerieCondensadora" placeholder="Serie CONDENSADORA" class="w-full border p-3 rounded-xl mt-1 font-mono">
-      <label class="text-xs font-bold mt-2 block">Capacidad - Debe ser igual en las 2</label>
-      <input id="fCapacidadTrabajo" placeholder="Ej: 12000 BTU" class="w-full border p-3 rounded-xl mt-1">
+  <!-- HEADER -->
+  <header class="flex justify-between items-center mb-3">
+    <div>
+      <h1 class="text-2xl font-black text-slate-800 leading-none">❄️ Clima<span class="text-blue-600">Serv</span></h1>
+      <p class="text-[11px] text-slate-500 font-bold">GESTIÓN • INVENTARIO • TRABAJOS</p>
     </div>
-    <input id="fSerie" placeholder="Serie - Se llena sola cuando pague, no escribas" readonly class="w-full border p-3 rounded-xl mb-2 bg-gray-100">
-    <input id="fLote" placeholder="Lote" class="w-full border p-3 rounded-xl mb-2">
-    <input id="fFlete" type="number" placeholder="Flete $" class="w-full border p-3 rounded-xl mb-2">
-    <input id="fMonto" type="number" placeholder="Monto $ - Precio Venta" class="w-full border p-3 rounded-xl mb-2">
-    <input id="fTrabajador" placeholder="Trabajador que lo hizo" class="w-full border p-3 rounded-xl mb-2">
-    <select id="fFrecuencia" class="w-full border p-3 rounded-xl mb-2"><option value="2">Cada 2 meses</option><option value="3" selected>Cada 3 meses</option><option value="4">Cada 4 meses</option><option value="6">Cada 6 meses</option></select>
-    <select id="fEstado" class="w-full border p-3 rounded-xl mb-2"><option value="pendiente">⏳ Pendiente</option><option value="pagado">✅ Pagado</option></select>
-    <label class="text-xs text-gray-500">Garantía Proveedor hasta:</label>
-    <input id="fGarantiaProv" type="date" class="w-full border p-3 rounded-xl mb-3">
-    <button onclick="generarVista()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">👁️ Generar Vista Previa</button>
-    <div id="vistaPrevia" class="hidden mt-3 border-2 border-blue-400 bg-blue-50 rounded-2xl p-4"></div>
-  </div>
-  <div id="lista" class="p-3 space-y-3"></div>
-</div>
-
-<!-- 1. CATALOGO -->
-<div id="tab-catalogo" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">📋 Catálogo</h2>
-  <p class="text-xs text-gray-500">Vacío. Vos agregás todo. Tiene Agregar, Editar y Borrar.</p>
-  <div class="mt-3 bg-blue-50 p-3 rounded-xl">
-    <p id="editandoCat" class="text-xs font-bold text-orange-600 hidden">✏️ Estás en modo EDITAR</p>
-    <label class="text-xs font-bold">Modelo</label>
-    <input id="catModelo" placeholder="Escribí tu modelo" class="w-full border p-3 rounded-xl mb-2 bg-white">
-    <label class="text-xs font-bold">Descripción</label>
-    <input id="catDesc" placeholder="Escribí tu descripción" class="w-full border p-3 rounded-xl mb-2 bg-white">
-    <label class="text-xs font-bold">Capacidad</label>
-    <input id="catCap" placeholder="Escribí tu capacidad" class="w-full border p-3 rounded-xl mb-2 bg-white">
-    <label class="text-xs font-bold">Marca</label>
-    <input id="catMarca" placeholder="Escribí tu marca" class="w-full border p-3 rounded-xl mb-2 bg-white">
-    <div class="flex gap-2">
-      <button onclick="agregarCatalogo()" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold">➕ Agregar</button>
-      <button onclick="guardarEdicionCatalogo()" class="flex-1 bg-yellow-400 text-black py-3 rounded-xl font-bold">✏️ Editar</button>
-      <button onclick="borrarEditandoCatalogo()" class="flex-1 bg-red-500 text-white py-3 rounded-xl font-bold">🗑️ Borrar</button>
+    <div class="flex gap-1">
+      <button onclick="exportarBackup()" class="bg-white border px-2 py-2 rounded-xl text-xs font-bold">💾 Backup</button>
+      <button onclick="document.getElementById('fileImp').click()" class="bg-white border px-2 py-2 rounded-xl text-xs font-bold">📂 Cargar</button>
+      <input type="file" id="fileImp" class="hidden" onchange="importarBackup(event)">
     </div>
-    <button id="btnCancelarEdit" onclick="cancelarEditarCat()" class="w-full mt-2 bg-gray-200 py-2 rounded-xl text-xs font-bold hidden">Cancelar edición / Limpiar</button>
+  </header>
+
+  <!-- ESTADISTICAS -->
+  <div class="grid grid-cols-3 gap-2 mb-3">
+    <div class="card !p-3 text-center"><p class="text-[10px] font-bold text-slate-400">INVENTARIO</p><p id="statInv" class="text-xl font-black">0</p></div>
+    <div class="card !p-3 text-center"><p class="text-[10px] font-bold text-slate-400">VENTAS PAGADAS</p><p id="statVentas" class="text-xl font-black text-green-600">$0</p></div>
+    <div class="card !p-3 text-center"><p class="text-[10px] font-bold text-slate-400">POR COBRAR</p><p id="statCobrar" class="text-xl font-black text-red-500">$0</p></div>
   </div>
-  <div id="listaCatalogo" class="mt-3 space-y-2"></div>
-</div>
 
-<!-- 2. FACTURA - SIN CANTIDAD, SIN BORRAR, SOLO EDITAR + PRECIOS -->
-<div id="tab-factura" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">🧾 Factura ⇄ Inventario</h2>
-  <p class="text-xs text-red-600 font-bold">⚠️ En Factura NO se puede borrar. Solo editar. Se descuenta solo cuando un trabajo se paga.</p>
-  <p class="text-xs text-gray-500">Se agrega equipo por equipo. Cada Serie = 1 fila, sin Cantidad.</p>
-  <div class="grid grid-cols-2 gap-2 mt-3">
-    <div><label class="text-xs">Fecha</label><input id="invFecha" type="date" class="w-full border p-3 rounded-xl"></div>
-    <div><label class="text-xs">Tipo Factura</label><input id="invTipoFactura" placeholder="Ej: 03CCF" class="w-full border p-3 rounded-xl"></div>
-    <div><label class="text-xs">N° Factura</label><input id="invFactura" placeholder="N° Factura" class="w-full border p-3 rounded-xl"></div>
-    <div><label class="text-xs">N° Garantía</label><input id="invGarantia" placeholder="N° Garantía" class="w-full border p-3 rounded-xl"></div>
-    <div class="col-span-2"><label class="text-xs">Sucursal</label><input id="invSucursal" placeholder="Sucursal" class="w-full border p-3 rounded-xl"></div>
+  <!-- MENU -->
+  <div class="grid grid-cols-5 gap-1 bg-white p-1 rounded-2xl shadow mb-4 sticky top-2 z-20">
+    <button onclick="showTab('trabajos')" id="b-trabajos" class="btn-nav active">🛠️<br>TRABAJO</button>
+    <button onclick="showTab('factura')" id="b-factura" class="btn-nav">🧾<br>FACTURA</button>
+    <button onclick="showTab('catalogo')" id="b-catalogo" class="btn-nav">📦<br>CATÁLOGO</button>
+    <button onclick="showTab('lista')" id="b-lista" class="btn-nav">📋<br>LISTA</button>
+    <button onclick="showTab('reporte')" id="b-reporte" class="btn-nav">📊<br>REPORTE</button>
   </div>
-  <hr class="my-3">
-  <p id="editandoInv" class="text-xs font-bold text-orange-600 hidden">✏️ Estás EDITANDO un equipo - lo que cambies acá cambia en Inventario también</p>
-  <label class="text-xs font-bold">Modelo - UNA SOLA BARRA POR EQUIPO ▼</label>
-  <select id="invModelo" onchange="autollenarCatalogo()" class="w-full border-2 border-blue-400 p-3 rounded-xl my-2 bg-blue-50 font-bold"></select>
-  <p id="avisoCatalogoVacio" class="text-xs text-red-500 hidden">⚠️ Todavía no tenés nada en Catálogo. Andá a 📋 Catálogo y agregá primero.</p>
-  <label class="text-xs font-bold">Descripción (auto)</label>
-  <input id="invDesc" readonly class="w-full border p-3 rounded-xl mb-2 bg-gray-100">
-  <label class="text-xs font-bold">Serie - Cada Serie = 1 equipo, 1 fila en Factura</label>
-  <input id="invSerie" placeholder="Ej: 370581" maxlength="6" inputmode="numeric" class="w-full border-2 border-red-400 p-3 rounded-xl mb-2 font-mono font-bold">
-  <p class="text-[11px] text-gray-500">Ejemplo: agregás 370581, después 370582, después 370583, después 370584 = 4 filas en Factura. En Inventario aparece 1 sola fila con Cantidad 4.</p>
-  <label class="text-xs font-bold">Capacidad (auto)</label>
-  <input id="invCap" readonly class="w-full border p-3 rounded-xl mb-2 bg-gray-100">
-  <label class="text-xs font-bold">Marca (auto)</label>
-  <input id="invMarca2" readonly class="w-full border p-3 rounded-xl mb-2 bg-gray-100">
-  <!-- NUEVO: PRECIOS AL AGREGAR EQUIPO EN FACTURA -->
-  <div class="bg-yellow-50 border-2 border-yellow-400 rounded-xl p-3 mt-2">
-    <p class="text-xs font-bold">💰 Precios del equipo - Para tenerlo en cuenta</p>
-    <label class="text-xs font-bold mt-2 block">💰 Precio Costo $ - Cuánto te costó el equipo</label>
-    <input id="invPrecioCosto" type="number" placeholder="Ej: 300 - Lo que pagaste" class="w-full border p-3 rounded-xl mb-2 bg-white">
-    <label class="text-xs font-bold">💵 Precio Venta $ - A cuánto lo podés vender</label>
-    <input id="invPrecioVenta" type="number" placeholder="Ej: 450 - Lo que vas a cobrar" class="w-full border p-3 rounded-xl mb-2 bg-white">
-    <p id="gananciaFactura" class="text-xs font-bold text-green-700">Ganancia: $0</p>
+
+  <!-- ================= TRABAJOS ================= -->
+  <div id="tab-trabajos" class="tab active space-y-3">
+    <div class="card space-y-2">
+      <h2 class="font-black">🛠️ NUEVO TRABAJO</h2>
+
+      <div class="grid grid-cols-2 gap-2">
+        <div><label>Cliente *</label><input id="fCliente" placeholder="Nombre del cliente"></div>
+        <div><label>Teléfono</label><input id="fTelefono" placeholder="7000-0000"></div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label>Departamento</label>
+          <select id="fDepartamento">
+            <option value="">-- Departamento --</option>
+            <option>San Salvador</option><option>La Libertad</option><option>Santa Ana</option><option>Sonsonate</option><option>Chalatenango</option><option>Cuscatlán</option><option>La Paz</option><option>Cabañas</option><option>San Vicente</option><option>Usulután</option><option>San Miguel</option><option>Morazán</option><option>La Unión</option><option>Ahuachapán</option>
+          </select>
+        </div>
+        <div><label>N° Factura</label><input id="fFacturaTrabajo" placeholder="Ej: 001"></div>
+      </div>
+
+      <div><label>Fecha de Trabajo</label><input type="date" id="fFechaTrabajo"></div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <div><label>Fecha Cumpleaños Cliente</label><input type="date" id="fCumple"></div>
+        <div><label>Serie</label><input id="fSerie" placeholder="Serie equipo"></div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2">
+        <div><label>Lote</label><input id="fLote" placeholder="Lote"></div>
+        <div><label>Flete $</label><input type="number" id="fFlete" value="0"></div>
+        <div><label>Monto $</label><input type="number" id="fMonto" placeholder="0"></div>
+      </div>
+
+      <div><label>Modelo (Venta)</label><select id="fModeloVenta"><option value="">-- Modelo Venta --</option></select></div>
+      <div><label>Capacidad Trabajo</label><input id="fCapacidadTrabajo" placeholder="Ej: 12000 BTU"></div>
+
+      <div><label>Trabajador</label>
+        <select id="fTrabajador"><option value="">-- Trabajador --</option><option>Juan</option><option>Carlos</option><option>Pedro</option><option>Otro</option></select>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <div><label>Frecuencia (meses)</label><select id="fFrecuencia"><option value="3">Cada 3 meses</option><option value="6">Cada 6 meses</option><option value="12">Cada 12 meses</option></select></div>
+        <div><label>Estado</label><select id="fEstado"><option value="pendiente">⏳ Pendiente</option><option value="pagado">✅ Pagado</option></select></div>
+      </div>
+
+      <div><label>Garantía Proveedor</label><input id="fGarantiaProv" placeholder="Ej: 12 meses"></div>
+
+      <div class="bg-slate-50 p-2 rounded-xl space-y-2">
+        <p class="text-xs font-bold">EQUIPOS</p>
+        <label class="flex gap-2 normal-case font-normal"><input type="checkbox" id="checkManejadora" checked class="!w-4"> Manejadora</label>
+        <input id="fSerieManejadora" placeholder="Serie Manejadora">
+        <label class="flex gap-2 normal-case font-normal"><input type="checkbox" id="checkCondensadora" checked class="!w-4"> Condensadora</label>
+        <input id="fSerieCondensadora" placeholder="Serie Condensadora">
+      </div>
+
+      <div id="msgGuardado" class="hidden bg-green-100 text-green-700 p-2 rounded-lg text-xs font-bold text-center">✅ Trabajo guardado. Dale Generar Vista Previa si querés la boleta.</div>
+
+      <div class="flex gap-2">
+        <button onclick="generar()" class="flex-1 bg-slate-900 text-white py-3 rounded-xl font-bold">Generar Vista Previa</button>
+        <button onclick="limpiarTodo()" class="bg-slate-200 px-4 rounded-xl font-bold">Limpiar</button>
+      </div>
+    </div>
+
+    <div id="vistaPrevia" class="hidden card"></div>
   </div>
-  <div class="flex gap-2 mt-2">
-    <button onclick="guardarInventarioNuevo()" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-bold">✅ Agregar a Inventario</button>
-    <button onclick="guardarEdicionInventario()" class="flex-1 bg-yellow-400 text-black py-3 rounded-xl font-bold">✏️ Editar</button>
-  </div>
-  <button onclick="cancelarEditarInv()" class="w-full mt-2 bg-gray-200 py-2 rounded-xl text-xs font-bold">Cancelar edición</button>
-  <button onclick="showTab('inventario')" class="w-full mt-2 bg-black text-white py-3 rounded-xl font-bold">📦 Ver Inventario - Cantidad primero</button>
-  <div class="mt-4">
-    <h3 class="font-bold text-sm">🧾 Lista Factura - Sin Cantidad, 1 fila por equipo, solo Editar</h3>
-    <div id="listaFactura" class="mt-2 space-y-2"></div>
-  </div>
-</div>
 
-<!-- 3. INVENTARIO -->
-<div id="tab-inventario" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">📦 Inventario ⇄ Factura</h2>
-  <p class="text-xs text-gray-500">Cantidad primero. Sin Serie, sin Acción. Solo muestra.</p>
-  <p class="text-xs font-bold mt-2">Total en bodega: <span id="totalInv5">0</span> equipos</p>
-  <p class="text-xs mt-1">Tengo = lo que hay físicamente. Apartado = trabajos pendientes de ese Modelo. Disponible = Tengo - Apartado.</p>
-  <div class="overflow-x-auto mt-3">
-    <table class="w-full text-[11px] border">
-      <tr class="bg-gray-100"><th class="p-2 text-center border">Cantidad<br><span class="text-[9px] font-normal">Tengo</span></th><th class="p-2 text-center border">Apartado<br><span class="text-[9px] font-normal">Pendiente</span></th><th class="p-2 text-center border">Disponible</th><th class="p-2 text-left border">Modelo</th><th class="p-2 text-left border">Descripción</th><th class="p-2 text-left border">Capacidad</th><th class="p-2 text-left border">Marca</th></tr>
-      <tbody id="listaInv"></tbody>
-    </table>
-  </div>
-  <p class="text-[11px] text-gray-500 mt-2">Solo se descuenta cuando el trabajo se paga y elegís qué Serie le diste. Mientras está pendiente, sigue en Tengo pero aparece como Apartado.</p>
-  <button onclick="showTab('factura')" class="w-full mt-3 bg-blue-600 text-white py-3 rounded-xl font-bold">⬅️ Volver a Factura</button>
-</div>
+  <!-- ================= FACTURA / INVENTARIO ================= -->
+  <div id="tab-factura" class="tab space-y-3">
+    <div class="card space-y-2">
+      <h2 class="font-black">🧾 FACTURA - INVENTARIO</h2>
 
-<div id="tab-gastos" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">💰 Gastos + Cierre</h2>
-  <input id="gDesc" placeholder="Ej: Gasolina, Comida" class="w-full border p-3 rounded-xl my-2">
-  <input id="gMonto" type="number" placeholder="Monto $" class="w-full border p-3 rounded-xl mb-2">
-  <select id="gTipo" class="w-full border p-3 rounded-xl mb-2"><option value="negocio">Negocio</option><option value="casa">Casa</option></select>
-  <button onclick="guardarGasto()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Guardar Gasto</button>
-  <div class="mt-4 bg-gray-50 p-3 rounded-xl text-sm"><b>Cierre del día:</b><p id="cierre">Entró: $0 - Salió: $0 - Quedó: $0</p><button onclick="cierreDia()" class="mt-2 bg-green-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Hacer Cierre</button></div>
-  <div id="listaGastos" class="mt-3 space-y-2"></div>
-</div>
+      <div id="editandoInv" class="hidden bg-yellow-100 text-yellow-800 p-2 rounded-lg text-xs font-bold text-center">
+        ✏️ Estás editando un equipo viejo. Cuando termines dale GUARDAR CAMBIOS.
+      </div>
 
-<div id="tab-calendario" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">📅 Calendario</h2>
-  <input type="date" id="fechaCal" onchange="renderCal()" class="w-full border p-3 rounded-xl mt-2">
-  <div id="listaCal" class="mt-3"></div>
-</div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label>Fecha Factura</label><input type="date" id="invFecha"></div>
+        <div><label>Tipo Factura</label><select id="invTipoFactura"><option>Crédito Fiscal</option><option>Consumidor Final</option></select></div>
+      </div>
 
-<div id="tab-reportes" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">📊 Reportes</h2>
-  <div class="flex gap-2 my-2">
-    <button onclick="generarReporte('dia')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Día</button>
-    <button onclick="generarReporte('semana')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Semana</button>
-    <button onclick="generarReporte('mes')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Mes</button>
-    <button onclick="generarReporte('anio')" class="bg-blue-100 px-3 py-1 rounded-full text-xs font-bold">Año</button>
-  </div>
-  <div id="reporteBox" class="mt-3 bg-blue-50 p-3 rounded-xl text-sm">Tocá un botón para ver el reporte</div>
-</div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label>N° Factura</label><input id="invFactura" placeholder="N° Factura"></div>
+        <div><label>Garantía</label><input id="invGarantia" placeholder="Ej: 12 meses"></div>
+      </div>
 
-<div id="tab-precios" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">🧾 Cotización + PDF</h2>
-  <p class="text-xs">Precios: Mantenimiento $25 • Instalación $80 • Reparación $40 • Gas $60</p>
-  <input id="cCliente" placeholder="Cliente cotización" class="w-full border p-3 rounded-xl my-2">
-  <input id="cDetalle" placeholder="Detalle Ej: Instalación" class="w-full border p-3 rounded-xl mb-2">
-  <input id="cMonto" type="number" placeholder="Monto $" class="w-full border p-3 rounded-xl mb-2">
-  <button onclick="cotizar()" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold">Cotización por WhatsApp</button>
-  <button onclick="factura()" class="w-full mt-2 bg-blue-600 text-white py-3 rounded-xl font-bold">Generar Factura / Garantía</button>
-  <button onclick="window.print()" class="w-full mt-2 bg-black text-white py-3 rounded-xl font-bold">Imprimir PDF</button>
-</div>
+      <div><label>Sucursal</label><input id="invSucursal" placeholder="Sucursal"></div>
+      <div><label>Modelo</label><select id="invModelo" onchange="autollenar()"><option value="">-- Elegí Modelo --</option></select></div>
+      <div><label>Descripción</label><input id="invDesc" placeholder="Descripción"></div>
 
-<div id="tab-trabajadores" class="tab hidden mx-3 bg-white rounded-2xl p-4">
-  <h2 class="font-bold">👷 Trabajadores</h2>
-  <input id="tNombre" placeholder="Nombre trabajador" class="w-full border p-3 rounded-xl my-2">
-  <input id="tClave" placeholder="Clave trabajador Ej: juan123" class="w-full border p-3 rounded-xl mb-2">
-  <button onclick="guardarTrabajador()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Agregar Trabajador</button>
-  <div id="listaTrab" class="mt-3 space-y-2"></div>
-</div>
-</div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label>Serie *</label><input id="invSerie" placeholder="Serie"></div>
+        <div><label>Capacidad</label><input id="invCap" placeholder="BTU"></div>
+      </div>
 
-<nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 text-xs font-bold">
-  <button onclick="showTab('trabajos')">👥 Clientes</button>
-  <button onclick="showTab('catalogo')">📋 Catálogo</button>
-  <button onclick="showTab('factura')">🧾 Factura</button>
-  <button onclick="showTab('inventario')">📦 Inventario</button>
-</nav>
+      <div><label>Marca</label><input id="invMarca2" placeholder="Marca"></div>
 
-<div id="modalSerie" class="hidden fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4">
-  <div class="bg-white rounded-2xl p-4 w-full max-w-sm">
-    <h3 class="font-bold">¿Qué Serie le diste?</h3>
-    <p id="modalSerieTexto" class="text-xs text-gray-500 mt-1"></p>
-    <p class="text-xs mt-2">Elegí la que realmente agarraste. Esa Serie va a desaparecer de Factura e Inventario.</p>
-    <select id="selectSeriePago" class="w-full border-2 border-red-400 p-3 rounded-xl my-3 font-mono font-bold"></select>
-    <div class="flex gap-2">
-      <button onclick="confirmarPagoConSerie()" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-bold">✅ Confirmar Pago</button>
-      <button onclick="cerrarModalSerie()" class="flex-1 bg-gray-200 py-3 rounded-xl font-bold">Cancelar</button>
+      <!-- PRECIOS -->
+      <div class="bg-green-50 p-3 rounded-xl space-y-2">
+        <p class="text-xs font-black text-green-700">💰 PRECIOS</p>
+        <div class="grid grid-cols-2 gap-2">
+          <div><label>Precio Costo $</label><input type="number" id="invPrecioCosto" placeholder="0" oninput="calcGananciaFactura()"></div>
+          <div><label>Precio Venta $</label><input type="number" id="invPrecioVenta" placeholder="0" oninput="calcGananciaFactura()"></div>
+        </div>
+        <div class="text-center bg-white rounded-lg py-2">
+          <span class="text-xs font-bold text-slate-500">GANANCIA: </span>
+          <span id="invGanancia" class="font-black text-green-600">$0.00</span>
+        </div>
+      </div>
+
+      <!-- BOTONES SEPARADOS - SOLO UNO A LA VEZ -->
+      <div class="mt-2">
+        <button id="btnAgregarInv" onclick="guardarInventarioNuevo()" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold">✅ AGREGAR PRODUCTO NUEVO</button>
+        <button id="btnEditarInv" onclick="guardarEdicionInventario()" class="w-full bg-yellow-400 text-black py-3 rounded-xl font-bold hidden">✏️ GUARDAR CAMBIOS</button>
+      </div>
+      <button onclick="cancelarEditarInv()" class="w-full text-xs text-slate-400 font-bold mt-1">Cancelar edición</button>
+    </div>
+
+    <div class="card">
+      <input id="buscInv" oninput="render()" placeholder="🔍 Buscar en inventario..." class="mb-2">
+      <div id="listaInv" class="space-y-2"></div>
     </div>
   </div>
+
+  <!-- ================= CATALOGO ================= -->
+  <div id="tab-catalogo" class="tab space-y-3">
+    <div class="card space-y-2">
+      <h2 class="font-black">📦 CATÁLOGO</h2>
+      <div><label>Modelo</label><input id="catModelo" placeholder="Ej: MS-12"></div>
+      <div><label>Descripción</label><input id="catDesc" placeholder="Descripción"></div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label>Capacidad</label><input id="catCap" placeholder="12000"></div>
+        <div><label>Marca</label><input id="catMarca" placeholder="Marca"></div>
+      </div>
+      <button onclick="guardarCatalogo()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Guardar en Catálogo</button>
+    </div>
+    <div id="listaCat" class="space-y-2"></div>
+  </div>
+
+  <!-- ================= LISTA TRABAJOS ================= -->
+  <div id="tab-lista" class="tab space-y-3">
+    <div class="card">
+      <div class="flex gap-2">
+        <input id="buscLista" oninput="render()" placeholder="🔍 Buscar trabajo..." class="flex-1">
+        <select id="filtroEstado" onchange="render()" class="!w-32"><option value="">Todos</option><option value="pagado">Pagado</option><option value="pendiente">Pendiente</option></select>
+      </div>
+    </div>
+    <div id="listaTrabajos" class="space-y-2"></div>
+  </div>
+
+  <!-- ================= REPORTE ================= -->
+  <div id="tab-reporte" class="tab space-y-3">
+    <div class="card">
+      <h2 class="font-black mb-2">📊 REPORTE</h2>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label>Desde</label><input type="date" id="repDesde"></div>
+        <div><label>Hasta</label><input type="date" id="repHasta"></div>
+      </div>
+      <button onclick="render()" class="w-full bg-slate-900 text-white py-3 rounded-xl font-bold mt-2">Actualizar Reporte</button>
+    </div>
+    <div id="listaReporte" class="space-y-2"></div>
+  </div>
+
 </div>
 
 <script>
-const CLAVE="Friosreina";
-function entrar(){
-  let v=document.getElementById('claveInput').value;
-  let trabs=JSON.parse(localStorage.getItem('climaserv_trabs')||'[]');
-  let esTrab=trabs.find(t=>t.clave===v);
-  if(v===CLAVE || esTrab){
-    localStorage.setItem('climaserv_login','ok');
-    localStorage.setItem('climaserv_user', esTrab ? esTrab.nombre : 'Jefe');
-    document.getElementById('login').style.display='none';
-    document.getElementById('app').classList.remove('hidden');
-    render();
-  } else { document.getElementById('errorClave').innerText='Clave incorrecta'; }
-}
-if(localStorage.getItem('climaserv_login')==='ok'){ document.getElementById('login').style.display='none'; document.getElementById('app').classList.remove('hidden'); }
-let CATALOGO=JSON.parse(localStorage.getItem('climaserv_catalogo')||'[]');
-let datos=JSON.parse(localStorage.getItem('climaserv_trabajos')||'[]');
-let inventario=JSON.parse(localStorage.getItem('climaserv_inv_5')||'[]');
-let gastos=JSON.parse(localStorage.getItem('climaserv_gastos')||'[]');
-let trabajadores=JSON.parse(localStorage.getItem('climaserv_trabs')||'[]');
-let filtro='todos';
-let datosTemp=null;
-let editandoCatIndex=-1;
-let editandoInvIndex=-1;
-let pagandoIndex=-1;
-const AIRES_BASE=['Mini Split 12000 BTU','Mini Split 18000 BTU','Mini Split 24000 BTU','Mini Split 36000 BTU','Mini Split 60000 BTU'];
-function save(){ localStorage.setItem('climaserv_catalogo',JSON.stringify(CATALOGO)); localStorage.setItem('climaserv_trabajos',JSON.stringify(datos)); localStorage.setItem('climaserv_inv_5',JSON.stringify(inventario)); localStorage.setItem('climaserv_gastos',JSON.stringify(gastos)); localStorage.setItem('climaserv_trabs',JSON.stringify(trabajadores)); render(); renderCal(); }
-function setFiltro(f){filtro=f;render();}
-function showTab(t){ document.querySelectorAll('.tab').forEach(e=>e.classList.add('hidden')); document.getElementById('tab-'+t).classList.remove('hidden'); }
-function leerCatForm(){ return { modelo:document.getElementById('catModelo').value.trim(), desc:document.getElementById('catDesc').value.trim(), cap:document.getElementById('catCap').value.trim(), marca:document.getElementById('catMarca').value.trim() }; }
-function validarCat(c){ if(!c.modelo) { alert('Poné el Modelo'); return false; } if(!c.desc) { alert('Poné la Descripción'); return false; } if(!c.cap) { alert('Poné la Capacidad'); return false; } if(!c.marca) { alert('Poné la Marca'); return false; } return true; }
-function agregarCatalogo(){ let c=leerCatForm(); if(!validarCat(c)) return; CATALOGO.unshift(c); cancelarEditarCat(); save(); alert('✅ Agregado: '+c.modelo); }
-function guardarEdicionCatalogo(){ if(editandoCatIndex<0) return alert('Primero tocá ✏️ Editar en un equipo de abajo'); let c=leerCatForm(); if(!validarCat(c)) return; CATALOGO[editandoCatIndex]=c; alert('✅ Editado: '+c.modelo); cancelarEditarCat(); save(); }
-function borrarEditandoCatalogo(){ if(editandoCatIndex<0) return alert('Primero tocá ✏️ Editar en un equipo de abajo'); if(!confirm('¿Borrar '+CATALOGO[editandoCatIndex].modelo+'?')) return; CATALOGO.splice(editandoCatIndex,1); cancelarEditarCat(); save(); }
-function editarCatalogo(i){ let c=CATALOGO[i]; editandoCatIndex=i; document.getElementById('catModelo').value=c.modelo; document.getElementById('catDesc').value=c.desc; document.getElementById('catCap').value=c.cap; document.getElementById('catMarca').value=c.marca; document.getElementById('editandoCat').classList.remove('hidden'); document.getElementById('btnCancelarEdit').classList.remove('hidden'); window.scrollTo(0,0); }
-function borrarCatalogo(i){ if(!confirm('¿Borrar '+CATALOGO[i].modelo+'?')) return; CATALOGO.splice(i,1); if(editandoCatIndex===i) cancelarEditarCat(); save(); }
-function cancelarEditarCat(){ editandoCatIndex=-1; document.getElementById('catModelo').value=''; document.getElementById('catDesc').value=''; document.getElementById('catCap').value=''; document.getElementById('catMarca').value=''; document.getElementById('editandoCat').classList.add('hidden'); document.getElementById('btnCancelarEdit').classList.add('hidden'); }
-function cargarCatalogo(){
-  let sel=document.getElementById('invModelo');
-  if(!sel) return;
-  if(CATALOGO.length===0){ sel.innerHTML='<option value="">-- Primero agregá en Catálogo --</option>'; document.getElementById('avisoCatalogoVacio').classList.remove('hidden'); document.getElementById('invDesc').value=''; document.getElementById('invCap').value=''; document.getElementById('invMarca2').value=''; }
-  else { document.getElementById('avisoCatalogoVacio').classList.add('hidden'); let actual=sel.value; sel.innerHTML=CATALOGO.map(c=>`<option value="${c.modelo}">${c.modelo} - ${c.cap}</option>`).join(''); if(actual && CATALOGO.some(c=>c.modelo===actual)) sel.value=actual; autollenarCatalogo(); }
-  document.getElementById('listaCatalogo').innerHTML=CATALOGO.length?CATALOGO.map((c,i)=>`<div class="border p-2 rounded-xl text-xs"><b>${c.modelo}</b><br>${c.desc}<br>${c.cap} - ${c.marca}<br><div class="flex gap-2 mt-1"><button onclick="editarCatalogo(${i})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-bold">✏️ Editar</button><button onclick="borrarCatalogo(${i})" class="bg-red-100 px-3 py-1 rounded-full text-xs font-bold">🗑️ Borrar</button></div></div>`).join(''):'<p class="text-xs text-gray-400">Catálogo vacío. Agregá tu primer equipo arriba con ➕ Agregar.</p>';
-}
-function autollenarCatalogo(){ let modelo=document.getElementById('invModelo').value; let c=CATALOGO.find(x=>x.modelo===modelo); if(!c) return; document.getElementById('invDesc').value=c.desc; document.getElementById('invCap').value=c.cap; document.getElementById('invMarca2').value=c.marca; }
+let datos = JSON.parse(localStorage.getItem('climaserv_datos') || '[]');
+let inventario = JSON.parse(localStorage.getItem('climaserv_inventario') || '[]');
+let CATALOGO = JSON.parse(localStorage.getItem('climaserv_catalogo') || '[]');
+let editandoInvIndex = -1;
 
-// FACTURA: CON PRECIOS COSTO / VENTA + SIN DUPLICAR AL EDITAR
+let fCliente = document.getElementById('fCliente');
+let fTelefono = document.getElementById('fTelefono');
+let fCumple = document.getElementById('fCumple');
+let fSerie = document.getElementById('fSerie');
+let fLote = document.getElementById('fLote');
+let fFlete = document.getElementById('fFlete');
+let fMonto = document.getElementById('fMonto');
+let fTrabajador = document.getElementById('fTrabajador');
+let fFrecuencia = document.getElementById('fFrecuencia');
+let fEstado = document.getElementById('fEstado');
+let fGarantiaProv = document.getElementById('fGarantiaProv');
+
+if(!document.getElementById('invFecha').value) document.getElementById('invFecha').value = new Date().toISOString().slice(0,10);
+if(!document.getElementById('fFechaTrabajo').value) document.getElementById('fFechaTrabajo').value = new Date().toISOString().slice(0,10);
+
+function showTab(t){
+  document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.btn-nav').forEach(e=>e.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  document.getElementById('b-'+t).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function save(){
+  localStorage.setItem('climaserv_datos', JSON.stringify(datos));
+  render();
+}
+
 function calcGananciaFactura(){
-  let c=Number(document.getElementById('invPrecioCosto').value||0);
-  let v=Number(document.getElementById('invPrecioVenta').value||0);
-  let el=document.getElementById('gananciaFactura');
-  if(el) el.innerText='Ganancia: $'+(v-c)+'  (Venta $'+v+' - Costo $'+c+')';
+  let c = Number(document.getElementById('invPrecioCosto').value) || 0;
+  let v = Number(document.getElementById('invPrecioVenta').value) || 0;
+  document.getElementById('invGanancia').textContent = '$' + (v - c).toFixed(2);
 }
-if(document.getElementById('invPrecioCosto')){ document.getElementById('invPrecioCosto').addEventListener('input',calcGananciaFactura); document.getElementById('invPrecioVenta').addEventListener('input',calcGananciaFactura); }
-function guardarInventarioNuevo(){
-  if(CATALOGO.length===0) return alert('Primero agregá en Catálogo');
-  let serie=document.getElementById('invSerie').value.trim();
-  if(!serie) return alert('⚠️ Te faltó la Serie');
-  if(inventario.some(i=>i.serie===serie)) return alert('Esa Serie '+serie+' ya está. Si es otra Serie, cambiá la Serie y te crea fila nueva en Factura.');
-  inventario.unshift({modelo:document.getElementById('invModelo').value,descripcion:document.getElementById('invDesc').value,serie:serie,capacidad:document.getElementById('invCap').value,marca:document.getElementById('invMarca2').value,fecha:document.getElementById('invFecha').value,tipoFactura:document.getElementById('invTipoFactura').value,factura:document.getElementById('invFactura').value,garantia:document.getElementById('invGarantia').value,sucursal:document.getElementById('invSucursal').value,precioCosto:document.getElementById('invPrecioCosto').value,precioVenta:document.getElementById('invPrecioVenta').value});
-  save(); document.getElementById('invSerie').value=''; document.getElementById('invPrecioCosto').value=''; document.getElementById('invPrecioVenta').value=''; calcGananciaFactura(); alert('✅ 1 equipo agregado en Factura - Serie '+serie+' - Costo $'+(inventario[0].precioCosto||0)+' / Venta $'+(inventario[0].precioVenta||0));
+
+function autollenar(){
+  let m = document.getElementById('invModelo').value;
+  let c = CATALOGO.find(x=>x.modelo===m);
+  if(c){
+    document.getElementById('invDesc').value = c.desc || '';
+    document.getElementById('invCap').value = c.cap || '';
+    document.getElementById('invMarca2').value = c.marca || '';
+  }
 }
-function editarInventario(i){
-  let x=inventario[i];
-  editandoInvIndex=i;
-  document.getElementById('invFecha').value=x.fecha||'';
-  document.getElementById('invTipoFactura').value=x.tipoFactura||'';
-  document.getElementById('invFactura').value=x.factura||'';
-  document.getElementById('invGarantia').value=x.garantia||'';
-  document.getElementById('invSucursal').value=x.sucursal||'';
-  document.getElementById('invModelo').value=x.modelo;
-  document.getElementById('invDesc').value=x.descripcion;
-  document.getElementById('invSerie').value=x.serie;
-  document.getElementById('invCap').value=x.capacidad;
-  document.getElementById('invMarca2').value=x.marca;
-  document.getElementById('invPrecioCosto').value=x.precioCosto||'';
-  document.getElementById('invPrecioVenta').value=x.precioVenta||'';
-  calcGananciaFactura();
+
+function cargarCatalogo(){
+  let s = document.getElementById('invModelo');
+  let v = s.value;
+  s.innerHTML = '<option value="">-- Elegí Modelo --</option>' + CATALOGO.map(c=>`<option value="${c.modelo}">${c.modelo} - ${c.desc}</option>`).join('');
+  s.value = v;
+  let s2 = document.getElementById('fModeloVenta');
+  let v2 = s2.value;
+  s2.innerHTML = '<option value="">-- Modelo Venta --</option>' + CATALOGO.map(c=>`<option value="${c.modelo}">${c.modelo}</option>`).join('');
+  s2.value = v2;
+}
+
+function guardarCatalogo(){
+  let m = document.getElementById('catModelo').value.trim();
+  if(!m) return alert('Poné Modelo');
+  CATALOGO.push({
+    modelo: m,
+    desc: document.getElementById('catDesc').value,
+    cap: document.getElementById('catCap').value,
+    marca: document.getElementById('catMarca').value
+  });
+  localStorage.setItem('climaserv_catalogo', JSON.stringify(CATALOGO));
+  document.getElementById('catModelo').value = '';
+  document.getElementById('catDesc').value = '';
+  document.getElementById('catCap').value = '';
+  document.getElementById('catMarca').value = '';
+  render();
+  alert('Guardado en Catálogo');
+}
+
+// =====================================================
+//  BOTONES - SOLO UNO A LA VEZ
+// =====================================================
+function mostrarModoAgregar(){
+  document.getElementById('btnAgregarInv').classList.remove('hidden');
+  document.getElementById('btnEditarInv').classList.add('hidden');
+  document.getElementById('editandoInv').classList.add('hidden');
+}
+function mostrarModoEditar(){
+  document.getElementById('btnAgregarInv').classList.add('hidden');
+  document.getElementById('btnEditarInv').classList.remove('hidden');
   document.getElementById('editandoInv').classList.remove('hidden');
+}
+
+function guardarInventarioNuevo(){
+  let modelo = document.getElementById('invModelo').value;
+  let serie = document.getElementById('invSerie').value.trim();
+  if(!modelo) return alert('Elegí Modelo');
+  if(!serie) return alert('Poné Serie');
+
+  inventario.unshift({
+    fecha: document.getElementById('invFecha').value,
+    tipoFactura: document.getElementById('invTipoFactura').value,
+    factura: document.getElementById('invFactura').value,
+    garantia: document.getElementById('invGarantia').value,
+    sucursal: document.getElementById('invSucursal').value,
+    modelo: modelo,
+    descripcion: document.getElementById('invDesc').value,
+    serie: serie,
+    capacidad: document.getElementById('invCap').value,
+    marca: document.getElementById('invMarca2').value,
+    precioCosto: Number(document.getElementById('invPrecioCosto').value) || 0,
+    precioVenta: Number(document.getElementById('invPrecioVenta').value) || 0,
+  });
+  localStorage.setItem('climaserv_inventario', JSON.stringify(inventario));
+  document.getElementById('invSerie').value = '';
+  document.getElementById('invPrecioCosto').value = '';
+  document.getElementById('invPrecioVenta').value = '';
+  calcGananciaFactura();
+  render();
+  alert('✅ Producto Nuevo Agregado');
+}
+
+// EDITAR VIEJOS - SI FUNCIONA
+function editarInventario(i){
+  let x = inventario[i];
+  editandoInvIndex = i;
+
+  // Si el modelo viejo no está en catálogo, lo agregamos para que sí aparezca
+  if(x.modelo && !CATALOGO.some(c=>c.modelo===x.modelo)){
+    CATALOGO.unshift({ modelo: x.modelo, desc: x.descripcion || '', cap: x.capacidad || '', marca: x.marca || '' });
+    localStorage.setItem('climaserv_catalogo', JSON.stringify(CATALOGO));
+  }
+  cargarCatalogo();
+
+  document.getElementById('invFecha').value = x.fecha || '';
+  document.getElementById('invTipoFactura').value = x.tipoFactura || '';
+  document.getElementById('invFactura').value = x.factura || '';
+  document.getElementById('invGarantia').value = x.garantia || '';
+  document.getElementById('invSucursal').value = x.sucursal || '';
+  document.getElementById('invModelo').value = x.modelo || '';
+  document.getElementById('invDesc').value = x.descripcion || '';
+  document.getElementById('invSerie').value = x.serie || '';
+  document.getElementById('invCap').value = x.capacidad || '';
+  document.getElementById('invMarca2').value = x.marca || '';
+  document.getElementById('invPrecioCosto').value = x.precioCosto || '';
+  document.getElementById('invPrecioVenta').value = x.precioVenta || '';
+  calcGananciaFactura();
+
+  mostrarModoEditar();
   showTab('factura');
   window.scrollTo(0,0);
 }
+
+// GUARDAR CAMBIOS - SOLO ESTE BOTON CUANDO EDITAS
 function guardarEdicionInventario(){
-  if(editandoInvIndex<0) return alert('Primero tocá ✏️ Editar en un equipo de Factura');
-  let serie=document.getElementById('invSerie').value.trim();
-  if(!serie) return alert('Te faltó la Serie');
-  if(inventario.some((x,idx)=>idx!==editandoInvIndex && x.serie===serie)) return alert('Esa Serie ya está en otra fila de Factura. Poné una Serie diferente.');
-  // REEMPLAZA, NO DUPLICA - se edita el mismo índice
-  inventario[editandoInvIndex]={modelo:document.getElementById('invModelo').value,descripcion:document.getElementById('invDesc').value,serie:serie,capacidad:document.getElementById('invCap').value,marca:document.getElementById('invMarca2').value,fecha:document.getElementById('invFecha').value,tipoFactura:document.getElementById('invTipoFactura').value,factura:document.getElementById('invFactura').value,garantia:document.getElementById('invGarantia').value,sucursal:document.getElementById('invSucursal').value,precioCosto:document.getElementById('invPrecioCosto').value,precioVenta:document.getElementById('invPrecioVenta').value};
-  alert('✅ Editado en Factura Y en Inventario - Serie '+serie+' - Sin duplicar. Costo $'+document.getElementById('invPrecioCosto').value+' / Venta $'+document.getElementById('invPrecioVenta').value);
-  cancelarEditarInv();
-  save();
-}
-function cancelarEditarInv(){ editandoInvIndex=-1; document.getElementById('editandoInv').classList.add('hidden'); document.getElementById('invSerie').value=''; document.getElementById('invPrecioCosto').value=''; document.getElementById('invPrecioVenta').value=''; }
-
-function abrirPago(idx){
-  let d=datos[idx];
-  let modelo=d.modeloVenta||'';
-  if(!modelo) return alert('Este trabajo no tiene Modelo de venta. Editalo y elegí el Modelo.');
-  if(modelo.includes('SERVICIO')){ marcarPagadoSinInventario(idx); return; }
-  let disponibles=inventario.filter(x=>x.modelo===modelo);
-  if(disponibles.length===0) return alert('No tenés en Inventario ningún equipo de ese Modelo: '+modelo);
-  // VALIDACION MANEJADORA / CONDENSADORA + CAPACIDAD
-  if(d.usarM && d.usarC && d.capacidadTrabajo){
-    let capM = d.serieManejadora ? (inventario.find(x=>x.serie===d.serieManejadora)||{}).capacidad : '';
-    // Si no puso series manuales, solo valida que la capacidad del trabajo sea igual a la del inventario
-    if(disponibles.length && disponibles[0].capacidad){
-      let norm = s => (s||'').toString().toLowerCase().replace(/[^0-9]/g,'');
-      if(norm(d.capacidadTrabajo)!=='' && norm(disponibles[0].capacidad)!=='' && norm(d.capacidadTrabajo)!==norm(disponibles[0].capacidad)){
-        return alert('❌ CAPACIDAD no coincide: Trabajo '+d.capacidadTrabajo+' vs Inventario '+disponibles[0].capacidad+'. No se puede pagar.');
-      }
-    }
+  if(editandoInvIndex < 0){
+    alert('No estás editando nada. Dale Editar a un equipo primero.');
+    return;
   }
-  pagandoIndex=idx;
-  document.getElementById('modalSerieTexto').innerText='Cliente: '+d.cliente+' - Modelo: '+modelo+' - Tenés '+disponibles.length+' disponibles de ese Modelo.';
-  document.getElementById('selectSeriePago').innerHTML=disponibles.map(x=>`<option value="${x.serie}">${x.serie} - ${x.modelo} - Factura ${x.factura||'-'} - Costo $${x.precioCosto||0} / Venta $${x.precioVenta||0}</option>`).join('');
-  document.getElementById('modalSerie').classList.remove('hidden');
-}
-function cerrarModalSerie(){ pagandoIndex=-1; document.getElementById('modalSerie').classList.add('hidden'); }
-function confirmarPagoConSerie(){
-  if(pagandoIndex<0) return;
-  let serie=document.getElementById('selectSeriePago').value;
-  let d=datos[pagandoIndex];
-  let invIdx=inventario.findIndex(x=>x.serie===serie);
-  if(invIdx<0) return alert('Esa Serie ya no está en Inventario');
-  d.estado='pagado';
-  d.serie=serie;
-  d.fechaPago=new Date().toISOString();
-  inventario.splice(invIdx,1);
-  cerrarModalSerie();
-  save();
-  alert('✅ Pagado - Serie entregada: '+serie+'\nYa se descontó de Factura e Inventario.\nCliente: '+d.cliente);
-}
-function marcarPagadoSinInventario(idx){
-  if(!confirm('¿Marcar como Pagado sin descontar Inventario?\nUsalo para mantenimiento, reparación, etc.')) return;
-  datos[idx].estado='pagado';
-  save();
+  let modelo = document.getElementById('invModelo').value;
+  let serie = document.getElementById('invSerie').value.trim();
+  if(!modelo) return alert('Elegí un Modelo');
+  if(!serie) return alert('Poné la Serie');
+
+  inventario[editandoInvIndex] = {
+    ...inventario[editandoInvIndex],
+    fecha: document.getElementById('invFecha').value,
+    tipoFactura: document.getElementById('invTipoFactura').value,
+    factura: document.getElementById('invFactura').value,
+    garantia: document.getElementById('invGarantia').value,
+    sucursal: document.getElementById('invSucursal').value,
+    modelo: modelo,
+    descripcion: document.getElementById('invDesc').value,
+    serie: serie,
+    capacidad: document.getElementById('invCap').value,
+    marca: document.getElementById('invMarca2').value,
+    precioCosto: Number(document.getElementById('invPrecioCosto').value) || 0,
+    precioVenta: Number(document.getElementById('invPrecioVenta').value) || 0,
+  };
+
+  localStorage.setItem('climaserv_inventario', JSON.stringify(inventario));
+  editandoInvIndex = -1;
+  mostrarModoAgregar();
+  document.getElementById('invSerie').value = '';
+  document.getElementById('invPrecioCosto').value = '';
+  document.getElementById('invPrecioVenta').value = '';
+  render();
+  alert('✅ Cambios guardados. Ya volvió a modo AGREGAR PRODUCTO NUEVO.');
 }
 
-function generarVista(){
-  const d={ cliente:fCliente.value.trim(), telefono:fTelefono.value.trim(), departamento:document.getElementById('fDepartamento').value, facturaTrabajo:document.getElementById('fFacturaTrabajo').value.trim(), fechaTrabajo:document.getElementById('fFechaTrabajo').value, cumple:fCumple.value, aire:fAire.value, modeloVenta:document.getElementById('fModeloVenta').value, serie:'', lote:fLote.value.trim(), flete:parseFloat(fFlete.value||0), monto:parseFloat(fMonto.value||0), trabajador:fTrabajador.value.trim(), frecuencia:fFrecuencia.value, estado:fEstado.value, garantiaProv:fGarantiaProv.value, fecha:new Date().toISOString(), usarM:document.getElementById('checkManejadora').checked, usarC:document.getElementById('checkCondensadora').checked, serieManejadora:document.getElementById('fSerieManejadora').value.trim(), serieCondensadora:document.getElementById('fSerieCondensadora').value.trim(), capacidadTrabajo:document.getElementById('fCapacidadTrabajo').value.trim() };
-  if(!d.cliente) return alert('⚠️ Te faltó el Cliente');
-  if(!d.telefono) return alert('⚠️ Te faltó el Teléfono');
-  if(!d.monto || d.monto <= 0) return alert('⚠️ Revisá el Monto');
-  if(!/^[0-9]+$/.test(d.telefono)) return alert('⚠️ El Teléfono solo números');
-  if(!d.modeloVenta) return alert('⚠️ Elegí el Modelo que le vas a vender');
-  if(d.estado==='pagado'){
-    let disponibles=inventario.filter(x=>x.modelo===d.modeloVenta);
-    if(!d.modeloVenta.includes('SERVICIO') && disponibles.length===0) return alert('No tenés en Inventario ningún equipo de ese Modelo. No podés marcarlo Pagado.');
-    if(!confirm('Lo estás creando ya como Pagado.\n¿Ya le entregaste el equipo? Al guardar te va a pedir elegir la Serie que agarraste.')) return;
+function cancelarEditarInv(){
+  editandoInvIndex = -1;
+  document.getElementById('invSerie').value = '';
+  document.getElementById('invPrecioCosto').value = '';
+  document.getElementById('invPrecioVenta').value = '';
+  mostrarModoAgregar();
+}
+
+function eliminarInventario(i){
+  if(confirm('¿Borrar este equipo?')){
+    inventario.splice(i,1);
+    localStorage.setItem('climaserv_inventario', JSON.stringify(inventario));
+    render();
   }
-  // Si marcó las 2, avisar que capacidad debe ser igual - se valida al pagar también
-  if(d.usarM && d.usarC && d.serieManejadora && d.serieCondensadora){
-    let invM=inventario.find(x=>x.serie===d.serieManejadora);
-    let invC=inventario.find(x=>x.serie===d.serieCondensadora);
-    if(d.estado==='pagado'){
-      if(!invM) return alert('❌ MANEJADORA '+d.serieManejadora+' NO está en inventario.');
-      if(!invC) return alert('❌ CONDENSADORA '+d.serieCondensadora+' NO está en inventario.');
-      let norm = s => (s||'').toString().toLowerCase().replace(/[^0-9]/g,'');
-      if(norm(invM.capacidad)!==norm(invC.capacidad)) return alert('❌ CAPACIDAD no coincide: Manejadora '+invM.capacidad+' vs Condensadora '+invC.capacidad);
-    }
-  }
-  datosTemp=d;
+}
+
+function venderInventario(i){
+  let x = inventario[i];
+  document.getElementById('fModeloVenta').value = x.modelo;
+  document.getElementById('fCapacidadTrabajo').value = x.capacidad || '';
+  fSerie.value = x.serie || '';
+  fMonto.value = x.precioVenta || '';
+  showTab('trabajos');
+  alert('Listo para vender. Llená Cliente y guardá el Trabajo.');
+}
+
+// ================= TRABAJO =================
+function generar(){
+  if(!fCliente.value.trim()) return alert('Falta Cliente');
+  let d = {
+    cliente: fCliente.value,
+    telefono: fTelefono.value,
+    departamento: document.getElementById('fDepartamento').value,
+    facturaTrabajo: document.getElementById('fFacturaTrabajo').value,
+    fechaTrabajo: document.getElementById('fFechaTrabajo').value,
+    cumple: fCumple.value,
+    serie: fSerie.value,
+    lote: fLote.value,
+    flete: Number(fFlete.value) || 0,
+    monto: Number(fMonto.value) || 0,
+    modeloVenta: document.getElementById('fModeloVenta').value,
+    capacidadTrabajo: document.getElementById('fCapacidadTrabajo').value,
+    trabajador: fTrabajador.value,
+    frecuencia: fFrecuencia.value,
+    estado: fEstado.value,
+    garantiaProv: fGarantiaProv.value,
+    usarM: document.getElementById('checkManejadora').checked,
+    usarC: document.getElementById('checkCondensadora').checked,
+    serieManejadora: document.getElementById('fSerieManejadora').value,
+    serieCondensadora: document.getElementById('fSerieCondensadora').value,
+    fecha: new Date().toLocaleDateString()
+  };
+  datos.unshift(d);
+  save();
+  document.getElementById('msgGuardado').classList.remove('hidden');
   document.getElementById('vistaPrevia').classList.remove('hidden');
-  document.getElementById('vistaPrevia').innerHTML=`<p class="text-sm"><b>Cliente:</b> ${d.cliente}</p><p class="text-sm"><b>Tel:</b> ${d.telefono}</p><p class="text-sm"><b>Departamento:</b> ${d.departamento||'-'}</p><p class="text-sm"><b>Factura:</b> ${d.facturaTrabajo||'-'}</p><p class="text-sm"><b>Fecha:</b> ${d.fechaTrabajo||'-'}</p><p class="text-sm"><b>Aire:</b> ${d.aire}</p><p class="text-sm"><b>Modelo a vender:</b> ${d.modeloVenta}</p><p class="text-sm"><b>Manejadora:</b> ${d.usarM?'Sí - '+(d.serieManejadora||'sin serie todavía'):'No'}</p><p class="text-sm"><b>Condensadora:</b> ${d.usarC?'Sí - '+(d.serieCondensadora||'sin serie todavía'):'No'}</p><p class="text-sm"><b>Capacidad:</b> ${d.capacidadTrabajo||'-'}</p><p class="text-sm"><b>Monto:</b> $${d.monto}</p><p class="text-sm"><b>Estado:</b> ${d.estado}</p><div class="flex gap-2 mt-3"><button onclick="confirmarGuardar()" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-bold">✅ Guardar Así</button><button onclick="document.getElementById('vistaPrevia').classList.add('hidden')" class="flex-1 bg-gray-200 py-3 rounded-xl font-bold">✏️ Corregir</button></div>`;
-  document.getElementById('vistaPrevia').scrollIntoView({behavior:'smooth'});
+  document.getElementById('vistaPrevia').innerHTML = `
+    <div class="boleta">
+      <h3 class="font-black text-center">❄️ CLIMASERV</h3>
+      <p class="text-center text-xs">BOLETA DE TRABAJO</p>
+      <hr class="my-2">
+      <p class="text-sm"><b>Cliente:</b> ${d.cliente}</p>
+      <p class="text-sm"><b>Teléfono:</b> ${d.telefono}</p>
+      <p class="text-sm"><b>Departamento:</b> ${d.departamento || ''}</p>
+      <p class="text-sm"><b>Factura:</b> ${d.facturaTrabajo || ''} | <b>Fecha:</b> ${d.fechaTrabajo || ''}</p>
+      <p class="text-sm"><b>Modelo:</b> ${d.modeloVenta || ''} | <b>Capacidad:</b> ${d.capacidadTrabajo || ''}</p>
+      <p class="text-sm"><b>Serie:</b> ${d.serie} | <b>Lote:</b> ${d.lote}</p>
+      <p class="text-sm"><b>Manejadora:</b> ${d.serieManejadora} | <b>Condensadora:</b> ${d.serieCondensadora}</p>
+      <p class="text-sm"><b>Monto:</b> $${d.monto} | <b>Flete:</b> $${d.flete} | <b>Estado:</b> ${d.estado}</p>
+      <p class="text-sm"><b>Trabajador:</b> ${d.trabajador} | <b>Garantía:</b> ${d.garantiaProv}</p>
+    </div>
+  `;
 }
-function confirmarGuardar(){
-  if(!datosTemp) return;
-  let eraPagado = datosTemp.estado==='pagado';
-  // FACTURA TRABAJO: NO DUPLICAR - si ya existe esa factura, reemplazar
-  if(datosTemp.facturaTrabajo){
-    let idxExist=datos.findIndex(x=>x.facturaTrabajo===datosTemp.facturaTrabajo);
-    if(idxExist>=0){ if(!confirm('Esa Factura '+datosTemp.facturaTrabajo+' ya existe. ¿Reemplazarla y no duplicarla?')) return; datos[idxExist]=datosTemp; datosTemp=null; document.getElementById('vistaPrevia').classList.add('hidden'); save(); alert('✅ Factura reemplazada, no duplicada.'); return; }
-  }
-  datos.unshift(datosTemp);
-  let idx=0;
-  datosTemp=null;
+
+function limpiarTodo(){
+  [fCliente,fTelefono,fCumple,fSerie,fLote,fFlete,fMonto,fGarantiaProv].forEach(e=>e.value='');
+  document.getElementById('fDepartamento').value = '';
+  document.getElementById('fFacturaTrabajo').value = '';
+  document.getElementById('fSerieManejadora').value = '';
+  document.getElementById('fSerieCondensadora').value = '';
+  document.getElementById('msgGuardado').classList.add('hidden');
   document.getElementById('vistaPrevia').classList.add('hidden');
-  fCliente.value=''; fTelefono.value=''; document.getElementById('fDepartamento').value=''; document.getElementById('fFacturaTrabajo').value=''; document.getElementById('fFechaTrabajo').value=''; fCumple.value=''; fSerie.value=''; fLote.value=''; fFlete.value=''; fMonto.value=''; fTrabajador.value=''; fFrecuencia.value='3'; fEstado.value='pendiente'; fGarantiaProv.value=''; document.getElementById('fSerieManejadora').value=''; document.getElementById('fSerieCondensadora').value=''; document.getElementById('fCapacidadTrabajo').value='';
-  save();
-  if(eraPagado){
-    alert('✅ Guardado como Pendiente por un momento. Ahora elegí la Serie que le diste para dejarlo Pagado.');
-    abrirPago(idx);
-  } else {
-    alert('✅ Guardado como Pendiente. Sigue en Inventario. Cuando pague, elegís la Serie.');
-  }
 }
-function guardarGasto(){ gastos.unshift({desc:gDesc.value,monto:parseFloat(gMonto.value||0),tipo:gTipo.value,fecha:new Date().toISOString()}); save(); gDesc.value=''; gMonto.value=''; }
-function guardarTrabajador(){ trabajadores.unshift({nombre:tNombre.value,clave:tClave.value}); save(); alert('Trabajador agregado: '+tClave.value); }
-function cierreDia(){ const hoy=new Date().toDateString(); const entr=datos.filter(d=>new Date(d.fecha).toDateString()===hoy&&d.estado==='pagado').reduce((s,d)=>s+d.monto,0); const sal=gastos.filter(g=>new Date(g.fecha).toDateString()===hoy).reduce((s,g)=>s+g.monto,0); document.getElementById('cierre').innerText=`Entró: $${entr} - Salió: $${sal} - Quedó: $${entr-sal}`; alert(`Cierre\nEntró: $${entr}\nSalió: $${sal}\nQuedó: $${entr-sal}`); }
-function buscarSerie(){ const s=prompt('Escribí la Serie:'); if(!s)return; const r=datos.filter(d=>(d.serie||'').toLowerCase().includes(s.toLowerCase())); const r2=inventario.filter(d=>(d.serie||'').toLowerCase().includes(s.toLowerCase())); alert(r.length?r.map(x=>`${x.cliente} - ${x.aire} - $${x.monto} - Serie ${x.serie}`).join('\n'):(r2.length?r2.map(x=>`${x.modelo} - Serie ${x.serie} - ${x.marca} - Factura ${x.factura}`).join('\n'):'No se encontró')); }
-function buscarTelefono(){ const s=prompt('Escribí el teléfono:'); if(!s)return; const r=datos.filter(d=>(d.telefono||'').includes(s)); alert(r.length?r.map(x=>`${x.cliente} - ${x.aire} - $${x.monto}`).join('\n'):'No se encontró'); }
-function exportar(){ const blob=new Blob([JSON.stringify({catalogo:CATALOGO,trabajos:datos,inventario,gastos,trabajadores},null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='copia-climaserv.json'; a.click(); }
-function cotizar(){ const msg=`Hola ${cCliente.value}, cotización Climaserv El Paraíso:\n${cDetalle.value} - $${cMonto.value}`; window.open('https://wa.me/?text='+encodeURIComponent(msg)); }
-function factura(){ alert(`FACTURA CLIMASERV\nCliente: ${cCliente.value}\nDetalle: ${cDetalle.value}\nMonto: $${cMonto.value}\nGarantía 30 días`); }
-function generarReporte(tipo){ const total=datos.reduce((s,d)=>s+d.monto,0); const pend=datos.filter(d=>d.estado==='pendiente').reduce((s,d)=>s+d.monto,0); document.getElementById('reporteBox').innerHTML=`Reporte ${tipo}<br>Total: $${total}<br>Pendiente: $${pend}<br>Cobrado: $${total-pend}<br>Trabajos: ${datos.length}<br>Inventario en bodega: ${inventario.length} equipos`; }
-function renderCal(){ const f=document.getElementById('fechaCal').value||new Date().toISOString().slice(0,10); const lista=datos.filter(d=>d.fecha.slice(0,10)===f); document.getElementById('listaCal').innerHTML=lista.length?lista.map(d=>`<div class="border p-2 rounded-xl text-sm">${d.cliente} - ${d.aire} - $${d.monto}</div>`).join(''):'Sin trabajos ese día.'; }
-function actualizarAires(){
-  let todos=[...AIRES_BASE]; CATALOGO.forEach(c=>{let a=`${c.desc} - ${c.marca}`; if(!todos.includes(a)) todos.push(a);});
-  document.getElementById('fAire').innerHTML=todos.map(a=>`<option value="${a}">${a}</option>`).join('');
-  let selVenta=document.getElementById('fModeloVenta');
-  if(selVenta){
-    if(CATALOGO.length===0){ selVenta.innerHTML='<option value="">-- Primero agregá en Catálogo --</option>'; }
-    else {
-      let actual=selVenta.value;
-      selVenta.innerHTML='<option value="">-- Elegí el Modelo a vender --</option>'+CATALOGO.map(c=>`<option value="${c.modelo}">${c.modelo} - ${c.cap} - ${c.marca}</option>`).join('')+'<option value="SERVICIO - Sin equipo">SERVICIO - Sin equipo (mantenimiento / reparación)</option>';
-      if(actual) selVenta.value=actual;
-    }
-  }
-}
+
 function editar(idx){
-  const d=datos[idx];
-  fCliente.value=d.cliente||''; fTelefono.value=d.telefono||''; fCumple.value=d.cumple||'';
-  document.getElementById('fDepartamento').value=d.departamento||'';
-  document.getElementById('fFacturaTrabajo').value=d.facturaTrabajo||'';
-  document.getElementById('fFechaTrabajo').value=d.fechaTrabajo||'';
-  fSerie.value=d.serie||''; fLote.value=d.lote||''; fFlete.value=d.flete||''; fMonto.value=d.monto||''; fTrabajador.value=d.trabajador||''; fFrecuencia.value=d.frecuencia||'3'; fEstado.value=d.estado||'pendiente'; fGarantiaProv.value=d.garantiaProv||'';
-  if(document.getElementById('fModeloVenta')) document.getElementById('fModeloVenta').value=d.modeloVenta||'';
-  document.getElementById('checkManejadora').checked=d.usarM!==false;
-  document.getElementById('checkCondensadora').checked=d.usarC!==false;
-  document.getElementById('fSerieManejadora').value=d.serieManejadora||'';
-  document.getElementById('fSerieCondensadora').value=d.serieCondensadora||'';
-  document.getElementById('fCapacidadTrabajo').value=d.capacidadTrabajo||'';
-  datos.splice(idx,1); save(); window.scrollTo(0,0); alert('Ahora corregí arriba y dale Generar Vista Previa');
+  let d = datos[idx];
+  fCliente.value = d.cliente || '';
+  fTelefono.value = d.telefono || '';
+  document.getElementById('fDepartamento').value = d.departamento || '';
+  document.getElementById('fFacturaTrabajo').value = d.facturaTrabajo || d.factura || '';
+  document.getElementById('fFechaTrabajo').value = d.fechaTrabajo || '';
+  fCumple.value = d.cumple || '';
+  fSerie.value = d.serie || '';
+  fLote.value = d.lote || '';
+  fFlete.value = d.flete || '';
+  fMonto.value = d.monto || '';
+  document.getElementById('fModeloVenta').value = d.modeloVenta || '';
+  document.getElementById('fCapacidadTrabajo').value = d.capacidadTrabajo || d.capacidad || '';
+  fTrabajador.value = d.trabajador || '';
+  fFrecuencia.value = d.frecuencia || '3';
+  fEstado.value = d.estado || 'pendiente';
+  fGarantiaProv.value = d.garantiaProv || '';
+  document.getElementById('checkManejadora').checked = d.usarM !== false;
+  document.getElementById('checkCondensadora').checked = d.usarC !== false;
+  document.getElementById('fSerieManejadora').value = d.serieManejadora || '';
+  document.getElementById('fSerieCondensadora').value = d.serieCondensadora || '';
+  datos.splice(idx,1);
+  save();
+  showTab('trabajos');
+  window.scrollTo(0,0);
 }
+
+function eliminar(idx){ if(confirm('¿Borrar trabajo?')){ datos.splice(idx,1); save(); } }
+function marcarPagado(idx){ datos[idx].estado = 'pagado'; save(); }
+
 function render(){
-  actualizarAires(); cargarCatalogo();
-  const user=localStorage.getItem('climaserv_user')||'Jefe';
-  const q=document.getElementById('buscador').value.toLowerCase();
-  let lista=datos.filter(d=>(d.cliente||'').toLowerCase().includes(q)||(d.aire||'').toLowerCase().includes(q)||(d.serie||'').toLowerCase().includes(q)||(d.telefono||'').includes(q)||(d.modeloVenta||'').toLowerCase().includes(q));
-  if(user!=='Jefe') lista=lista.filter(d=>(d.trabajador||'').toLowerCase()===user.toLowerCase());
-  if(filtro==='pendiente') lista=lista.filter(d=>d.estado==='pendiente');
-  if(filtro==='pagado') lista=lista.filter(d=>d.estado==='pagado');
-  const total=datos.reduce((s,d)=>s+(d.monto||0),0);
-  const pend=datos.filter(d=>d.estado==='pendiente').reduce((s,d)=>s+(d.monto||0),0);
-  document.getElementById('statTotal').innerText='$'+total;
-  document.getElementById('statPend').innerText='$'+pend;
-  document.getElementById('statCob').innerText='$'+(total-pend);
-  const hoy=new Date().toISOString().slice(5,10);
-  const cumples=datos.filter(d=>d.cumple&&d.cumple.slice(5,10)===hoy);
-  document.getElementById('alertas').innerText=(pend>0?`${datos.filter(d=>d.estado==='pendiente').length} pendientes • `:'Todo al día • ')+`Usuario: ${user}`;
-  document.getElementById('alertasCumple').innerText=cumples.length?`🎂 Hoy cumple: ${cumples.map(c=>c.cliente).join(', ')}`:'Sin cumpleaños hoy.';
-  document.getElementById('lista').innerHTML=lista.map((d)=>{ let idx=datos.indexOf(d); let esServicio=d.modeloVenta && d.modeloVenta.includes('SERVICIO'); return `<div class="bg-white p-4 rounded-2xl shadow"><p class="font-bold">${d.cliente}</p><p class="text-xs text-gray-500">${d.aire} • Modelo a vender: ${d.modeloVenta||'-'} • Serie entregada: ${d.serie||'Todavía no, se elige cuando pague'} • Lote: ${d.lote||'-'} • Flete: $${d.flete||0} • Tel: ${d.telefono||''} • Depto: ${d.departamento||'-'} • Factura: ${d.facturaTrabajo||'-'} • Fecha: ${d.fechaTrabajo||'-'}</p><p class="text-xs text-gray-500">🧊 Manejadora: ${(d.usarM?'Sí':'No')+' '+(d.serieManejadora||'')} | 🔥 Condensadora: ${(d.usarC?'Sí':'No')+' '+(d.serieCondensadora||'')} | Capacidad: ${d.capacidadTrabajo||'-'}</p><p class="font-bold text-blue-600">$${d.monto} • Cada ${d.frecuencia} meses • ${d.estado}</p><div class="flex gap-2 mt-2 flex-wrap">${d.estado==='pendiente' ? `<button onclick="abrirPago(${idx})" class="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-bold">✅ Pagado - Elegir Serie</button><button onclick="marcarPagadoSinInventario(${idx})" class="bg-gray-100 px-3 py-1 rounded-full text-xs font-bold">Pagado sin equipo</button>` : `<span class="bg-green-100 px-3 py-1 rounded-full text-xs font-bold">✅ Pagado - Serie ${d.serie||'-'}</span>`}<button onclick="editar(${idx})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-bold">✏️ Editar</button><button onclick="datos.splice(${idx},1);save()" class="text-red-500 text-xs font-bold">Borrar trabajo</button></div></div>`; }).join('')||'<p class="text-center text-gray-400 py-6">Sin registros</p>';
-  let invFiltrado=inventario.filter(x=>(x.modelo||'').toLowerCase().includes(q)||(x.serie||'').toLowerCase().includes(q)||(x.descripcion||'').toLowerCase().includes(q)||(x.marca||'').toLowerCase().includes(q)||(x.factura||'').toLowerCase().includes(q));
-  document.getElementById('totalInv5').innerText=inventario.length+' equipos';
-  document.getElementById('listaFactura').innerHTML=invFiltrado.map((x)=>{ let idx=inventario.indexOf(x); let gan=(Number(x.precioVenta||0)-Number(x.precioCosto||0)); return `<div class="border p-2 rounded-xl text-xs"><b>${x.modelo} - Serie ${x.serie}</b><br>📅 Fecha: ${x.fecha||'-'} • 🧾 Factura: ${x.factura||'-'} (${x.tipoFactura||'-'}) • 🛡️ Garantía: ${x.garantia||'-'} • 🏢 Sucursal: ${x.sucursal||'-'}<br>${x.descripcion} • ${x.capacidad} • ${x.marca}<br><b>💰 Costo: $${x.precioCosto||0} | 💵 Venta: $${x.precioVenta||0} | Ganancia: $${gan}</b><br><div class="flex gap-2 mt-1"><button onclick="editarInventario(${idx})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-bold">✏️ Editar</button><span class="text-[10px] text-gray-400 py-1">No se puede borrar. Solo se descuenta cuando un trabajo se paga.</span></div></div>`; }).join('')||'<p class="text-xs text-gray-400">Sin facturas. Agregá arriba, equipo por equipo.</p>';
-  let grupos={};
-  invFiltrado.forEach(x=>{ let key=(x.modelo||'').trim().toLowerCase(); if(!grupos[key]) grupos[key]={modelo:x.modelo,descripcion:x.descripcion,capacidad:x.capacidad,marca:x.marca,cant:0}; grupos[key].cant++; });
-  let gruposArr=Object.values(grupos);
-  document.getElementById('listaInv').innerHTML=gruposArr.map(g=>{
-    let apartados=datos.filter(d=>d.estado==='pendiente' && d.modeloVenta===g.modelo).length;
-    let disponible=Math.max(0, g.cant - apartados);
-    return `<tr class="border-b"><td class="p-2 border text-center font-bold text-lg">${g.cant}</td><td class="p-2 border text-center font-bold text-yellow-600">${apartados}</td><td class="p-2 border text-center font-bold ${disponible===0?'text-red-600':'text-green-600'}">${disponible}</td><td class="p-2 border font-bold">${g.modelo}</td><td class="p-2 border text-[10px]">${g.descripcion}</td><td class="p-2 border">${g.capacidad}</td><td class="p-2 border">${g.marca}</td></tr>`;
-  }).join('')||'<tr><td colspan="7" class="p-2 text-center text-gray-400">Sin inventario. Agregá desde Factura, acá aparece sumado por Modelo.</td></tr>';
-  document.getElementById('listaGastos').innerHTML=gastos.map(x=>`<div class="border p-2 rounded-xl text-sm">${x.desc} - $${x.monto} - ${x.tipo}</div>`).join('');
-  document.getElementById('listaTrab').innerHTML=trabajadores.map(x=>`<div class="border p-2 rounded-xl text-sm">${x.nombre} - clave: ${x.clave}</div>`).join('');
+  cargarCatalogo();
+
+  let b = (document.getElementById('buscInv').value || '').toLowerCase();
+  let invFil = inventario.filter(x => (x.modelo + ' ' + x.serie + ' ' + x.descripcion).toLowerCase().includes(b));
+  document.getElementById('listaInv').innerHTML = invFil.map((x)=>{
+    let idx = inventario.indexOf(x);
+    let gan = (Number(x.precioVenta)||0) - (Number(x.precioCosto)||0);
+    return `
+    <div class="border rounded-xl p-2 flex justify-between">
+      <div>
+        <b>${x.modelo}</b> - ${x.descripcion || ''}<br>
+        <span class="text-xs">Serie: ${x.serie} | ${x.marca || ''} | Fact: ${x.factura || ''}</span><br>
+        <span class="text-xs">Costo: $${x.precioCosto || 0} | Venta: $${x.precioVenta || 0} | <b class="text-green-600">Gan: $${gan}</b></span>
+      </div>
+      <div class="flex flex-col gap-1">
+        <button onclick="editarInventario(${idx})" class="bg-yellow-400 px-2 py-1 rounded-lg text-xs font-bold">✏️ Editar</button>
+        <button onclick="venderInventario(${idx})" class="bg-blue-600 text-white px-2 py-1 rounded-lg text-xs font-bold">Vender</button>
+        <button onclick="eliminarInventario(${idx})" class="bg-red-100 px-2 py-1 rounded-lg text-xs font-bold">🗑️</button>
+      </div>
+    </div>`;
+  }).join('') || '<p class="text-center text-slate-400 text-sm">Sin inventario</p>';
+
+  let bl = (document.getElementById('buscLista').value || '').toLowerCase();
+  let fe = document.getElementById('filtroEstado').value;
+  document.getElementById('listaTrabajos').innerHTML = datos.filter(d=>!fe || d.estado===fe).filter(d=>(d.cliente + ' ' + d.serie).toLowerCase().includes(bl)).map((d)=>{
+    let idx = datos.indexOf(d);
+    return `
+    <div class="card flex justify-between">
+      <div>
+        <b>${d.cliente}</b> <span class="text-xs ${d.estado==='pagado'?'text-green-600':'text-red-500'}">${d.estado}</span><br>
+        <span class="text-xs">Dept: ${d.departamento || ''} | Fact: ${d.facturaTrabajo || ''} | Fecha: ${d.fechaTrabajo || ''} | Modelo: ${d.modeloVenta || ''} | $${d.monto}</span>
+      </div>
+      <div class="flex gap-1">
+        <button onclick="editar(${idx})" class="bg-yellow-400 px-2 py-1 rounded-lg text-xs font-bold">✏️</button>
+        <button onclick="marcarPagado(${idx})" class="bg-green-100 px-2 py-1 rounded-lg text-xs font-bold">✅</button>
+        <button onclick="eliminar(${idx})" class="bg-red-100 px-2 py-1 rounded-lg text-xs font-bold">🗑️</button>
+      </div>
+    </div>`;
+  }).join('') || '<p class="text-center text-slate-400 text-sm">Sin trabajos</p>';
+
+  document.getElementById('listaCat').innerHTML = CATALOGO.map((c,i)=>`
+    <div class="card flex justify-between">
+      <div><b>${c.modelo}</b><br><span class="text-xs">${c.desc} | ${c.cap} | ${c.marca}</span></div>
+      <button onclick="CATALOGO.splice(${i},1);localStorage.setItem('climaserv_catalogo',JSON.stringify(CATALOGO));render()" class="bg-red-100 px-2 py-1 rounded-lg text-xs">🗑️</button>
+    </div>`).join('') || '';
+
+  document.getElementById('statInv').textContent = inventario.length;
+  let ventas = datos.filter(d=>d.estado==='pagado').reduce((a,d)=>a+(Number(d.monto)||0),0);
+  let cobrar = datos.filter(d=>d.estado!=='pagado').reduce((a,d)=>a+(Number(d.monto)||0),0);
+  document.getElementById('statVentas').textContent = '$' + ventas;
+  document.getElementById('statCobrar').textContent = '$' + cobrar;
+
+  let desde = document.getElementById('repDesde').value;
+  let hasta = document.getElementById('repHasta').value;
+  document.getElementById('listaReporte').innerHTML = datos.filter(d=>{
+    if(desde && d.fechaTrabajo < desde) return false;
+    if(hasta && d.fechaTrabajo > hasta) return false;
+    return true;
+  }).map(d=>`<div class="card text-sm"><b>${d.cliente}</b> - $${d.monto} - ${d.estado} - ${d.fechaTrabajo || ''}</div>`).join('') || '<p class="text-center text-slate-400 text-sm">Sin datos</p>';
 }
-function verHistorial(cliente){ const h=datos.filter(x=>x.cliente===cliente); alert('Historial '+cliente+'\n'+h.map(x=>`${x.aire} - $${x.monto} - ${x.estado} - Serie ${x.serie}`).join('\n')); }
-render(); renderCal();
+
+function exportarBackup(){
+  let blob = new Blob([JSON.stringify({datos, inventario, CATALOGO})], {type:'application/json'});
+  let a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'climaserv-backup.json';
+  a.click();
+}
+function importarBackup(e){
+  let f = e.target.files[0];
+  if(!f) return;
+  let r = new FileReader();
+  r.onload = ()=>{
+    try{
+      let j = JSON.parse(r.result);
+      datos = j.datos || datos;
+      inventario = j.inventario || inventario;
+      CATALOGO = j.CATALOGO || CATALOGO;
+      save();
+      localStorage.setItem('climaserv_inventario', JSON.stringify(inventario));
+      localStorage.setItem('climaserv_catalogo', JSON.stringify(CATALOGO));
+      render();
+      alert('Backup cargado');
+    }catch(err){ alert('Error'); }
+  };
+  r.readAsText(f);
+}
+
+render();
+mostrarModoAgregar();
 </script>
 </body>
 </html>
