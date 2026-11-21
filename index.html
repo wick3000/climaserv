@@ -229,7 +229,7 @@
 
 <div id="modalSerie" class="hidden fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4">
   <div class="bg-white rounded-2xl p-4 w-full max-w-sm">
-    <h3 id="modalTitulo" class="font-black">¿Qué Series le diste?</h3>
+    <h3 id="modalTitulo" class="font-black">⏳ PENDIENTE DE PAGAR - Elegí las Series</h3>
     <p id="modalSerieTexto" class="text-xs text-gray-500 mt-1 font-bold"></p>
     <label class="text-xs font-black mt-2 block">Serie Manejadora</label>
     <select id="selectSerieManejadora" onchange="calcularCompraModal()" class="w-full border-2 border-red-400 p-3 rounded-xl my-1 font-mono font-black"></select>
@@ -242,7 +242,7 @@
     </div>
     <p id="modalError" class="text-xs text-red-600 font-black hidden mt-2"></p>
     <div class="flex gap-2 mt-3">
-      <button id="btnModalConfirmar" onclick="confirmarPagoConSeries()" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-black">✅ Confirmar Pago</button>
+      <button id="btnModalConfirmar" onclick="confirmarPagoConSeries()" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-black">💰 PAGAR</button>
       <button onclick="cerrarModalSerie()" class="flex-1 bg-gray-200 py-3 rounded-xl font-black">Cancelar</button>
     </div>
   </div>
@@ -265,7 +265,7 @@ let facturas=JSON.parse(localStorage.getItem('climaserv_facturas')||'[]');
 if(facturas.length===0 && inventario.length>0){ facturas=[...inventario]; }
 let gastos=JSON.parse(localStorage.getItem('climaserv_gastos')||'[]');
 let trabajadores=JSON.parse(localStorage.getItem('climaserv_trabs')||'[]');
-let filtro='todos'; let datosTemp=null; let editandoCatIndex=-1; let editandoInvIndex=-1; let editandoInvSerieOld=''; let pagandoIndex=-1; let modoModal='pago';
+let filtro='todos'; let datosTemp=null; let editandoCatIndex=-1; let editandoInvIndex=-1; let editandoInvSerieOld=''; let pagandoIndex=-1;
 function save(){ localStorage.setItem('climaserv_catalogo',JSON.stringify(CATALOGO)); localStorage.setItem('climaserv_trabajos',JSON.stringify(datos)); localStorage.setItem('climaserv_inv_5',JSON.stringify(inventario)); localStorage.setItem('climaserv_facturas',JSON.stringify(facturas)); localStorage.setItem('climaserv_gastos',JSON.stringify(gastos)); localStorage.setItem('climaserv_trabs',JSON.stringify(trabajadores)); render(); renderCal(); }
 function setFiltro(f){filtro=f;render();}
 function showTab(t){ document.querySelectorAll('.tab').forEach(e=>e.classList.add('hidden')); document.getElementById('tab-'+t).classList.remove('hidden'); }
@@ -359,22 +359,14 @@ function guardarEdicionInventario(){
   alert('✅ Editado en Factura Y en Inventario'); cancelarEditarInv(); save();
 }
 function cancelarEditarInv(){ editandoInvIndex=-1; editandoInvSerieOld=''; document.getElementById('editandoInv').classList.add('hidden'); document.getElementById('invSerie').value=''; mostrarModoAgregar(); }
-function abrirModalSeries(idx, modo){
+// --- SOLO UN BOTON: PENDIENTE DE PAGAR -> PIDE SERIES -> PAGAR ---
+function abrirPago(idx){
   let d=datos[idx];
-  modoModal=modo; pagandoIndex=idx;
+  pagandoIndex=idx;
   let cap=d.capacidadTrabajo||'';
   let filtrados=inventario.filter(x=>!cap || normCap(x.capacidad)===normCap(cap));
-  if(d.serieManejadora){ let f=facturas.find(x=>x.serie===d.serieManejadora); if(f && !filtrados.some(x=>x.serie===f.serie)) filtrados.unshift(f); }
-  if(d.serieCondensadora){ let f=facturas.find(x=>x.serie===d.serieCondensadora); if(f && !filtrados.some(x=>x.serie===f.serie)) filtrados.unshift(f); }
-  if(filtrados.length<2 && modo==='pago') return alert('No tenés 2 equipos con esa Capacidad '+cap+' en Inventario. No se puede pagar.');
-  if(filtrados.length===0) return alert('No hay equipos con esa Capacidad en Inventario.');
-  if(modo==='pendiente'){
-    document.getElementById('modalTitulo').innerText='⏳ PENDIENTE DE PAGAR - Elegí las Series y quedan guardadas';
-    document.getElementById('btnModalConfirmar').innerText='💾 Guardar Series en Pendiente';
-  } else {
-    document.getElementById('modalTitulo').innerText='¿Qué Series le diste? - Se descuenta SOLO de Inventario';
-    document.getElementById('btnModalConfirmar').innerText='✅ Confirmar Pago';
-  }
+  if(filtrados.length<2) return alert('No tenés 2 equipos con esa Capacidad '+cap+' en Inventario. No se puede pagar.');
+  document.getElementById('modalTitulo').innerText='⏳ PENDIENTE DE PAGAR - Elegí las Series';
   document.getElementById('modalSerieTexto').innerText='Cliente: '+d.cliente+' - Capacidad: '+cap+' - Sistema: '+(d.sistema||'-')+' - Venta: $'+d.monto+' - Factura NO se borra, solo Inventario.';
   document.getElementById('modalVenta').innerText='$'+d.monto;
   let opts='<option value="">Elegir Serie ▼</option>'+filtrados.map(x=>`<option value="${x.serie}">${x.serie} - ${x.modelo} - ${x.capacidad} - Costo $${x.precioCosto||0}</option>`).join('');
@@ -385,8 +377,6 @@ function abrirModalSeries(idx, modo){
   calcularCompraModal();
   document.getElementById('modalSerie').classList.remove('hidden');
 }
-function abrirPago(idx){ abrirModalSeries(idx,'pago'); }
-function abrirPendiente(idx){ abrirModalSeries(idx,'pendiente'); }
 function calcularCompraModal(){
   if(pagandoIndex<0) return;
   let d=datos[pagandoIndex];
@@ -409,17 +399,11 @@ function confirmarPagoConSeries(){
   if(err) return alert(err+'\n\nNO SE HIZO NADA.');
   let compra=getCostoSerie(m)+getCostoSerie(c);
   d.serieManejadora=m; d.serieCondensadora=c; d.precioCompra=compra; d.ganancia=parseFloat(d.monto||0)-compra;
-  if(modoModal==='pendiente'){
-    d.estado='pendiente';
-    cerrarModalSerie(); save();
-    alert('💾 Guardado en PENDIENTE DE PAGAR\nManejadora: '+m+'\nCondensadora: '+c+'\nCompra: $'+compra+'\nTodavía NO se descontó de Inventario. Cuando pague, le das a Pagado y ahí sí se descuenta SOLO de Inventario.');
-  } else {
-    d.estado='pagado'; d.fechaPago=new Date().toISOString();
-    // SOLO de Inventario, NUNCA de Factura
-    inventario=inventario.filter(x=>x.serie!==m && x.serie!==c);
-    cerrarModalSerie(); save();
-    alert('✅ Pagado\nManejadora: '+m+'\nCondensadora: '+c+'\nCompra: $'+compra+'\nVenta: $'+d.monto+'\nGanancia: $'+d.ganancia+'\nSe descontó SOLO de Inventario. Factura quedó intacta.');
-  }
+  d.estado='pagado'; d.fechaPago=new Date().toISOString();
+  // SOLO de Inventario, NUNCA de Factura
+  inventario=inventario.filter(x=>x.serie!==m && x.serie!==c);
+  cerrarModalSerie(); save();
+  alert('✅ Pagado\nManejadora: '+m+'\nCondensadora: '+c+'\nCompra: $'+compra+'\nVenta: $'+d.monto+'\nGanancia: $'+d.ganancia+'\nSe descontó SOLO de Inventario. Factura quedó intacta.');
 }
 function generarVista(){
   let esPagado=document.getElementById('fEstado').value==='pagado';
@@ -443,7 +427,6 @@ function generarVista(){
     if(calc.err) return alert(calc.err+'\n\nNO SE GUARDÓ COMO PAGADO.');
     d.precioCompra=calc.compra; d.ganancia=d.monto-d.precioCompra;
     if(!confirm('Lo vas a guardar ya como PAGADO y se van a descontar SOLO de Inventario:\nManejadora '+mSerie+'\nCondensadora '+cSerie+'\nCompra $'+d.precioCompra+' - Venta $'+d.monto+'\nFactura NO se borra.')) return;
-    // SOLO Inventario
     inventario=inventario.filter(x=>x.serie!==mSerie && x.serie!==cSerie);
   }
   datosTemp=d;
@@ -493,7 +476,7 @@ function render(){
   const cumples=datos.filter(d=>d.cumple&&d.cumple.slice(5,10)===hoy);
   document.getElementById('alertas').innerText=(pend>0?`${datos.filter(d=>d.estado==='pendiente').length} pendientes de pagar • `:'Todo al día • ')+`Usuario: ${user}`;
   document.getElementById('alertasCumple').innerText=cumples.length?`🎂 Hoy cumple: ${cumples.map(c=>c.cliente).join(', ')}`:'Sin cumpleaños hoy.';
-  document.getElementById('lista').innerHTML=lista.map((d)=>{ let idx=datos.indexOf(d); let esPend=d.estado==='pendiente'; return `<div class="bg-white p-4 rounded-2xl shadow"><p class="font-black">${d.cliente} - ${d.telefono}</p><p class="text-xs text-gray-500 font-bold">${d.departamento} • Fecha instalación: ${d.fechaTrabajo||'-'} • Capacidad: ${d.capacidadTrabajo} • Sistema: ${d.sistema||'-'}</p><p class="text-xs text-gray-500 font-bold">Trabajador: ${d.trabajador||'-'} • Mantenimiento cada ${d.frecuencia} meses • Garantía hasta: ${d.garantiaProv||'-'}</p><p class="text-xs font-black ${esPend?'text-yellow-600':'text-green-600'}">${esPend?'⏳ PENDIENTE DE PAGAR':'✅ PAGADO'}</p>${d.serieManejadora?`<p class="text-sm font-black bg-yellow-50 border rounded-lg p-2 mt-1">Manejadora: ${d.serieManejadora} • Condensadora: ${d.serieCondensadora}</p>`:''}<p class="font-black text-blue-600 mt-1">Venta $${d.monto} ${d.precioCompra!==undefined?`• Compra $${d.precioCompra} • Ganancia $${d.ganancia||0}`:''}</p><div class="flex gap-2 mt-2 flex-wrap">${esPend ? `<button onclick="abrirPendiente(${idx})" class="bg-yellow-400 px-3 py-1 rounded-full text-xs font-black">⏳ PENDIENTE DE PAGAR</button><button onclick="abrirPago(${idx})" class="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-black">✅ Pagado - Descontar</button>` : `<span class="bg-green-100 px-3 py-1 rounded-full text-xs font-black">✅ PAGADO</span>`}<button onclick="editar(${idx})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-black">✏️ Editar</button><button onclick="datos.splice(${idx},1);save()" class="text-red-500 text-xs font-black">Borrar</button></div></div>`; }).join('')||'<p class="text-center text-gray-400 py-6 font-bold">Sin registros</p>';
+  document.getElementById('lista').innerHTML=lista.map((d)=>{ let idx=datos.indexOf(d); let esPend=d.estado==='pendiente'; return `<div class="bg-white p-4 rounded-2xl shadow"><p class="font-black">${d.cliente} - ${d.telefono}</p><p class="text-xs text-gray-500 font-bold">${d.departamento} • Fecha instalación: ${d.fechaTrabajo||'-'} • Capacidad: ${d.capacidadTrabajo} • Sistema: ${d.sistema||'-'}</p><p class="text-xs text-gray-500 font-bold">Trabajador: ${d.trabajador||'-'} • Mantenimiento cada ${d.frecuencia} meses • Garantía hasta: ${d.garantiaProv||'-'}</p><p class="text-xs font-black ${esPend?'text-yellow-600':'text-green-600'}">${esPend?'⏳ PENDIENTE DE PAGAR':'✅ PAGADO'}</p>${d.serieManejadora?`<p class="text-sm font-black bg-yellow-50 border rounded-lg p-2 mt-1">Manejadora: ${d.serieManejadora} • Condensadora: ${d.serieCondensadora}</p>`:''}<p class="font-black text-blue-600 mt-1">Venta $${d.monto} ${d.precioCompra!==undefined?`• Compra $${d.precioCompra} • Ganancia $${d.ganancia||0}`:''}</p><div class="flex gap-2 mt-2 flex-wrap">${esPend ? `<button onclick="abrirPago(${idx})" class="bg-yellow-400 px-4 py-2 rounded-full text-xs font-black w-full">⏳ PENDIENTE DE PAGAR</button>` : `<span class="bg-green-100 px-3 py-1 rounded-full text-xs font-black">✅ PAGADO</span>`}<button onclick="editar(${idx})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-black">✏️ Editar</button><button onclick="datos.splice(${idx},1);save()" class="text-red-500 text-xs font-black">Borrar</button></div></div>`; }).join('')||'<p class="text-center text-gray-400 py-6 font-bold">Sin registros</p>';
   let facFiltrado=facturas.filter(x=>(x.modelo||'').toLowerCase().includes(q)||(x.serie||'').toLowerCase().includes(q)||(x.descripcion||'').toLowerCase().includes(q)||(x.marca||'').toLowerCase().includes(q)||(x.factura||'').toLowerCase().includes(q));
   document.getElementById('totalInv5').innerText=inventario.length+' equipos en bodega • '+facturas.length+' en Factura historial';
   document.getElementById('listaFactura').innerHTML=facFiltrado.map((x)=>{ let idx=facturas.indexOf(x); let enInv=inventario.some(v=>v.serie===x.serie); return `<div class="border p-2 rounded-xl text-xs font-bold"><b class="font-black">${x.modelo} - Serie ${x.serie}</b> ${enInv?'<span class="bg-green-100 px-2 py-0.5 rounded-full text-[10px] font-black">En Inventario</span>':'<span class="bg-gray-200 px-2 py-0.5 rounded-full text-[10px] font-black">Ya vendido - Solo en Factura</span>'}<br>📅 ${x.fecha||'-'} • 🧾 Factura: ${x.factura||'-'} (${x.tipoFactura||'-'}) • 🛡️ Garantía: ${x.garantia||'-'} • 🏢 ${x.sucursal||'-'}<br>${x.descripcion} • ${x.capacidad} • ${x.marca} • Costo $${x.precioCosto||0}<br><button onclick="editarInventario(${idx})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-black mt-1">✏️ Editar</button></div>`; }).join('')||'<p class="text-xs text-gray-400">Sin facturas.</p>';
