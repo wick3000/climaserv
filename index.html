@@ -55,10 +55,11 @@
 
 <div id="tab-trabajos" class="tab">
   <div class="mx-3 bg-white rounded-2xl p-4 shadow">
-    <h2 class="font-black text-lg">Registrar Trabajo</h2>
-    <label class="text-xs font-black">Cliente</label>
+    <h2 class="font-black text-lg">Registrar Trabajo - 1 equipo por venta</h2>
+    <p class="text-xs font-bold text-blue-600">Si el cliente compra 2 equipos de diferente capacidad, guardás 2 ventas con el mismo cliente. Si vuelve después, usás el botón ➕ Agregar otro equipo.</p>
+    <label class="text-xs font-black mt-2 block">Cliente</label>
     <input id="fCliente" placeholder="Cliente" class="w-full border p-3 rounded-xl mb-2">
-    <label class="text-xs font-black">Teléfono</label>
+    <label class="text-xs font-black">Teléfono - Esto agrupa el historial</label>
     <input id="fTelefono" placeholder="Ej: 70001234" inputmode="numeric" class="w-full border p-3 rounded-xl mb-2">
     <label class="text-xs font-black">Departamento ▼</label>
     <select id="fDepartamento" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-black">
@@ -69,7 +70,7 @@
     <input id="fFechaTrabajo" type="date" class="w-full border p-3 rounded-xl mb-2">
     <label class="text-xs font-black">Fecha cumpleaños del cliente (opcional)</label>
     <input id="fCumple" type="date" class="w-full border p-3 rounded-xl mb-2">
-    <label class="text-xs font-black">Capacidad - De Inventario, sin duplicar ▼</label>
+    <label class="text-xs font-black">Capacidad de ESTE equipo ▼</label>
     <select id="fCapacidadTrabajo" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-black"></select>
     <label class="text-xs font-black">Elegir sistema ▼</label>
     <select id="fSistema" class="w-full border-2 border-blue-400 p-3 rounded-xl mb-2 bg-blue-50 font-black">
@@ -99,7 +100,7 @@
       </div>
     </div>
     <div id="boxVentaPendiente">
-      <label class="text-xs font-black">Precio de venta final</label>
+      <label class="text-xs font-black">Precio de venta final de ESTE equipo</label>
       <input id="fMontoPendiente" type="number" placeholder="Precio venta final $" class="w-full border p-3 rounded-xl mb-2">
     </div>
     <button onclick="generarVista()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-black">👁️ Generar Vista Previa</button>
@@ -359,7 +360,16 @@ function guardarEdicionInventario(){
   alert('✅ Editado en Factura Y en Inventario'); cancelarEditarInv(); save();
 }
 function cancelarEditarInv(){ editandoInvIndex=-1; editandoInvSerieOld=''; document.getElementById('editandoInv').classList.add('hidden'); document.getElementById('invSerie').value=''; mostrarModoAgregar(); }
-// --- SOLO UN BOTON: PENDIENTE DE PAGAR -> PIDE SERIES -> PAGAR ---
+// --- NUEVO: AGREGAR OTRO EQUIPO AL MISMO CLIENTE, SIN PERDER HISTORIAL ---
+function agregarOtroEquipo(telefono){
+  let ultimo=datos.find(d=>d.telefono===telefono);
+  if(!ultimo) return;
+  fCliente.value=ultimo.cliente||''; fTelefono.value=ultimo.telefono||''; document.getElementById('fDepartamento').value=ultimo.departamento||''; fCumple.value=ultimo.cumple||'';
+  document.getElementById('fFechaTrabajo').value=''; document.getElementById('fCapacidadTrabajo').value=''; document.getElementById('fSistema').value=''; fTrabajador.value=ultimo.trabajador||''; fFrecuencia.value=ultimo.frecuencia||'3'; document.getElementById('fEstado').value='pendiente'; fGarantiaProv.value=''; document.getElementById('fMonto').value=''; document.getElementById('fMontoPendiente').value='';
+  toggleSeriesInternas();
+  window.scrollTo(0,0);
+  alert('Listo para agregar otro equipo a '+ultimo.cliente+'\nYa te llené nombre, teléfono y departamento. Solo poné la nueva capacidad, fecha y precio.');
+}
 function abrirPago(idx){
   let d=datos[idx];
   pagandoIndex=idx;
@@ -400,7 +410,6 @@ function confirmarPagoConSeries(){
   let compra=getCostoSerie(m)+getCostoSerie(c);
   d.serieManejadora=m; d.serieCondensadora=c; d.precioCompra=compra; d.ganancia=parseFloat(d.monto||0)-compra;
   d.estado='pagado'; d.fechaPago=new Date().toISOString();
-  // SOLO de Inventario, NUNCA de Factura
   inventario=inventario.filter(x=>x.serie!==m && x.serie!==c);
   cerrarModalSerie(); save();
   alert('✅ Pagado\nManejadora: '+m+'\nCondensadora: '+c+'\nCompra: $'+compra+'\nVenta: $'+d.monto+'\nGanancia: $'+d.ganancia+'\nSe descontó SOLO de Inventario. Factura quedó intacta.');
@@ -459,7 +468,7 @@ function editar(idx){
   fTrabajador.value=d.trabajador||''; fFrecuencia.value=d.frecuencia||'3'; document.getElementById('fEstado').value=d.estado||'pendiente'; fGarantiaProv.value=d.garantiaProv||'';
   if(d.estado==='pendiente') document.getElementById('fMontoPendiente').value=d.monto||''; else document.getElementById('fMonto').value=d.monto||'';
   toggleSeriesInternas();
-  datos.splice(idx,1); save(); window.scrollTo(0,0); alert('Ahora corregí arriba y dale Generar Vista Previa');
+  datos.splice(idx,1); save(); window.scrollTo(0,0); alert('Ahora corregí arriba y dale Generar Vista Previa - Ojo: si era un equipo de un cliente con varios, solo editás ese equipo, el historial de los otros queda.');
 }
 function render(){
   cargarCatalogo(); cargarCapacidades();
@@ -476,13 +485,29 @@ function render(){
   const cumples=datos.filter(d=>d.cumple&&d.cumple.slice(5,10)===hoy);
   document.getElementById('alertas').innerText=(pend>0?`${datos.filter(d=>d.estado==='pendiente').length} pendientes de pagar • `:'Todo al día • ')+`Usuario: ${user}`;
   document.getElementById('alertasCumple').innerText=cumples.length?`🎂 Hoy cumple: ${cumples.map(c=>c.cliente).join(', ')}`:'Sin cumpleaños hoy.';
-  document.getElementById('lista').innerHTML=lista.map((d)=>{ let idx=datos.indexOf(d); let esPend=d.estado==='pendiente'; return `<div class="bg-white p-4 rounded-2xl shadow"><p class="font-black">${d.cliente} - ${d.telefono}</p><p class="text-xs text-gray-500 font-bold">${d.departamento} • Fecha instalación: ${d.fechaTrabajo||'-'} • Capacidad: ${d.capacidadTrabajo} • Sistema: ${d.sistema||'-'}</p><p class="text-xs text-gray-500 font-bold">Trabajador: ${d.trabajador||'-'} • Mantenimiento cada ${d.frecuencia} meses • Garantía hasta: ${d.garantiaProv||'-'}</p><p class="text-xs font-black ${esPend?'text-yellow-600':'text-green-600'}">${esPend?'⏳ PENDIENTE DE PAGAR':'✅ PAGADO'}</p>${d.serieManejadora?`<p class="text-sm font-black bg-yellow-50 border rounded-lg p-2 mt-1">Manejadora: ${d.serieManejadora} • Condensadora: ${d.serieCondensadora}</p>`:''}<p class="font-black text-blue-600 mt-1">Venta $${d.monto} ${d.precioCompra!==undefined?`• Compra $${d.precioCompra} • Ganancia $${d.ganancia||0}`:''}</p><div class="flex gap-2 mt-2 flex-wrap">${esPend ? `<button onclick="abrirPago(${idx})" class="bg-yellow-400 px-4 py-2 rounded-full text-xs font-black w-full">⏳ PENDIENTE DE PAGAR</button>` : `<span class="bg-green-100 px-3 py-1 rounded-full text-xs font-black">✅ PAGADO</span>`}<button onclick="editar(${idx})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-black">✏️ Editar</button><button onclick="datos.splice(${idx},1);save()" class="text-red-500 text-xs font-black">Borrar</button></div></div>`; }).join('')||'<p class="text-center text-gray-400 py-6 font-bold">Sin registros</p>';
+  // AGRUPAR POR TELEFONO PARA NO PERDER HISTORIAL
+  let grupos={};
+  lista.forEach(d=>{ let key=(d.telefono||d.cliente||'').trim()||d.cliente; if(!grupos[key]) grupos[key]=[]; grupos[key].push(d); });
+  document.getElementById('lista').innerHTML=Object.values(grupos).map(grupo=>{
+    let primero=grupo[0];
+    let totalCliente=grupo.reduce((s,d)=>s+(d.monto||0),0);
+    let equiposHtml=grupo.map(d=>{
+      let idx=datos.indexOf(d); let esPend=d.estado==='pendiente';
+      return `<div class="border rounded-xl p-3 mt-2 ${esPend?'bg-yellow-50':'bg-green-50'}">
+        <p class="text-xs font-black">📅 ${d.fechaTrabajo||'-'} • ${d.capacidadTrabajo} • ${d.sistema||'-'} • ${d.trabajador||'-'} • Garantía hasta: ${d.garantiaProv||'-'}</p>
+        <p class="text-xs font-black ${esPend?'text-yellow-600':'text-green-600'}">${esPend?'⏳ PENDIENTE DE PAGAR':'✅ PAGADO'} - Venta $${d.monto} ${d.precioCompra!==undefined?`• Compra $${d.precioCompra} • Ganancia $${d.ganancia||0}`:''}</p>
+        ${d.serieManejadora?`<p class="text-sm font-black">Manejadora: ${d.serieManejadora} • Condensadora: ${d.serieCondensadora}</p>`:`<p class="text-xs text-gray-500 font-bold">Sin series todavía - Apretá PENDIENTE DE PAGAR para elegirlas</p>`}
+        <div class="flex gap-2 mt-2 flex-wrap">${esPend ? `<button onclick="abrirPago(${idx})" class="bg-yellow-400 px-4 py-2 rounded-full text-xs font-black">⏳ PENDIENTE DE PAGAR</button>` : `<span class="bg-green-100 px-3 py-1 rounded-full text-xs font-black">✅ PAGADO</span>`}<button onclick="editar(${idx})" class="bg-white border px-3 py-1 rounded-full text-xs font-black">✏️ Editar este equipo</button><button onclick="if(confirm('¿Borrar solo este equipo? El resto del historial de este cliente queda.')){datos.splice(${idx},1);save()}" class="text-red-500 text-xs font-black">Borrar este equipo</button></div>
+      </div>`;
+    }).join('');
+    return `<div class="bg-white p-4 rounded-2xl shadow"><p class="font-black text-lg">${primero.cliente} - ${primero.telefono}</p><p class="text-xs text-gray-500 font-bold">${primero.departamento} • Cumple: ${primero.cumple||'-'} • Total comprado: $${totalCliente} • Equipos: ${grupo.length}</p><button onclick="agregarOtroEquipo('${primero.telefono}')" class="w-full mt-2 bg-blue-600 text-white py-2 rounded-xl text-xs font-black">➕ Agregar otro equipo a este cliente</button>${equiposHtml}</div>`;
+  }).join('')||'<p class="text-center text-gray-400 py-6 font-bold">Sin registros</p>';
   let facFiltrado=facturas.filter(x=>(x.modelo||'').toLowerCase().includes(q)||(x.serie||'').toLowerCase().includes(q)||(x.descripcion||'').toLowerCase().includes(q)||(x.marca||'').toLowerCase().includes(q)||(x.factura||'').toLowerCase().includes(q));
   document.getElementById('totalInv5').innerText=inventario.length+' equipos en bodega • '+facturas.length+' en Factura historial';
   document.getElementById('listaFactura').innerHTML=facFiltrado.map((x)=>{ let idx=facturas.indexOf(x); let enInv=inventario.some(v=>v.serie===x.serie); return `<div class="border p-2 rounded-xl text-xs font-bold"><b class="font-black">${x.modelo} - Serie ${x.serie}</b> ${enInv?'<span class="bg-green-100 px-2 py-0.5 rounded-full text-[10px] font-black">En Inventario</span>':'<span class="bg-gray-200 px-2 py-0.5 rounded-full text-[10px] font-black">Ya vendido - Solo en Factura</span>'}<br>📅 ${x.fecha||'-'} • 🧾 Factura: ${x.factura||'-'} (${x.tipoFactura||'-'}) • 🛡️ Garantía: ${x.garantia||'-'} • 🏢 ${x.sucursal||'-'}<br>${x.descripcion} • ${x.capacidad} • ${x.marca} • Costo $${x.precioCosto||0}<br><button onclick="editarInventario(${idx})" class="bg-yellow-100 px-3 py-1 rounded-full text-xs font-black mt-1">✏️ Editar</button></div>`; }).join('')||'<p class="text-xs text-gray-400">Sin facturas.</p>';
-  let grupos={};
-  inventario.forEach(x=>{ let key=(x.modelo||'').trim().toLowerCase(); if(!grupos[key]) grupos[key]={modelo:x.modelo,descripcion:x.descripcion,capacidad:x.capacidad,marca:x.marca,cant:0}; grupos[key].cant++; });
-  let gruposArr=Object.values(grupos);
+  let gruposInv={};
+  inventario.forEach(x=>{ let key=(x.modelo||'').trim().toLowerCase(); if(!gruposInv[key]) gruposInv[key]={modelo:x.modelo,descripcion:x.descripcion,capacidad:x.capacidad,marca:x.marca,cant:0}; gruposInv[key].cant++; });
+  let gruposArr=Object.values(gruposInv);
   document.getElementById('listaInv').innerHTML=gruposArr.map(g=>{
     let apartados=datos.filter(d=>d.estado==='pendiente' && normCap(d.capacidadTrabajo)===normCap(g.capacidad)).length;
     let disponible=Math.max(0, g.cant - apartados);
