@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -37,13 +36,13 @@
 <select id="filtroGananciaAnio" onchange="render()" class="flex-1 border p-2 rounded-xl text-xs font-black bg-white"><option value="">Todos los años</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option><option value="2027">2027</option></select>
 <button onclick="gananciaMesActual()" class="bg-purple-600 text-white px-3 py-2 rounded-xl text-xs font-black">Mes actual</button>
 </div>
-<p class="text- font-bold text-gray-600 mt-1">Por defecto: mes actual. La ganancia se cuenta el día que se instaló, no el día que se cotizó. Y lo que elijas aquí también filtra la lista de Clientes abajo.</p>
+<p class="text- font-bold text-gray-600 mt-1">Por defecto: mes actual automático según la fecha de hoy. La ganancia se cuenta el día que se instaló, no el día que se cotizó. Y lo que elijas aquí también filtra la lista de Clientes abajo.</p>
 </div>
 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 p-3">
 <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs font-black">Total</p><p id="statTotal" class="font-black text-blue-600">$0</p></div>
 <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs font-black">Pendiente de Pagar</p><p id="statPend" class="font-black text-yellow-600">$0</p></div>
 <div class="bg-white rounded-xl p-3 text-center"><p class="text-xs font-black">Cobrado</p><p id="statCob" class="font-black text-green-600">$0</p></div>
-<div class="bg-purple-600 text-white rounded-xl p-3 text-center border-2 border-purple-700"><p class="text- font-black">💰 GANANCIA</p><p id="statGanancia" class="font-black text-2xl leading-none mt-1">$0</p><p id="statGananciaMesLetra" class="text- font-black mt-1">Noviembre 2026</p><p id="statGananciaDetalle" class="text- font-bold opacity-90">0 equipos instalados</p><button onclick="gananciaMesActual()" class="mt-2 bg-white text-purple-700 px-3 py-1 rounded-full text- font-black">Ver mes actual</button></div>
+<div class="bg-purple-600 text-white rounded-xl p-3 text-center border-2 border-purple-700"><p class="text- font-black">💰 GANANCIA</p><p id="statGanancia" class="font-black text-2xl leading-none mt-1">$0</p><p id="statGananciaMesLetra" class="text- font-black mt-1">Noviembre 2026</p><p id="statGananciaDetalle" class="text- font-bold opacity-90">0 equipos instalados</p><button onclick="verTodosGanancia()" class="mt-2 bg-white text-purple-700 px-3 py-1 rounded-full text- font-black">Ver todos de nuevo</button></div>
 </div>
 <div class="mx-3 bg-yellow-50 border rounded-xl p-3 text-xs"><b class="font-black">🔔 Alertas:</b> <span id="alertas"></span></div>
 <div class="mx-3 mt-2 bg-blue-50 border rounded-xl p-3 text-xs"><b class="font-black">🎂 Cumpleaños:</b> <span id="alertasCumple"></span></div>
@@ -196,6 +195,7 @@ function cargarDistritosForm(){let dep=document.getElementById('fDepartamento').
 function cargarDistritosRuta(){let dep=document.getElementById('rutaDep').value;let sel=document.getElementById('rutaDistrito');let act=sel.value;if(dep==='todos'){sel.innerHTML='<option value="todos">Todos los distritos</option>';return;}let l=DISTRITOS[dep]||[];sel.innerHTML='<option value="todos">Todos los distritos</option>'+l.map(m=>`<option value="${m}">${m}</option>`).join('');if(act&&l.includes(act))sel.value=act;else sel.value='todos';}
 function fechaParaGanancia(d){if(d.estado!=='pagado')return '';return (d.fechaInstalacion||d.fechaTrabajo||'').slice(0,10);}
 function gananciaMesActual(){let h=new Date();document.getElementById('filtroGananciaMes').value=String(h.getMonth()+1).padStart(2,'0');document.getElementById('filtroGananciaAnio').value=String(h.getFullYear());render();}
+function verTodosGanancia(){document.getElementById('filtroGananciaMes').value='';document.getElementById('filtroGananciaAnio').value='';render();}
 function calcularGananciaFiltrada(){let mes=document.getElementById('filtroGananciaMes')?document.getElementById('filtroGananciaMes').value:'';let anio=document.getElementById('filtroGananciaAnio')?document.getElementById('filtroGananciaAnio').value:'';let total=0,cant=0;datos.forEach(d=>{let f=fechaParaGanancia(d);if(!f)return;if(mes&&f.slice(5,7)!==mes)return;if(anio&&f.slice(0,4)!==anio)return;total+=parseFloat(d.ganancia!==undefined&&d.ganancia!==null?d.ganancia:(d.monto-(d.precioCompra||0))||0);cant++;});return{total,cant,mes,anio};}
 function entrar(){let v=document.getElementById('claveInput').value;let trabs=JSON.parse(localStorage.getItem('climaserv_trabs')||'[]');let esTrab=trabs.find(t=>t.clave===v);if(v===CLAVE||esTrab){localStorage.setItem('climaserv_login','ok');localStorage.setItem('climaserv_user',esTrab?esTrab.nombre:'Jefe');document.getElementById('login').style.display='none';document.getElementById('app').classList.remove('hidden');render();}else{document.getElementById('errorClave').innerText='Clave incorrecta';}}
 if(localStorage.getItem('climaserv_login')==='ok'){document.getElementById('login').style.display='none';document.getElementById('app').classList.remove('hidden');}
