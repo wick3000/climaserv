@@ -344,10 +344,10 @@ function generarInformePDF(){renderReportes();let r=renderReportes();let desde=r
 let _showTabOrig=showTab;showTab=function(t){_showTabOrig(t);if(t=='reportes')renderReportes();};
 function generarPDFReportes(){
   let tabla=document.getElementById('repTabla').innerHTML;
-  let html='<html><head><meta charset="utf-8"><title>Tabla</title><style>table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #000;padding:5px;text-align:left} @media print{@page{size:landscape}}</style></head><body><h2 style="text-align:center">❄️ CLIMASERV - El Paraíso</h2>'+tabla+'<p style="text-align:center">Para guardar como PDF: Compartir ➡️ Imprimir ➡️ Guardar en Archivos</p></body></html>';
+  let html='<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Tabla CLIMASERV</title><style>table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #000;padding:5px;text-align:left}</style></head><body><h2 style="text-align:center">CLIMASERV - El Paraíso</h2>'+tabla+'<p style="text-align:center">Para guardar: Compartir - Imprimir - Guardar en Archivos</p><p style="text-align:center"><a href="javascript:history.back()">⬅️ Volver</a></p></body></html>';
   let blob=new Blob([html],{type:'text/html'});
   let url=URL.createObjectURL(blob);
-  window.open(url,'_blank');
+  window.location.href=url;
 }
 </script>
 </body>
