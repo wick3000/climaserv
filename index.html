@@ -13,8 +13,8 @@
 .modal-compacto-body input,.modal-compacto-body select{padding:8px 10px !important;margin-top:2px !important;margin-bottom:2px !important}
 .modal-compacto-foot{padding:10px 12px;border-top:1px solid #eee;background:#fff;flex-shrink:0;position:sticky;bottom:0}
 .modal-compacto-foot button{padding:10px !important}
-/* BOTONES AFUERA EN LINEA HORIZONTAL, CHIQUITOS, UNA SOLA LINEA */
-.btn-linea{flex:1 1 0 !important;min-width:0 !important;white-space:nowrap !important;padding:6px 2px !important;font-size:11px !important;line-height:1.2 !important}
+/* BOTONES AFUERA EN LINEA HORIZONTAL, CHIQUITOS, UNA SOLA LINEA - CON DESCRIPCION */
+.btn-linea{flex:1 1 0 !important;min-width:0 !important;white-space:nowrap !important;padding:6px 2px !important;font-size:10px !important;line-height:1.2 !important}
 .fila-botones{display:flex !important;flex-direction:row !important;flex-wrap:nowrap !important;gap:4px !important;width:100% !important}
 #lista{padding-bottom:20px}
 </style>
@@ -246,8 +246,8 @@ function fechaCotizacionDe(d){return d.fechaCotizacion||d.fechaTrabajo||d.fecha|
 function fechaInstalacionDe(d){return d.fechaInstalacion||(d.estado==='pagado'?d.fechaTrabajo:'')||'';}
 function infoMant(d){let baseStr=d.ultimoMant||fechaInstalacionDe(d)||d.fechaTrabajo||d.fecha;let base=parseFecha(baseStr?baseStr.slice(0,10):null);if(!base)return null;let vence=sumarDias(base,diasMant(d));let hoy=new Date();hoy.setHours(12,0,0,0);let dias=Math.round((vence-hoy)/(1000*60*60*24));return{base,vence,dias,baseStr:fmtFecha(base),venceStr:fmtFecha(vence)};}
 function infoGarantia(d){if(!d.garantiaProv)return null;let vence=parseFecha(d.garantiaProv.slice(0,10));if(!vence)return null;let hoy=new Date();hoy.setHours(12,0,0,0);let dias=Math.round((vence-hoy)/(1000*60*60*24));return{vence,dias,venceStr:fmtFecha(vence)};}
-function botonRealizado(idx,d){let info=infoMant(d);let pendiente=!info||info.dias<=30;let clase=pendiente?'bg-gray-300 text-gray-800':'bg-green-600 text-white';let texto=pendiente?'Realizado':'✓ Realizado';return `<button type="button" onclick="hacerMantenimiento(${idx})" class="${clase} btn-linea px-2 py-1 rounded-full font-black">Realizado</button>`;}
-function botonRealizadoInstalacion(idx,d){let hecho=d.estado==='pagado';let clase=hecho?'bg-green-600 text-white':'bg-gray-300 text-gray-800';let texto=hecho?'✓ Realizado':'Realizado';return `<button type="button" onclick="abrirPago(${idx})" class="${clase} btn-linea px-2 py-1 rounded-full font-black">Realizado</button>`;}
+function botonRealizado(idx,d){let info=infoMant(d);let pendiente=!info||info.dias<=30;let clase=pendiente?'bg-gray-300 text-gray-800':'bg-green-600 text-white';return `<button type="button" onclick="hacerMantenimiento(${idx})" class="${clase} btn-linea px-2 py-1 rounded-full font-black">Realizado Mantenimiento</button>`;}
+function botonRealizadoInstalacion(idx,d){let hecho=d.estado==='pagado';let clase=hecho?'bg-green-600 text-white':'bg-gray-300 text-gray-800';let texto=hecho?'Realizado Instalación':'Realizado';return `<button type="button" onclick="abrirPago(${idx})" class="${clase} btn-linea px-2 py-1 rounded-full font-black">${texto}</button>`;}
 function botonCancelarInstalacion(idx){return `<button type="button" onclick="cancelarInstalacion(${idx})" class="bg-red-500 text-white btn-linea px-2 py-1 rounded-full font-black">❌ Cancelar</button>`;}
 function devolverSeriesAInventario(mSerie,cSerie){[mSerie,cSerie].forEach(s=>{if(!s)return;if(inventario.some(x=>x.serie===s))return;let f=facturas.find(x=>x.serie===s);if(f)inventario.unshift({...f});});}
 function cancelarInstalacion(idx){
