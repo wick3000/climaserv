@@ -16,19 +16,20 @@
 .btn-linea{flex:1 1 0 !important;min-width:0 !important;white-space:nowrap !important;padding:6px 2px !important;font-size:10px !important;line-height:1.2 !important}
 .fila-botones{display:flex !important;flex-direction:row !important;flex-wrap:nowrap !important;gap:4px !important;width:100% !important}
 #lista{padding-bottom:20px}
-#fabWrap{position:fixed;right:12px;bottom:78px;display:none;flex-direction:column;gap:10px;align-items:flex-end;z-index:45}
+#fabWrap{position:fixed;right:12px;bottom:78px;display:none;flex-direction:column;gap:8px;align-items:flex-end;z-index:45}
 #fabWrap.show{display:flex}
-#btnCotizFab{background:#FFC107;color:#111;border:none;padding:11px 14px;border-radius:25px;font-weight:900;font-size:12px;box-shadow:0 4px 10px rgba(0,0,0,.3)}
+/* BOTON COTIZADO MAS CHIQUITO */
+#btnCotizFab{background:#FFC107;color:#111;border:none;padding:6px 10px;border-radius:20px;font-weight:900;font-size:11px;box-shadow:0 4px 10px rgba(0,0,0,.3);line-height:1}
 #btnAddFab{width:58px;height:58px;border-radius:50%;background:#2563EB;color:#fff;font-size:28px;font-weight:900;border:none;box-shadow:0 4px 12px rgba(0,0,0,.35)}
-/* FORMULARIO COMPACTO - YA NO SOBREPASA */
-#modalTrabajo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:60;align-items:center;justify-content:center;padding:8px}
+/* FORMULARIO COMPACTO - FONDO SOLIDO BLANCO, TODO UNO ABAJO DEL OTRO */
+#modalTrabajo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:999;align-items:center;justify-content:center;padding:10px}
 #modalTrabajo.open{display:flex}
-#modalTrabajo.caja{background:#fff;width:100%;max-width:480px;border-radius:16px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden}
-#modalTrabajo.caja-head{padding:8px 10px;border-bottom:1px solid #eee;flex-shrink:0}
-#modalTrabajo.caja-body{padding:8px 10px;overflow-y:auto;flex:1}
+#modalTrabajo.caja{background:#ffffff !important;opacity:1 !important;width:100%;max-width:460px;border-radius:16px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+#modalTrabajo.caja-head{background:#ffffff !important;padding:8px 10px 6px;border-bottom:1px solid #eee;flex-shrink:0}
+#modalTrabajo.caja-body{background:#ffffff !important;padding:8px 10px;overflow-y:auto;flex:1}
 #modalTrabajo.caja-body label{font-size:11px !important;margin-top:6px !important;display:block}
-#modalTrabajo.caja-body input,#modalTrabajo.caja-body select{padding:7px 8px !important;margin-top:2px !important;margin-bottom:2px !important;font-size:13px !important;border-radius:10px !important}
-#modalTrabajo.caja-foot{padding:8px 10px;border-top:1px solid #eee;background:#fff;flex-shrink:0;position:sticky;bottom:0}
+#modalTrabajo.caja-body input,#modalTrabajo.caja-body select{background:#ffffff !important;padding:7px 8px !important;margin-top:2px !important;margin-bottom:2px !important;font-size:13px !important;border-radius:10px !important;width:100% !important;display:block !important}
+#modalTrabajo.caja-foot{background:#ffffff !important;padding:8px 10px;border-top:1px solid #eee;flex-shrink:0}
 #modalTrabajo.caja-foot button{padding:9px !important;font-size:13px !important}
 </style>
 </head>
@@ -81,7 +82,7 @@
 <div class="mx-3 mt-2 bg-red-50 border border-red-300 rounded-xl p-2 text-xs"><b class="font-black">🛡️ Garantías por vencer:</b> <span id="alertasGarantia"></span></div>
 </div>
 
-<!-- BOTONES DE ARRIBA - YA SIN LOS 4 PRIMEROS, SOLO LOS QUE SIGUEN -->
+<!-- BOTONES DE ARRIBA - SIN LOS 4 PRIMEROS -->
 <div class="flex gap-2 p-3 overflow-x-auto">
 <button onclick="showTab('catalogo')" class="bg-white px-4 py-2 rounded-full text-xs font-black border-2 border-blue-600">📋 Catálogo</button>
 <button onclick="showTab('factura')" class="bg-white px-4 py-2 rounded-full text-xs font-black border-2 border-green-600">🧾 Factura</button>
@@ -162,32 +163,47 @@
 </div>
 
 <div id="fabWrap" class="show">
-<button id="btnCotizFab" onclick="toggleCotiz()">💰 Cotizaciones</button>
+<button id="btnCotizFab" onclick="toggleCotiz()">💰 Cotizado</button>
 <button id="btnAddFab" onclick="abrirFormTrabajo()">+</button>
 </div>
 
 <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 text-xs font-black"><button onclick="showTab('trabajos')">👥 Clientes</button><button onclick="showTab('ruta')">🚗 Ruta</button><button onclick="showTab('garantias')">🛡️ Gar.</button><button onclick="showTab('mantenimientos')">🔧 Mant.</button></nav>
 
-<!-- MODAL COMPACTO -->
+<!-- MODAL COMPACTO - FONDO SOLIDO - TODO UNO ABAJO DEL OTRO -->
 <div id="modalTrabajo" onclick="if(event.target==this) cerrarFormTrabajo()"><div class="caja">
-<div class="caja-head"><div class="flex justify-between items-center"><div><h2 class="font-black text-sm leading-tight">Registrar Trabajo</h2><p class="text- font-bold text-blue-600 leading-tight">1 equipo por venta. Si son 2, guardá 2 ventas.</p></div><button onclick="cerrarFormTrabajo()" class="bg-gray-200 px-2 py-1 rounded-full font-black text-xs">X</button></div>
+<div class="caja-head"><div class="flex justify-between items-center"><div><h2 class="font-black text-sm leading-tight">Registrar Trabajo</h2><p class="text- font-bold text-blue-600 leading-tight">1 equipo por venta.</p></div><button onclick="cerrarFormTrabajo()" class="bg-gray-200 px-2 py-1 rounded-full font-black text-xs">X</button></div>
 <p id="editandoTrabajoAviso" class="hidden mt-1 bg-yellow-100 border border-yellow-400 rounded-lg p-1 text- font-black">✏️ EDITANDO. <button onclick="cancelarEdicionTrabajo()" class="bg-gray-200 px-2 py-0 rounded-full">Cancelar</button></p></div>
 <div class="caja-body">
 <label>Cliente</label>
 <div class="relative"><input id="fCliente" placeholder="Cliente" autocomplete="off" class="w-full border rounded-xl"><div id="sugCliente" class="sugerencias"></div></div>
-<div class="grid grid-cols-2 gap-2"><div><label>Teléfono</label><div class="relative"><input id="fTelefono" placeholder="70001234" inputmode="numeric" autocomplete="off" class="w-full border rounded-xl"><div id="sugTelefono" class="sugerencias"></div></div></div><div><label>Cumpleaños</label><input id="fCumple" type="date" class="w-full border rounded-xl"></div></div>
-<div class="grid grid-cols-2 gap-2"><div><label>Departamento ▼</label><select id="fDepartamento" onchange="cargarDistritosForm()" class="w-full border-2 border-blue-400 rounded-xl bg-blue-50 font-black"><option value="">Departamento ▼</option><option>Ahuachapán</option><option>Cabañas</option><option>Chalatenango</option><option>Cuscatlán</option><option>La Libertad</option><option>La Paz</option><option>La Unión</option><option>Morazán</option><option>San Miguel</option><option>San Salvador</option><option>San Vicente</option><option>Santa Ana</option><option>Sonsonate</option><option>Usulután</option></select></div><div><label>Distrito ▼</label><select id="fDistrito" class="w-full border rounded-xl bg-white font-black"><option value="">-- Sin distrito --</option></select></div></div>
-<div class="grid grid-cols-2 gap-2"><div><label id="labelFechaTrabajo">Fecha cotización</label><input id="fFechaTrabajo" type="date" class="w-full border rounded-xl"></div><div><label>Estado</label><select id="fEstado" onchange="toggleSeriesInternas()" class="w-full border rounded-xl"><option value="pendiente">⏳ PENDIENTE</option><option value="pagado">✅ Pagado</option></select></div></div>
-<div class="grid grid-cols-3 gap-2"><div><label>Capacidad ▼</label><select id="fCapacidadTrabajo" onchange="llenarSeriesTrabajo()" class="w-full border-2 border-blue-400 rounded-xl bg-blue-50 font-black"></select></div><div><label>Sistema ▼</label><select id="fSistema" class="w-full border-2 border-blue-400 rounded-xl bg-blue-50 font-black"><option value="">Sistema ▼</option><option value="CONVENCIONAL">CONVENCIONAL</option><option value="INVERTER">INVERTER</option></select></div><div><label>Mantenimiento</label><select id="fFrecuencia" class="w-full border rounded-xl"><option value="3" selected>3 meses</option><option value="2">2 meses</option><option value="4">4 meses</option><option value="6">6 meses</option></select></div></div>
+<label>Teléfono</label>
+<div class="relative"><input id="fTelefono" placeholder="Ej: 70001234" inputmode="numeric" autocomplete="off" class="w-full border rounded-xl"><div id="sugTelefono" class="sugerencias"></div></div>
+<label>Departamento ▼</label>
+<select id="fDepartamento" onchange="cargarDistritosForm()" class="w-full border-2 border-blue-400 rounded-xl bg-blue-50 font-black"><option value="">Seleccionar Departamento ▼</option><option>Ahuachapán</option><option>Cabañas</option><option>Chalatenango</option><option>Cuscatlán</option><option>La Libertad</option><option>La Paz</option><option>La Unión</option><option>Morazán</option><option>San Miguel</option><option>San Salvador</option><option>San Vicente</option><option>Santa Ana</option><option>Sonsonate</option><option>Usulután</option></select>
+<label>Distrito ▼ (Opcional)</label>
+<select id="fDistrito" class="w-full border rounded-xl bg-white font-black"><option value="">-- Sin distrito --</option></select>
+<label id="labelFechaTrabajo">Fecha de cotización</label>
+<input id="fFechaTrabajo" type="date" class="w-full border rounded-xl">
+<label>Cumpleaños (opcional)</label>
+<input id="fCumple" type="date" class="w-full border rounded-xl">
+<label>Capacidad ▼ - Solo Inventario</label>
+<select id="fCapacidadTrabajo" onchange="llenarSeriesTrabajo()" class="w-full border-2 border-blue-400 rounded-xl bg-blue-50 font-black"></select>
+<label>Sistema ▼</label>
+<select id="fSistema" class="w-full border-2 border-blue-400 rounded-xl bg-blue-50 font-black"><option value="">Elegir sistema ▼</option><option value="CONVENCIONAL">CONVENCIONAL</option><option value="INVERTER">INVERTER</option></select>
+<label>Mantenimiento</label>
+<select id="fFrecuencia" class="w-full border rounded-xl"><option value="3" selected>Cada 3 meses</option><option value="2">Cada 2 meses</option><option value="4">Cada 4 meses</option><option value="6">Cada 6 meses</option></select>
+<label>Estado</label>
+<select id="fEstado" onchange="toggleSeriesInternas()" class="w-full border rounded-xl"><option value="pendiente">⏳ PENDIENTE DE PAGAR</option><option value="pagado">✅ Pagado</option></select>
 <div id="boxSeriesInternas" class="hidden bg-gray-50 border rounded-xl p-2 mt-2">
 <p class="text- font-black">🔒 Al pagar - Trabajador, Garantía y Series</p>
-<div class="grid grid-cols-2 gap-2"><div><label>Trabajador</label><input id="fTrabajador" placeholder="Trabajador" class="w-full border rounded-xl bg-white"></div><div><label>Garantía hasta</label><input id="fGarantiaProv" type="date" class="w-full border rounded-xl bg-white"></div></div>
+<label>Trabajador</label><input id="fTrabajador" placeholder="Trabajador" class="w-full border rounded-xl bg-white">
+<label>Garantía hasta</label><input id="fGarantiaProv" type="date" class="w-full border rounded-xl bg-white">
 <label>Serie Manejadora</label><select id="fSerieManejadora" onchange="calcularCompraAuto()" class="w-full border rounded-xl font-mono bg-white"></select>
 <label>Serie Condensadora</label><select id="fSerieCondensadora" onchange="calcularCompraAuto()" class="w-full border rounded-xl font-mono bg-white"></select>
 <p id="errorSeries" class="text- text-red-600 font-black hidden"></p>
-<div class="bg-yellow-50 border rounded-xl p-2 mt-1 text-"><p class="font-black">Compra: <b id="txtCompraAuto">$0</b></p><label class="mt-1 block">Precio venta final</label><input id="fMonto" type="number" placeholder="Precio venta $" class="w-full border rounded-xl mt-1"><p class="font-black">Ganancia: <b id="txtGananciaAuto">$0</b></p></div>
+<div class="bg-yellow-50 border rounded-xl p-2 mt-1 text-"><p class="font-black">Compra (auto): <b id="txtCompraAuto">$0</b></p><label class="mt-1 block">Precio de venta final</label><input id="fMonto" type="number" placeholder="Precio venta final $" class="w-full border rounded-xl mt-1"><p class="font-black">Ganancia: <b id="txtGananciaAuto">$0</b></p></div>
 </div>
-<div id="boxVentaPendiente"><label>Precio de venta final</label><input id="fMontoPendiente" type="number" placeholder="Precio venta $" class="w-full border rounded-xl"></div>
+<div id="boxVentaPendiente"><label>Precio de venta final</label><input id="fMontoPendiente" type="number" placeholder="Precio venta final $" class="w-full border rounded-xl"></div>
 <div id="vistaPrevia" class="hidden mt-2 border-2 border-blue-400 bg-blue-50 rounded-xl p-2"></div>
 </div>
 <div class="caja-foot"><button onclick="generarVista()" class="w-full bg-blue-600 text-white rounded-xl font-black">👁️ Generar Vista Previa</button><button onclick="cerrarFormTrabajo()" class="w-full mt-1 bg-gray-100 rounded-xl font-black text-gray-500">Cancelar</button></div>
@@ -236,11 +252,11 @@ let soloCotiz=false;
 let datosTemp=null;let editandoCatIndex=-1;let editandoInvIndex=-1;let editandoInvSerieOld='';let pagandoIndex=-1;let mantIndex=-1;
 let editandoTrabajoIndex=-1;let editandoTrabajoOriginal=null;
 function save(){localStorage.setItem('climaserv_catalogo',JSON.stringify(CATALOGO));localStorage.setItem('climaserv_trabajos',JSON.stringify(datos));localStorage.setItem('climaserv_inv_5',JSON.stringify(inventario));localStorage.setItem('climaserv_facturas',JSON.stringify(facturas));localStorage.setItem('climaserv_gastos',JSON.stringify(gastos));localStorage.setItem('climaserv_trabs',JSON.stringify(trabajadores));render();renderCal();}
-function setFiltro(f){filtro=f;soloCotiz=false;document.getElementById('btnCotizFab').innerText='💰 Cotizaciones';render();} function setFiltroMant(f){filtroMant=f;render();} function setFiltroGar(f){filtroGar=f;render();} function setFiltroRuta(f){filtroRuta=f;render();}
+function setFiltro(f){filtro=f;soloCotiz=false;document.getElementById('btnCotizFab').innerText='💰 Cotizado';render();} function setFiltroMant(f){filtroMant=f;render();} function setFiltroGar(f){filtroGar=f;render();} function setFiltroRuta(f){filtroRuta=f;render();}
 function showTab(t){document.querySelectorAll('.tab').forEach(e=>e.classList.add('hidden'));document.getElementById('tab-'+t).classList.remove('hidden');let esClientes=(t==='trabajos');let zona=document.getElementById('zonaArriba');if(zona)zona.style.display=esClientes?'block':'none';let fab=document.getElementById('fabWrap');if(fab)fab.classList.toggle('show',esClientes);window.scrollTo({top:0});render();}
 function abrirFormTrabajo(){document.getElementById('modalTrabajo').classList.add('open');}
 function cerrarFormTrabajo(){document.getElementById('modalTrabajo').classList.remove('open');}
-function toggleCotiz(){soloCotiz=!soloCotiz;document.getElementById('btnCotizFab').innerText=soloCotiz?'📋 Mostrar Todos':'💰 Cotizaciones';if(soloCotiz){filtro='pendiente';}else{filtro='todos';}render();}
+function toggleCotiz(){soloCotiz=!soloCotiz;document.getElementById('btnCotizFab').innerText=soloCotiz?'📋 Mostrar Todos':'💰 Cotizado';if(soloCotiz){filtro='pendiente';}else{filtro='todos';}render();}
 function normCap(s){return (s||'').toString().toLowerCase().replace(/[^0-9]/g,'');}
 function normTxt(s){return (s||'').toString().toLowerCase().trim();}
 function parseFecha(s){if(!s)return null;let d=new Date(s+'T12:00:00');return isNaN(d)?null:d;}
