@@ -18,18 +18,18 @@
 #lista{padding-bottom:20px}
 #fabWrap{position:fixed;right:12px;bottom:78px;display:none;flex-direction:column;gap:8px;align-items:flex-end;z-index:45}
 #fabWrap.show{display:flex}
-/* BOTON COTIZADO REDONDO */
-#btnCotizFab{width:56px;height:56px;border-radius:50%;background:#FFC107;color:#111;border:none;font-size:22px;font-weight:900;box-shadow:0 4px 10px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;line-height:1}
+/* BOTON AMARILLO - DICE COTIZADO CON LETRAS, REDONDO TIPO PASTILLITA */
+#btnCotizFab{background:#FFC107 !important;color:#111 !important;border:none !important;padding:9px 14px !important;border-radius:999px !important;font-weight:900 !important;font-size:12px !important;box-shadow:0 4px 10px rgba(0,0,0,.35) !important;line-height:1 !important;white-space:nowrap !important}
 #btnAddFab{width:58px;height:58px;border-radius:50%;background:#2563EB;color:#fff;font-size:28px;font-weight:900;border:none;box-shadow:0 4px 12px rgba(0,0,0,.35)}
-/* FORMULARIO - MISMO LAYOUT DE LA FOTO, PERO CON FONDO SOLIDO BLANCO */
-#modalTrabajo{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85) !important;z-index:999;align-items:center;justify-content:center;padding:10px}
+/* REGISTRO DE TRABAJO - FONDO BLANCO SOLIDO FORZADO */
+#modalTrabajo{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88) !important;z-index:999;align-items:center;justify-content:center;padding:10px}
 #modalTrabajo.open{display:flex}
 #modalTrabajo.caja{background:#ffffff !important;background-color:#ffffff !important;opacity:1 !important;width:100%;max-width:460px;border-radius:16px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.6)}
-#modalTrabajo.caja-head{background:#ffffff !important;padding:8px 10px 6px;border-bottom:1px solid #eee;flex-shrink:0}
+#modalTrabajo.caja-head{background:#ffffff !important;background-color:#ffffff !important;padding:8px 10px 6px;border-bottom:1px solid #eee;flex-shrink:0}
 #modalTrabajo.caja-body{background:#ffffff !important;background-color:#ffffff !important;padding:8px 10px;overflow-y:auto;flex:1}
 #modalTrabajo.caja-body label{font-size:11px !important;margin-top:6px !important;display:block;background:#fff !important}
 #modalTrabajo.caja-body input,#modalTrabajo.caja-body select{background:#ffffff !important;padding:7px 8px !important;margin-top:2px !important;margin-bottom:2px !important;font-size:13px !important;border-radius:10px !important}
-#modalTrabajo.caja-foot{background:#ffffff !important;padding:8px 10px;border-top:1px solid #eee;flex-shrink:0}
+#modalTrabajo.caja-foot{background:#ffffff !important;background-color:#ffffff !important;padding:8px 10px;border-top:1px solid #eee;flex-shrink:0}
 #modalTrabajo.caja-foot button{padding:9px !important;font-size:13px !important}
 </style>
 </head>
@@ -82,7 +82,6 @@
 <div class="mx-3 mt-2 bg-red-50 border border-red-300 rounded-xl p-2 text-xs"><b class="font-black">🛡️ Garantías por vencer:</b> <span id="alertasGarantia"></span></div>
 </div>
 
-<!-- BOTONES DE ARRIBA - SIN LOS 4 PRIMEROS -->
 <div class="flex gap-2 p-3 overflow-x-auto">
 <button onclick="showTab('catalogo')" class="bg-white px-4 py-2 rounded-full text-xs font-black border-2 border-blue-600">📋 Catálogo</button>
 <button onclick="showTab('factura')" class="bg-white px-4 py-2 rounded-full text-xs font-black border-2 border-green-600">🧾 Factura</button>
@@ -163,17 +162,17 @@
 </div>
 
 <div id="fabWrap" class="show">
-<button id="btnCotizFab" onclick="toggleCotiz()" title="Cotizado">💰</button>
+<button id="btnCotizFab" onclick="toggleCotiz()">Cotizado</button>
 <button id="btnAddFab" onclick="abrirFormTrabajo()">+</button>
 </div>
 
 <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 text-xs font-black"><button onclick="showTab('trabajos')">👥 Clientes</button><button onclick="showTab('ruta')">🚗 Ruta</button><button onclick="showTab('garantias')">🛡️ Gar.</button><button onclick="showTab('mantenimientos')">🔧 Mant.</button></nav>
 
-<!-- MODAL - MISMO LAYOUT DE LA FOTO, CON FONDO SOLIDO -->
-<div id="modalTrabajo" onclick="if(event.target==this) cerrarFormTrabajo()"><div class="caja">
-<div class="caja-head"><div class="flex justify-between items-center"><div><h2 class="font-black text-sm leading-tight">Registrar Trabajo</h2><p class="text- font-bold text-blue-600 leading-tight">1 equipo por venta. Si son 2, guardá 2 veces.</p></div><button onclick="cerrarFormTrabajo()" class="bg-gray-200 px-2 py-1 rounded-full font-black text-xs">X</button></div>
+<!-- REGISTRO DE TRABAJO - FONDO BLANCO EN EL MISMO HTML -->
+<div id="modalTrabajo" onclick="if(event.target==this) cerrarFormTrabajo()"><div class="caja" style="background:#ffffff !important;background-color:#ffffff !important;opacity:1 !important">
+<div class="caja-head" style="background:#ffffff !important"><div class="flex justify-between items-center"><div><h2 class="font-black text-sm leading-tight">Registrar Trabajo</h2><p class="text- font-bold text-blue-600 leading-tight">1 equipo por venta. Si son 2, guardá 2 veces.</p></div><button onclick="cerrarFormTrabajo()" class="bg-gray-200 px-2 py-1 rounded-full font-black text-xs">X</button></div>
 <p id="editandoTrabajoAviso" class="hidden mt-1 bg-yellow-100 border border-yellow-400 rounded-lg p-1 text- font-black">✏️ EDITANDO. <button onclick="cancelarEdicionTrabajo()" class="bg-gray-200 px-2 py-0 rounded-full">Cancelar</button></p></div>
-<div class="caja-body">
+<div class="caja-body" style="background:#ffffff !important">
 <label>Cliente</label>
 <div class="relative"><input id="fCliente" placeholder="Cliente" autocomplete="off" class="w-full border rounded-xl"><div id="sugCliente" class="sugerencias"></div></div>
 <label>Teléfono</label>
@@ -212,7 +211,7 @@
 <div id="boxVentaPendiente"><label>Precio de venta final</label><input id="fMontoPendiente" type="number" placeholder="Precio venta final $" class="w-full border rounded-xl"></div>
 <div id="vistaPrevia" class="hidden mt-2 border-2 border-blue-400 bg-blue-50 rounded-xl p-2"></div>
 </div>
-<div class="caja-foot"><button onclick="generarVista()" class="w-full bg-blue-600 text-white rounded-xl font-black">👁️ Generar Vista Previa</button><button onclick="cerrarFormTrabajo()" class="w-full mt-1 bg-gray-100 rounded-xl font-black text-gray-500">Cancelar</button></div>
+<div class="caja-foot" style="background:#ffffff !important"><button onclick="generarVista()" class="w-full bg-blue-600 text-white rounded-xl font-black">👁️ Generar Vista Previa</button><button onclick="cerrarFormTrabajo()" class="w-full mt-1 bg-gray-100 rounded-xl font-black text-gray-500">Cancelar</button></div>
 </div></div>
 
 <div id="modalSerie" class="hidden fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-2"><div class="bg-white rounded-2xl w-full max-w-sm modal-compacto">
@@ -258,11 +257,11 @@ let soloCotiz=false;
 let datosTemp=null;let editandoCatIndex=-1;let editandoInvIndex=-1;let editandoInvSerieOld='';let pagandoIndex=-1;let mantIndex=-1;
 let editandoTrabajoIndex=-1;let editandoTrabajoOriginal=null;
 function save(){localStorage.setItem('climaserv_catalogo',JSON.stringify(CATALOGO));localStorage.setItem('climaserv_trabajos',JSON.stringify(datos));localStorage.setItem('climaserv_inv_5',JSON.stringify(inventario));localStorage.setItem('climaserv_facturas',JSON.stringify(facturas));localStorage.setItem('climaserv_gastos',JSON.stringify(gastos));localStorage.setItem('climaserv_trabs',JSON.stringify(trabajadores));render();renderCal();}
-function setFiltro(f){filtro=f;soloCotiz=false;let b=document.getElementById('btnCotizFab');if(b)b.innerText='💰';render();} function setFiltroMant(f){filtroMant=f;render();} function setFiltroGar(f){filtroGar=f;render();} function setFiltroRuta(f){filtroRuta=f;render();}
+function setFiltro(f){filtro=f;soloCotiz=false;let b=document.getElementById('btnCotizFab');if(b)b.innerText='Cotizado';render();} function setFiltroMant(f){filtroMant=f;render();} function setFiltroGar(f){filtroGar=f;render();} function setFiltroRuta(f){filtroRuta=f;render();}
 function showTab(t){document.querySelectorAll('.tab').forEach(e=>e.classList.add('hidden'));document.getElementById('tab-'+t).classList.remove('hidden');let esClientes=(t==='trabajos');let zona=document.getElementById('zonaArriba');if(zona)zona.style.display=esClientes?'block':'none';let fab=document.getElementById('fabWrap');if(fab)fab.classList.toggle('show',esClientes);window.scrollTo({top:0});render();}
 function abrirFormTrabajo(){document.getElementById('modalTrabajo').classList.add('open');}
 function cerrarFormTrabajo(){document.getElementById('modalTrabajo').classList.remove('open');}
-function toggleCotiz(){soloCotiz=!soloCotiz;let b=document.getElementById('btnCotizFab');if(b)b.innerText=soloCotiz?'📋':'💰';if(soloCotiz){filtro='pendiente';}else{filtro='todos';}render();}
+function toggleCotiz(){soloCotiz=!soloCotiz;let b=document.getElementById('btnCotizFab');if(b)b.innerText=soloCotiz?'Mostrar Todos':'Cotizado';if(soloCotiz){filtro='pendiente';}else{filtro='todos';}render();}
 function normCap(s){return (s||'').toString().toLowerCase().replace(/[^0-9]/g,'');}
 function normTxt(s){return (s||'').toString().toLowerCase().trim();}
 function parseFecha(s){if(!s)return null;let d=new Date(s+'T12:00:00');return isNaN(d)?null:d;}
