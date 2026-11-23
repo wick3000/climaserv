@@ -2,10 +2,16 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>Climaserv - El Paraíso</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<style>h1,h2,h3,label,.titulo{font-weight:900 !important}.sugerencias{position:absolute;top:100%;left:0;right:0;background:white;border:1px solid #ccc;border-radius:10px;z-index:20;display:none;box-shadow:0 4px 12px rgba(0,0,0,.15);overflow:hidden}.sugerencias div{padding:10px 12px;cursor:pointer;font-size:13px;font-weight:700;border-bottom:1px solid #eee}.sugerencias div:last-child{border-bottom:none}.sugerencias div:hover{background:#}.sugerencias small{color:#666;font-weight:600}
+<style>
+*{box-sizing:border-box}
+h1,h2,h3,label,.titulo{font-weight:900 !important}
+.sugerencias{position:absolute;top:100%;left:0;right:0;background:white;border:1px solid #ccc;border-radius:10px;z-index:20;display:none;box-shadow:0 4px 12px rgba(0,0,0,.15);overflow:hidden}
+.sugerencias div{padding:10px 12px;cursor:pointer;font-size:13px;font-weight:700;border-bottom:1px solid #eee}
+.sugerencias div:last-child{border-bottom:none}
+.sugerencias small{color:#666;font-weight:600}
 .modal-compacto{max-height:92vh;display:flex;flex-direction:column;overflow:hidden;padding:0 !important}
 .modal-compacto-head{padding:10px 12px 8px;border-bottom:1px solid #eee;flex-shrink:0}
 .modal-compacto-body{padding:10px 12px;overflow-y:auto;flex:1}
@@ -18,19 +24,23 @@
 #lista{padding-bottom:20px}
 #fabWrap{position:fixed;right:12px;bottom:78px;display:none;flex-direction:column;gap:8px;align-items:flex-end;z-index:45}
 #fabWrap.show{display:flex}
-/* BOTON AMARILLO - DICE COTIZADO CON LETRAS, REDONDO TIPO PASTILLITA */
-#btnCotizFab{background:#FFC107 !important;color:#111 !important;border:none !important;padding:9px 14px !important;border-radius:999px !important;font-weight:900 !important;font-size:12px !important;box-shadow:0 4px 10px rgba(0,0,0,.35) !important;line-height:1 !important;white-space:nowrap !important}
+/* BOTON COTIZADO - AMARILLO CON LETRAS */
+#btnCotizFab{background:#FFC107 !important;color:#111 !important;border:none !important;padding:9px 14px !important;border-radius:999px !important;font-weight:900 !important;font-size:12px !important;box-shadow:0 4px 10px rgba(0,0,0,.35) !important;white-space:nowrap !important}
 #btnAddFab{width:58px;height:58px;border-radius:50%;background:#2563EB;color:#fff;font-size:28px;font-weight:900;border:none;box-shadow:0 4px 12px rgba(0,0,0,.35)}
-/* REGISTRO DE TRABAJO - FONDO BLANCO SOLIDO FORZADO */
-#modalTrabajo{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88) !important;z-index:999;align-items:center;justify-content:center;padding:10px}
+/* REGISTRO OPTIMIZADO - QUEPA TODO, FONDO BLANCO SOLIDO */
+#modalTrabajo{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88) !important;z-index:999;align-items:flex-start;justify-content:center;padding:8px;overflow-y:auto}
 #modalTrabajo.open{display:flex}
-#modalTrabajo.caja{background:#ffffff !important;background-color:#ffffff !important;opacity:1 !important;width:100%;max-width:460px;border-radius:16px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.6)}
-#modalTrabajo.caja-head{background:#ffffff !important;background-color:#ffffff !important;padding:8px 10px 6px;border-bottom:1px solid #eee;flex-shrink:0}
-#modalTrabajo.caja-body{background:#ffffff !important;background-color:#ffffff !important;padding:8px 10px;overflow-y:auto;flex:1}
-#modalTrabajo.caja-body label{font-size:11px !important;margin-top:6px !important;display:block;background:#fff !important}
-#modalTrabajo.caja-body input,#modalTrabajo.caja-body select{background:#ffffff !important;padding:7px 8px !important;margin-top:2px !important;margin-bottom:2px !important;font-size:13px !important;border-radius:10px !important}
-#modalTrabajo.caja-foot{background:#ffffff !important;background-color:#ffffff !important;padding:8px 10px;border-top:1px solid #eee;flex-shrink:0}
-#modalTrabajo.caja-foot button{padding:9px !important;font-size:13px !important}
+#modalTrabajo.caja{background:#ffffff !important;width:100%;max-width:400px;border-radius:14px;margin:auto;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+#modalTrabajo.caja-head{background:#fff !important;padding:10px 12px 8px;border-bottom:1px solid #eee;flex-shrink:0}
+#modalTrabajo.caja-body{background:#fff !important;padding:10px 12px 12px;overflow-y:auto;flex:1}
+#modalTrabajo.caja-body label{font-size:12px !important;margin-top:8px !important;display:block;color:#111}
+#modalTrabajo.caja-body input,#modalTrabajo.caja-body select{background:#fff !important;width:100% !important;max-width:100% !important;padding:8px 8px !important;margin-top:2px !important;margin-bottom:0 !important;font-size:13px !important;border-radius:10px !important;min-width:0 !important}
+#modalTrabajo.caja-foot{background:#fff !important;padding:10px 12px;border-top:1px solid #eee;flex-shrink:0}
+#modalTrabajo.caja-foot button{padding:10px !important;font-size:13px !important;width:100% !important}
+#modalTrabajo.grid2{display:grid !important;grid-template-columns:1fr 1fr !important;gap:8px !important;width:100% !important}
+#modalTrabajo.grid3{display:grid !important;grid-template-columns:1fr 1fr 1fr !important;gap:6px !important;width:100% !important}
+#modalTrabajo.grid3 select,#modalTrabajo.grid3 input{font-size:12px !important;padding:8px 4px !important}
+#modalTrabajo.grid2 select,#modalTrabajo.grid2 input{font-size:12px !important}
 </style>
 </head>
 <body class="bg-gray-100 pb-28">
@@ -168,50 +178,43 @@
 
 <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 text-xs font-black"><button onclick="showTab('trabajos')">👥 Clientes</button><button onclick="showTab('ruta')">🚗 Ruta</button><button onclick="showTab('garantias')">🛡️ Gar.</button><button onclick="showTab('mantenimientos')">🔧 Mant.</button></nav>
 
-<!-- REGISTRO DE TRABAJO - FONDO BLANCO EN EL MISMO HTML -->
-<div id="modalTrabajo" onclick="if(event.target==this) cerrarFormTrabajo()"><div class="caja" style="background:#ffffff !important;background-color:#ffffff !important;opacity:1 !important">
-<div class="caja-head" style="background:#ffffff !important"><div class="flex justify-between items-center"><div><h2 class="font-black text-sm leading-tight">Registrar Trabajo</h2><p class="text- font-bold text-blue-600 leading-tight">1 equipo por venta. Si son 2, guardá 2 veces.</p></div><button onclick="cerrarFormTrabajo()" class="bg-gray-200 px-2 py-1 rounded-full font-black text-xs">X</button></div>
-<p id="editandoTrabajoAviso" class="hidden mt-1 bg-yellow-100 border border-yellow-400 rounded-lg p-1 text- font-black">✏️ EDITANDO. <button onclick="cancelarEdicionTrabajo()" class="bg-gray-200 px-2 py-0 rounded-full">Cancelar</button></p></div>
-<div class="caja-body" style="background:#ffffff !important">
+<!-- REGISTRO OPTIMIZADO -->
+<div id="modalTrabajo" onclick="if(event.target==this) cerrarFormTrabajo()"><div class="caja" style="background:#ffffff !important">
+<div class="caja-head" style="background:#ffffff"><div class="flex justify-between items-start gap-2"><div class="min-w-0"><h2 class="font-black text- leading-tight">Registrar Trabajo</h2><p class="text- font-bold text-blue-600 leading-tight">1 equipo por venta. Si son 2, guardá 2 veces.</p></div><button onclick="cerrarFormTrabajo()" class="shrink-0 bg-gray-200 w-7 h-7 rounded-full font-black text-sm leading-none">X</button></div>
+<p id="editandoTrabajoAviso" class="hidden mt-2 bg-yellow-100 border border-yellow-400 rounded-lg p-1 text- font-black">✏️ EDITANDO. <button onclick="cancelarEdicionTrabajo()" class="bg-gray-200 px-2 py-0 rounded-full">Cancelar</button></p></div>
+<div class="caja-body" style="background:#ffffff">
 <label>Cliente</label>
-<div class="relative"><input id="fCliente" placeholder="Cliente" autocomplete="off" class="w-full border rounded-xl"><div id="sugCliente" class="sugerencias"></div></div>
+<div class="relative"><input id="fCliente" placeholder="Cliente" autocomplete="off" class="border rounded-xl"><div id="sugCliente" class="sugerencias"></div></div>
 <label>Teléfono</label>
-<div class="relative"><input id="fTelefono" placeholder="Ej: 70001234" inputmode="numeric" autocomplete="off" class="w-full border rounded-xl"><div id="sugTelefono" class="sugerencias"></div></div>
-<div class="grid grid-cols-2 gap-2">
-<div><label>Departamento ▼</label>
-<select id="fDepartamento" onchange="cargarDistritosForm()" class="w-full border-2 border-blue-400 rounded-xl bg-blue-50 font-black"><option value="">Departamento ▼</option><option>Ahuachapán</option><option>Cabañas</option><option>Chalatenango</option><option>Cuscatlán</option><option>La Libertad</option><option>La Paz</option><option>La Unión</option><option>Morazán</option><option>San Miguel</option><option>San Salvador</option><option>San Vicente</option><option>Santa Ana</option><option>Sonsonate</option><option>Usulután</option></select></div>
-<div><label>Distrito ▼</label>
-<select id="fDistrito" class="w-full border rounded-xl bg-white font-black"><option value="">-- Sin distrito --</option></select></div>
+<div class="relative"><input id="fTelefono" placeholder="Ej: 70001234" inputmode="numeric" autocomplete="off" class="border rounded-xl"><div id="sugTelefono" class="sugerencias"></div></div>
+<div class="grid2">
+<div><label>Departamento ▼</label><select id="fDepartamento" onchange="cargarDistritosForm()" class="border-2 border-blue-400 rounded-xl bg-blue-50 font-black"><option value="">Departamento ▼</option><option>Ahuachapán</option><option>Cabañas</option><option>Chalatenango</option><option>Cuscatlán</option><option>La Libertad</option><option>La Paz</option><option>La Unión</option><option>Morazán</option><option>San Miguel</option><option>San Salvador</option><option>San Vicente</option><option>Santa Ana</option><option>Sonsonate</option><option>Usulután</option></select></div>
+<div><label>Distrito ▼</label><select id="fDistrito" class="border rounded-xl bg-white font-black"><option value="">-- Sin distrito --</option></select></div>
 </div>
-<div class="grid grid-cols-2 gap-2">
-<div><label id="labelFechaTrabajo">Fecha de cotización</label>
-<input id="fFechaTrabajo" type="date" class="w-full border rounded-xl"></div>
-<div><label>Estado</label>
-<select id="fEstado" onchange="toggleSeriesInternas()" class="w-full border rounded-xl"><option value="pendiente">⏳ PENDIENTE</option><option value="pagado">✅ Pagado</option></select></div>
+<div class="grid2">
+<div><label id="labelFechaTrabajo">Fecha de cotización</label><input id="fFechaTrabajo" type="date" class="border rounded-xl"></div>
+<div><label>Estado</label><select id="fEstado" onchange="toggleSeriesInternas()" class="border rounded-xl"><option value="pendiente">⏳ PENDIENTE</option><option value="pagado">✅ Pagado</option></select></div>
 </div>
 <label>Cumpleaños (opcional)</label>
-<input id="fCumple" type="date" class="w-full border rounded-xl">
-<div class="grid grid-cols-3 gap-2">
-<div><label>Capacidad ▼</label>
-<select id="fCapacidadTrabajo" onchange="llenarSeriesTrabajo()" class="w-full border-2 border-blue-400 rounded-xl bg-blue-50 font-black"></select></div>
-<div><label>Sistema ▼</label>
-<select id="fSistema" class="w-full border-2 border-blue-400 rounded-xl bg-blue-50 font-black"><option value="">Sistema ▼</option><option value="CONVENCIONAL">CONVENCIONAL</option><option value="INVERTER">INVERTER</option></select></div>
-<div><label>Mantenimiento</label>
-<select id="fFrecuencia" class="w-full border rounded-xl"><option value="3" selected>3 meses</option><option value="2">2 meses</option><option value="4">4 meses</option><option value="6">6 meses</option></select></div>
+<input id="fCumple" type="date" class="border rounded-xl">
+<div class="grid3">
+<div><label>Capacidad ▼</label><select id="fCapacidadTrabajo" onchange="llenarSeriesTrabajo()" class="border-2 border-blue-400 rounded-xl bg-blue-50 font-black"></select></div>
+<div><label>Sistema ▼</label><select id="fSistema" class="border-2 border-blue-400 rounded-xl bg-blue-50 font-black"><option value="">Sistema ▼</option><option value="CONVENCIONAL">CONVENCIONAL</option><option value="INVERTER">INVERTER</option></select></div>
+<div><label>Mantenimiento</label><select id="fFrecuencia" class="border rounded-xl"><option value="3" selected>3 meses</option><option value="2">2 meses</option><option value="4">4 meses</option><option value="6">6 meses</option></select></div>
 </div>
 <div id="boxSeriesInternas" class="hidden bg-gray-50 border rounded-xl p-2 mt-2">
 <p class="text- font-black">🔒 Al pagar - Trabajador, Garantía y Series</p>
-<label>Trabajador</label><input id="fTrabajador" placeholder="Trabajador" class="w-full border rounded-xl bg-white">
-<label>Garantía hasta</label><input id="fGarantiaProv" type="date" class="w-full border rounded-xl bg-white">
-<label>Serie Manejadora</label><select id="fSerieManejadora" onchange="calcularCompraAuto()" class="w-full border rounded-xl font-mono bg-white"></select>
-<label>Serie Condensadora</label><select id="fSerieCondensadora" onchange="calcularCompraAuto()" class="w-full border rounded-xl font-mono bg-white"></select>
+<label>Trabajador</label><input id="fTrabajador" placeholder="Trabajador" class="border rounded-xl bg-white">
+<label>Garantía hasta</label><input id="fGarantiaProv" type="date" class="border rounded-xl bg-white">
+<label>Serie Manejadora</label><select id="fSerieManejadora" onchange="calcularCompraAuto()" class="border rounded-xl font-mono bg-white"></select>
+<label>Serie Condensadora</label><select id="fSerieCondensadora" onchange="calcularCompraAuto()" class="border rounded-xl font-mono bg-white"></select>
 <p id="errorSeries" class="text- text-red-600 font-black hidden"></p>
-<div class="bg-yellow-50 border rounded-xl p-2 mt-1 text-"><p class="font-black">Compra (auto): <b id="txtCompraAuto">$0</b></p><label class="mt-1 block">Precio de venta final</label><input id="fMonto" type="number" placeholder="Precio venta final $" class="w-full border rounded-xl mt-1"><p class="font-black">Ganancia: <b id="txtGananciaAuto">$0</b></p></div>
+<div class="bg-yellow-50 border rounded-xl p-2 mt-1 text-"><p class="font-black">Compra (auto): <b id="txtCompraAuto">$0</b></p><label class="mt-1 block">Precio de venta final</label><input id="fMonto" type="number" placeholder="Precio venta final $" class="border rounded-xl mt-1"><p class="font-black">Ganancia: <b id="txtGananciaAuto">$0</b></p></div>
 </div>
-<div id="boxVentaPendiente"><label>Precio de venta final</label><input id="fMontoPendiente" type="number" placeholder="Precio venta final $" class="w-full border rounded-xl"></div>
+<div id="boxVentaPendiente"><label>Precio de venta final</label><input id="fMontoPendiente" type="number" placeholder="Precio venta final $" class="border rounded-xl"></div>
 <div id="vistaPrevia" class="hidden mt-2 border-2 border-blue-400 bg-blue-50 rounded-xl p-2"></div>
 </div>
-<div class="caja-foot" style="background:#ffffff !important"><button onclick="generarVista()" class="w-full bg-blue-600 text-white rounded-xl font-black">👁️ Generar Vista Previa</button><button onclick="cerrarFormTrabajo()" class="w-full mt-1 bg-gray-100 rounded-xl font-black text-gray-500">Cancelar</button></div>
+<div class="caja-foot" style="background:#ffffff"><button onclick="generarVista()" class="bg-blue-600 text-white rounded-xl font-black">👁️ Generar Vista Previa</button><button onclick="cerrarFormTrabajo()" class="mt-2 bg-gray-100 rounded-xl font-black text-gray-500">Cancelar</button></div>
 </div></div>
 
 <div id="modalSerie" class="hidden fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-2"><div class="bg-white rounded-2xl w-full max-w-sm modal-compacto">
