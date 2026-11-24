@@ -344,8 +344,18 @@ let _showTabOrig=showTab;showTab=function(t){_showTabOrig(t);if(t=='reportes')re
 async function pdfReportes() {
   const tabla = document.querySelector('#repTabla table');
   if (!tabla) { alert('Primero toca Filtrar en Reportes'); return; }
-  const filas = tabla.querySelectorAll('tr');
-  if (filas.length <= 1 || tabla.innerText.includes('Sin resultados')) { alert('No hay datos en la tabla para generar el PDF.'); return; }
+  const filasDOM = tabla.querySelectorAll('tr');
+  if (filasDOM.length <= 1 || tabla.innerText.includes('Sin resultados')) { alert('No hay datos en la tabla para generar el PDF.'); return; }
+
+  // Sacar la tabla fila por fila para que sí salga en el PDF
+  const head = [];
+  const body = [];
+  filasDOM.forEach((tr, i) => {
+    const celdas = Array.from(tr.querySelectorAll('th, td')).map(td => td.innerText.replace('🟢', '(+)').replace('🔴', '(-)').trim());
+    if (i === 0) head.push(celdas);
+    else body.push(celdas);
+  });
+
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation: 'landscape' });
   doc.setFontSize(16); doc.text('CLIMASERV - El Paraíso', 14, 15);
@@ -358,9 +368,18 @@ async function pdfReportes() {
   const total = document.getElementById('repTotal').innerText;
   doc.setFont(undefined, 'bold');
   doc.text(`Entró: ${entro}   |   Salió: ${salio}   |   Total: ${total}`, 14, 29);
-  doc.autoTable({ html: '#repTabla table', startY: 34, styles: { fontSize: 8, cellPadding: 2 }, headStyles: { fillColor: [37, 99, 235] }, didParseCell: function(data) { if (data.cell.text) { data.cell.text = data.cell.text.map(t => t.replace('🟢', '(+)').replace('🔴', '(-)')); } } });
+
+  doc.autoTable({ head: head, body: body, startY: 34, styles: { fontSize: 8, cellPadding: 2 }, headStyles: { fillColor: [37, 99, 235] } });
+
   const nombreArchivo = `Reporte-Climaserv-${new Date().toISOString().slice(0,10)}.pdf`;
-  try { const pdfBlob = doc.output('blob'); const file = new File([pdfBlob], nombreArchivo, { type: 'application/pdf' }); if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: 'Reporte Climaserv', text: `Reporte Climaserv (${entro} / ${salio} / Total: ${total})` }); return; } } catch (err) { console.log('Compartir nativo cancelado o no disponible, descargando archivo...', err); }
+  try {
+    const pdfBlob = doc.output('blob');
+    const file = new File([pdfBlob], nombreArchivo, { type: 'application/pdf' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file] });
+      return;
+    }
+  } catch (err) { console.log('Compartir cancelado, descargando...', err); }
   doc.save(nombreArchivo);
 }
 </script>  
