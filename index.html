@@ -341,16 +341,29 @@ function setRepRango(t){let hoy=new Date();let d1=new Date(hoy);if(t=='semana')d
 function marcaDeTrabajo(d){let fm=facturas.find(x=>x.serie===d.serieManejadora);let fc=facturas.find(x=>x.serie===d.serieCondensadora);if(!fm&&!fc)return '';let marca=(fm||fc).marca||'';let modM=fm?(fm.modelo||''):'';let modC=fc?(fc.modelo||''):'';if(!modM||!modC)return (marca+' '+(modM||modC)).trim();let i=0;while(i<modM.length&&i<modC.length&&modM[i]===modC[i])i++;let comun=modM.slice(0,i).replace(/[\s\-\(\[\._]+$/,'').trim();return (marca+' '+comun).trim();}  
 function renderReportes(){let selCap=document.getElementById('repCap');if(selCap.options.length<=1){let caps=[...new Set(datos.map(d=>d.capacidadTrabajo).filter(Boolean))];caps.forEach(c=>selCap.innerHTML+=`<option value="${c}">${c}</option>`);}let filas=[];datos.forEach(d=>{if(d.estado!=='pagado')return;let fecha=fechaParaGanancia(d)||d.fechaInstalacion||d.fechaTrabajo||'';filas.push({fecha:fecha.slice(0,10),tipo:'entrada',concepto:d.cliente||'Venta',depto:d.departamento||'',distrito:d.distrito||'',capacidad:d.capacidadTrabajo||'',sistema:d.sistema||'',marca:marcaDeTrabajo(d),monto:Number(d.monto||0)});});gastos.forEach(g=>{filas.push({fecha:(g.fecha||'').slice(0,10),tipo:'salida',concepto:g.desc||'Gasto',depto:'',distrito:'',capacidad:'',sistema:'',marca:'',monto:Number(g.monto||0)});});let f1=document.getElementById('repDesde').value,f2=document.getElementById('repHasta').value;let tp=document.getElementById('repTipo').value,dp=document.getElementById('repDepto').value;let dt=document.getElementById('repDist').value,cp=document.getElementById('repCap').value;let ss=document.getElementById('repSis').value,mc=document.getElementById('repMarca').value.toLowerCase();let filtradas=filas.filter(r=>{if(f1&&r.fecha<f1)return false;if(f2&&r.fecha>f2)return false;if(tp&&r.tipo!=tp)return false;if(dp&&r.depto!=dp)return false;if(dt&&r.distrito!=dt)return false;if(cp&&r.capacidad!=cp)return false;if(ss&&r.sistema!=ss)return false;if(mc&&!r.marca.toLowerCase().includes(mc)&&!r.concepto.toLowerCase().includes(mc))return false;return true;}).sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||''));let entro=0,salio=0;filtradas.forEach(r=>{if(r.tipo=='entrada')entro+=r.monto;else salio+=r.monto;});let html='<table class="w-full text-xs border"><tr class="bg-gray-100"><th class="p-2 border">Fecha</th><th class="p-2 border">Tipo</th><th class="p-2 border">Cliente / Concepto</th><th class="p-2 border">Depto.</th><th class="p-2 border">Distrito</th><th class="p-2 border">Cap.</th><th class="p-2 border">Sistema</th><th class="p-2 border">Marca / Modelo</th><th class="p-2 border">Monto</th></tr>';if(!filtradas.length)html+='<tr><td colspan="9" class="p-3 text-center">Sin resultados - limpiá los filtros</td></tr>';filtradas.forEach(r=>{html+='<tr><td class="p-2 border">'+r.fecha+'</td><td class="p-2 border">'+(r.tipo=='entrada'?'🟢 Entrada':'🔴 Salida')+'</td><td class="p-2 border">'+r.concepto+'</td><td class="p-2 border">'+r.depto+'</td><td class="p-2 border">'+r.distrito+'</td><td class="p-2 border">'+r.capacidad+'</td><td class="p-2 border">'+r.sistema+'</td><td class="p-2 border">'+r.marca+'</td><td class="p-2 border">$'+r.monto.toFixed(2)+'</td></tr>';});html+='</table>';document.getElementById('repTabla').innerHTML=html;document.getElementById('repEntro').textContent='$'+entro.toFixed(2);document.getElementById('repSalio').textContent='$'+salio.toFixed(2);document.getElementById('repTotal').textContent='$'+(entro-salio).toFixed(2);}  
 let _showTabOrig=showTab;showTab=function(t){_showTabOrig(t);if(t=='reportes')renderReportes();};  
-function pdfReportes(){
-var tabla=document.querySelector('#repTabla table');
-if(!tabla){alert('Primero toca Filtrar en Reportes');return;}
-var html='<html><head><title>Reporte CLIMASERV</title><meta name=\'viewport\' content=\'width=device-width,initial-scale=1\'><style>body{font-family:Arial,sans-serif;padding:16px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #999;padding:6px;font-size:12px}</style></head><body><h2>CLIMASERV - Reporte</h2><p>Entro: '+document.getElementById('repEntro').innerText+' | Salio: '+document.getElementById('repSalio').innerText+' | Total: '+document.getElementById('repTotal').innerText+'</p>'+tabla.outerHTML+'<br><p>Toca Compartir > Imprimir > Guardar como PDF</p></body></html>';
-var win=window.open('', '_blank');
-if(!win){alert('Permití ventanas emergentes en Safari para ver el reporte');return;}
-win.document.write(html);
-win.document.close();
-win.focus();
+async function pdfReportes() {
+  const tabla = document.querySelector('#repTabla table');
+  if (!tabla) { alert('Primero toca Filtrar en Reportes'); return; }
+  const filas = tabla.querySelectorAll('tr');
+  if (filas.length <= 1 || tabla.innerText.includes('Sin resultados')) { alert('No hay datos en la tabla para generar el PDF.'); return; }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'landscape' });
+  doc.setFontSize(16); doc.text('CLIMASERV - El Paraíso', 14, 15);
+  doc.setFontSize(10);
+  const f1 = document.getElementById('repDesde').value || 'Inicio';
+  const f2 = document.getElementById('repHasta').value || 'Hoy';
+  doc.text(`Reporte de movimientos (${f1} al ${f2})`, 14, 22);
+  const entro = document.getElementById('repEntro').innerText;
+  const salio = document.getElementById('repSalio').innerText;
+  const total = document.getElementById('repTotal').innerText;
+  doc.setFont(undefined, 'bold');
+  doc.text(`Entró: ${entro}   |   Salió: ${salio}   |   Total: ${total}`, 14, 29);
+  doc.autoTable({ html: '#repTabla table', startY: 34, styles: { fontSize: 8, cellPadding: 2 }, headStyles: { fillColor: [37, 99, 235] }, didParseCell: function(data) { if (data.cell.text) { data.cell.text = data.cell.text.map(t => t.replace('🟢', '(+)').replace('🔴', '(-)')); } } });
+  const nombreArchivo = `Reporte-Climaserv-${new Date().toISOString().slice(0,10)}.pdf`;
+  try { const pdfBlob = doc.output('blob'); const file = new File([pdfBlob], nombreArchivo, { type: 'application/pdf' }); if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: 'Reporte Climaserv', text: `Reporte Climaserv (${entro} / ${salio} / Total: ${total})` }); return; } } catch (err) { console.log('Compartir nativo cancelado o no disponible, descargando archivo...', err); }
+  doc.save(nombreArchivo);
 }
 </script>  
 </body>  
 </html>
+
