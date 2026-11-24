@@ -341,12 +341,118 @@ function setRepRango(t){let hoy=new Date();let d1=new Date(hoy);if(t=='semana')d
 function marcaDeTrabajo(d){let fm=facturas.find(x=>x.serie===d.serieManejadora);let fc=facturas.find(x=>x.serie===d.serieCondensadora);if(!fm&&!fc)return '';let marca=(fm||fc).marca||'';let modM=fm?(fm.modelo||''):'';let modC=fc?(fc.modelo||''):'';if(!modM||!modC)return (marca+' '+(modM||modC)).trim();let i=0;while(i<modM.length&&i<modC.length&&modM[i]===modC[i])i++;let comun=modM.slice(0,i).replace(/[\s\-\(\[\._]+$/,'').trim();return (marca+' '+comun).trim();}  
 function renderReportes(){let selCap=document.getElementById('repCap');if(selCap.options.length<=1){let caps=[...new Set(datos.map(d=>d.capacidadTrabajo).filter(Boolean))];caps.forEach(c=>selCap.innerHTML+=`<option value="${c}">${c}</option>`);}let filas=[];datos.forEach(d=>{if(d.estado!=='pagado')return;let fecha=fechaParaGanancia(d)||d.fechaInstalacion||d.fechaTrabajo||'';filas.push({fecha:fecha.slice(0,10),tipo:'entrada',concepto:d.cliente||'Venta',depto:d.departamento||'',distrito:d.distrito||'',capacidad:d.capacidadTrabajo||'',sistema:d.sistema||'',marca:marcaDeTrabajo(d),monto:Number(d.monto||0)});});gastos.forEach(g=>{filas.push({fecha:(g.fecha||'').slice(0,10),tipo:'salida',concepto:g.desc||'Gasto',depto:'',distrito:'',capacidad:'',sistema:'',marca:'',monto:Number(g.monto||0)});});let f1=document.getElementById('repDesde').value,f2=document.getElementById('repHasta').value;let tp=document.getElementById('repTipo').value,dp=document.getElementById('repDepto').value;let dt=document.getElementById('repDist').value,cp=document.getElementById('repCap').value;let ss=document.getElementById('repSis').value,mc=document.getElementById('repMarca').value.toLowerCase();let filtradas=filas.filter(r=>{if(f1&&r.fecha<f1)return false;if(f2&&r.fecha>f2)return false;if(tp&&r.tipo!=tp)return false;if(dp&&r.depto!=dp)return false;if(dt&&r.distrito!=dt)return false;if(cp&&r.capacidad!=cp)return false;if(ss&&r.sistema!=ss)return false;if(mc&&!r.marca.toLowerCase().includes(mc)&&!r.concepto.toLowerCase().includes(mc))return false;return true;}).sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||''));let entro=0,salio=0;filtradas.forEach(r=>{if(r.tipo=='entrada')entro+=r.monto;else salio+=r.monto;});let html='<table class="w-full text-xs border"><tr class="bg-gray-100"><th class="p-2 border">Fecha</th><th class="p-2 border">Tipo</th><th class="p-2 border">Cliente / Concepto</th><th class="p-2 border">Depto.</th><th class="p-2 border">Distrito</th><th class="p-2 border">Cap.</th><th class="p-2 border">Sistema</th><th class="p-2 border">Marca / Modelo</th><th class="p-2 border">Monto</th></tr>';if(!filtradas.length)html+='<tr><td colspan="9" class="p-3 text-center">Sin resultados - limpiá los filtros</td></tr>';filtradas.forEach(r=>{html+='<tr><td class="p-2 border">'+r.fecha+'</td><td class="p-2 border">'+(r.tipo=='entrada'?'🟢 Entrada':'🔴 Salida')+'</td><td class="p-2 border">'+r.concepto+'</td><td class="p-2 border">'+r.depto+'</td><td class="p-2 border">'+r.distrito+'</td><td class="p-2 border">'+r.capacidad+'</td><td class="p-2 border">'+r.sistema+'</td><td class="p-2 border">'+r.marca+'</td><td class="p-2 border">$'+r.monto.toFixed(2)+'</td></tr>';});html+='</table>';document.getElementById('repTabla').innerHTML=html;document.getElementById('repEntro').textContent='$'+entro.toFixed(2);document.getElementById('repSalio').textContent='$'+salio.toFixed(2);document.getElementById('repTotal').textContent='$'+(entro-salio).toFixed(2);}  
 let _showTabOrig=showTab;showTab=function(t){_showTabOrig(t);if(t=='reportes')renderReportes();};  
-async function pdfReportes() {
+// ==========================================
+// RESUMEN EJECUTIVO - CLIMASERV
+// Regla: Bien = 5 dialogos / Mal = 10 dialogos
+// Mal = bajo mas de 25% o quedo en rojo o mas de la mitad de dias sin ventas
+// ==========================================
+function _filasBaseReportes(){
+  let filas=[];
+  datos.forEach(d=>{
+    if(d.estado!=='pagado') return;
+    let fecha=fechaParaGanancia(d)||d.fechaInstalacion||d.fechaTrabajo||'';
+    filas.push({fecha:fecha.slice(0,10),tipo:'entrada',concepto:d.cliente||'Venta',depto:d.departamento||'',distrito:d.distrito||'',capacidad:d.capacidadTrabajo||'',sistema:d.sistema||'',marca:marcaDeTrabajo(d),monto:Number(d.monto||0),cliente:(d.cliente||'').trim().toLowerCase()});
+  });
+  gastos.forEach(g=>{
+    filas.push({fecha:(g.fecha||'').slice(0,10),tipo:'salida',concepto:g.desc||'Gasto',depto:'',distrito:'',capacidad:'',sistema:'',marca:'',monto:Number(g.monto||0),cliente:''});
+  });
+  return filas;
+}
+function _aplicarFiltrosRep(filas, f1, f2){
+  let tp=document.getElementById('repTipo').value, dp=document.getElementById('repDepto').value;
+  let dt=document.getElementById('repDist').value, cp=document.getElementById('repCap').value;
+  let ss=document.getElementById('repSis').value, mc=document.getElementById('repMarca').value.toLowerCase();
+  return filas.filter(r=>{
+    if(f1&&r.fecha<f1) return false;
+    if(f2&&r.fecha>f2) return false;
+    if(tp&&r.tipo!=tp) return false;
+    if(dp&&r.depto!=dp) return false;
+    if(dt&&r.distrito!=dt) return false;
+    if(cp&&r.capacidad!=cp) return false;
+    if(ss&&r.sistema!=ss) return false;
+    if(mc&&!r.marca.toLowerCase().includes(mc)&&!r.concepto.toLowerCase().includes(mc)) return false;
+    return true;
+  });
+}
+function _resumenPeriodo(desde, hasta){
+  let base=_filasBaseReportes();
+  let fil=_aplicarFiltrosRep(base, desde, hasta);
+  let ingresos=0, egresos=0, trabajos=0;
+  let clientesSet=new Set(), porCliente={}, porDia={};
+  fil.forEach(r=>{
+    if(r.tipo==='entrada'){ ingresos+=r.monto; trabajos++; if(r.cliente) clientesSet.add(r.cliente); porCliente[r.cliente]=(porCliente[r.cliente]||0)+r.monto; }
+    else egresos+=r.monto;
+    porDia[r.fecha]=(porDia[r.fecha]||0)+1;
+  });
+  let d1=new Date(desde+'T12:00:00'), d2=new Date(hasta+'T12:00:00');
+  let diasTotales=Math.max(1, Math.round((d2-d1)/(1000*60*60*24))+1);
+  let diasConVentas=new Set(Object.keys(porDia).filter(f=>fil.some(r=>r.fecha===f&&r.tipo==='entrada'))).size;
+  let diasSinVentas=diasTotales-diasConVentas;
+  let mejorClienteMonto=0;
+  for(let k in porCliente) mejorClienteMonto=Math.max(mejorClienteMonto, porCliente[k]);
+  return { ingresos, egresos, trabajos, diasTotales, diasSinVentas, clientesTotales: clientesSet.size, clientesSet, mejorClienteMonto };
+}
+function _sumarDiasISO(fechaISO, dias){
+  let d=new Date(fechaISO+'T12:00:00'); d.setDate(d.getDate()+dias);
+  return d.toISOString().slice(0,10);
+}
+function analizarPeriodoClimaserv(actual, anterior){
+  let totalActual=actual.ingresos-actual.egresos;
+  let totalAnterior=anterior.ingresos-anterior.egresos;
+  let promActual=actual.trabajos>0?actual.ingresos/actual.trabajos:0;
+  let promAnterior=anterior.trabajos>0?anterior.ingresos/anterior.trabajos:0;
+  let pct=(ahora,antes)=> antes===0 ? (ahora>0?100:0) : ((ahora-antes)/antes)*100;
+  let porcIngresos=pct(actual.ingresos, anterior.ingresos);
+  let porcTrabajos=pct(actual.trabajos, anterior.trabajos);
+  let porcPromedio=pct(promActual, promAnterior);
+  let porcTotal=pct(totalActual, totalAnterior);
+
+  // Clientes nuevos: estan en actual pero no en anterior
+  let clientesNuevos=0;
+  actual.clientesSet.forEach(c=>{ if(!anterior.clientesSet.has(c)) clientesNuevos++; });
+
+  // REGLA MAL - 25%
+  let bajoMas25 = porcIngresos <= -25;
+  let quedamosEnRojo = totalActual < 0;
+  let mitadDiasSinVentas = actual.diasSinVentas >= actual.diasTotales/2;
+  let vamosMal = bajoMas25 || quedamosEnRojo || mitadDiasSinVentas;
+
+  let dialogos=[];
+  if(porcIngresos>=10) dialogos.push({tipo:'exito',titulo:'Crecimiento en ingresos',texto:`Se registro un incremento en los ingresos del periodo de ${porcIngresos.toFixed(1)}%, reflejando un desempeno positivo en las operaciones comerciales.`});
+  if(porcTrabajos>=10) dialogos.push({tipo:'exito',titulo:'Aumento en volumen de trabajo',texto:`Se observo un aumento en la cantidad de servicios realizados de ${porcTrabajos.toFixed(1)}%, lo que evidencia una mayor demanda y capacidad operativa.`});
+  if(porcPromedio>=10) dialogos.push({tipo:'exito',titulo:'Mejora en el valor promedio',texto:`El valor promedio por servicio presento una mejora de ${porcPromedio.toFixed(1)}%, lo que indica una optimizacion en la estrategia de precios.`});
+  if(actual.diasSinVentas===0) dialogos.push({tipo:'exito',titulo:'Constancia operativa',texto:`El periodo mantuvo una actividad constante, con operaciones registradas de manera continua.`});
+  if(clientesNuevos>0) dialogos.push({tipo:'exito',titulo:'Expansion de clientela',texto:`Se incorporaron ${clientesNuevos} nuevos clientes durante el periodo, fortaleciendo la base comercial de la empresa.`});
+  if(totalActual>totalAnterior && totalAnterior>0 && porcTotal>=30) dialogos.push({tipo:'exito',titulo:'Periodo destacado',texto:`El presente periodo se posiciona como uno de los mejores desempenos registrados hasta la fecha.`});
+  if(porcIngresos<=-25) dialogos.push({tipo:'alerta',titulo:'Disminucion en ingresos',texto:`Se presento una disminucion en los ingresos de ${Math.abs(porcIngresos).toFixed(1)}% en comparacion con el periodo anterior. Se recomienda analizar las causas y aplicar acciones correctivas.`});
+  if(porcTrabajos<=-15) dialogos.push({tipo:'alerta',titulo:'Reduccion en servicios',texto:`Se evidencio una reduccion en la cantidad de servicios realizados de ${Math.abs(porcTrabajos).toFixed(1)}%, lo que sugiere una menor demanda durante el periodo.`});
+  if(porcPromedio<=-10) dialogos.push({tipo:'alerta',titulo:'Disminucion en valor promedio',texto:`El valor promedio por servicio mostro una disminucion de ${Math.abs(porcPromedio).toFixed(1)}%, lo que impacto directamente en los ingresos totales.`});
+  if(mitadDiasSinVentas) dialogos.push({tipo:'alerta',titulo:'Baja actividad',texto:`Se identificaron ${actual.diasSinVentas} dias sin operaciones registradas de ${actual.diasTotales}, lo que afecto el rendimiento general del periodo.`});
+  if(actual.mejorClienteMonto>0 && actual.ingresos>0 && (actual.mejorClienteMonto/actual.ingresos)>=0.6) dialogos.push({tipo:'alerta',titulo:'Concentracion de ingresos',texto:`Los ingresos del periodo se concentraron en un numero reducido de clientes, lo que representa un riesgo operativo a considerar.`});
+  if(quedamosEnRojo) dialogos.push({tipo:'alerta',titulo:'Resultado negativo',texto:`Los egresos superaron a los ingresos durante el periodo, generando un resultado neto negativo que requiere atencion.`});
+  if(porcIngresos<-5 && porcIngresos>-25) dialogos.push({tipo:'alerta',titulo:'Periodo por debajo del promedio',texto:`El desempeno del periodo se ubico por debajo del promedio habitual, por lo que se sugiere implementar estrategias de mejora.`});
+  if(Math.abs(porcIngresos)<5 && porcTrabajos>0) dialogos.push({tipo:'mejora',titulo:'Estabilidad con potencial',texto:`El periodo se mantuvo estable, con un leve incremento en la cantidad de servicios, lo que indica un potencial de crecimiento para el siguiente periodo.`});
+  if(porcIngresos<0 && clientesNuevos>0) dialogos.push({tipo:'mejora',titulo:'Crecimiento a futuro',texto:`A pesar de una leve variacion en los ingresos, se registro un aumento en la captacion de nuevos clientes, lo cual favorece el desempeno futuro.`});
+  if(porcIngresos>=0 && porcIngresos<10) dialogos.push({tipo:'mejora',titulo:'Tendencia positiva',texto:`Se observa una tendencia positiva sostenida. De mantenerse este ritmo, se proyecta superar el desempeno del periodo anterior.`});
+  if(Math.abs(porcIngresos)<10 && actual.diasSinVentas<actual.diasTotales/2) dialogos.push({tipo:'mejora',titulo:'Estabilidad operativa',texto:`La empresa mantuvo un desempeno estable durante el periodo. Se recomienda impulsar acciones comerciales para lograr un crecimiento sostenido.`});
+  if(actual.diasSinVentas===0 || actual.trabajos>anterior.trabajos) dialogos.push({tipo:'mejora',titulo:'Base solida',texto:`Se mantiene una base operativa solida y constante, con oportunidades claras para incrementar el valor promedio por servicio.`});
+
+  let limite = vamosMal ? 10 : 5;
+  dialogos.sort((a,b)=>{
+    if(vamosMal){ let o={alerta:0,mejora:1,exito:2}; return o[a.tipo]-o[b.tipo]; }
+    let o={exito:0,mejora:1,alerta:2}; return o[a.tipo]-o[b.tipo];
+  });
+  let dialogosFinales=dialogos.slice(0,limite);
+  let recomendacion="Se recomienda mantener la constancia operativa y fortalecer la captacion de nuevos clientes.";
+  if(vamosMal) recomendacion="Se recomienda implementar acciones correctivas inmediatas: reforzar la captacion de clientes, revisar la estrategia de precios y reducir los dias sin operaciones.";
+  else if(porcIngresos>=10) recomendacion="Se recomienda mantener la estrategia actual y aprovechar el crecimiento para consolidar nuevos clientes.";
+  return { comparativa:{ ingresosActual:actual.ingresos, ingresosAnterior:anterior.ingresos, porcIngresos, egresosActual:actual.egresos, egresosAnterior:anterior.egresos, totalActual, totalAnterior, porcTotal, trabajosActual:actual.trabajos, trabajosAnterior:anterior.trabajos, porcTrabajos, promedioActual:promActual, promedioAnterior:promAnterior, porcPromedio, clientesNuevos }, dialogos:dialogosFinales, vamosMal, recomendacion };
+}
+  async function pdfReportes() {
   const tabla = document.querySelector('#repTabla table');
   if (!tabla) { alert('Primero toca Filtrar en Reportes'); return; }
   const filasDOM = tabla.querySelectorAll('tr');
   if (filasDOM.length <= 1 || tabla.innerText.includes('Sin resultados')) { alert('No hay datos en la tabla para generar el PDF.'); return; }
-
   const head = [];
   const body = [];
   filasDOM.forEach((tr, i) => {
@@ -354,10 +460,9 @@ async function pdfReportes() {
     if (i === 0) head.push(celdas);
     else body.push(celdas);
   });
-
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation: 'landscape' });
-  doc.setFontSize(16); doc.text('CLIMASERV - El Paraíso', 14, 15);
+  doc.setFontSize(16); doc.text('CLIMASERV - El Paraiso', 14, 15);
   doc.setFontSize(10);
   const f1 = document.getElementById('repDesde').value || 'Inicio';
   const f2 = document.getElementById('repHasta').value || 'Hoy';
@@ -366,9 +471,63 @@ async function pdfReportes() {
   const salio = document.getElementById('repSalio').innerText;
   const total = document.getElementById('repTotal').innerText;
   doc.setFont(undefined, 'bold');
-  doc.text(`Entró: ${entro}   |   Salió: ${salio}   |   Total: ${total}`, 14, 29);
-
+  doc.text(`Entro: ${entro}   |   Salio: ${salio}   |   Total: ${total}`, 14, 29);
   doc.autoTable({ head: head, body: body, startY: 34, styles: { fontSize: 8, cellPadding: 2 }, headStyles: { fillColor: [37, 99, 235], textColor: 255 }, alternateRowStyles: { fillColor: [220, 240, 255] } });
+
+  // ===== RESUMEN EJECUTIVO - PAGINA NUEVA =====
+  try{
+    let desde = document.getElementById('repDesde').value;
+    let hasta = document.getElementById('repHasta').value;
+    if(desde && hasta){
+      let diasRango = Math.max(1, Math.round((new Date(hasta+'T12:00:00') - new Date(desde+'T12:00:00'))/(1000*60*60*24))+1);
+      let antHasta = _sumarDiasISO(desde, -1);
+      let antDesde = _sumarDiasISO(antHasta, -(diasRango-1));
+      let actual = _resumenPeriodo(desde, hasta);
+      let anterior = _resumenPeriodo(antDesde, antHasta);
+      let res = analizarPeriodoClimaserv(actual, anterior);
+      let c = res.comparativa;
+
+      doc.addPage('landscape');
+      doc.setFontSize(16); doc.setFont(undefined,'bold'); doc.text('RESUMEN EJECUTIVO - CLIMASERV', 14, 15);
+      doc.setFontSize(10); doc.setFont(undefined,'normal');
+      doc.text(`Periodo actual: ${desde} al ${hasta}  |  Periodo anterior: ${antDesde} al ${antHasta}`, 14, 22);
+      doc.setFont(undefined,'bold');
+      doc.text(res.vamosMal ? 'Estado: REQUIERE ATENCION - Se muestran 10 dialogos' : 'Estado: ESTABLE / POSITIVO - Se muestran 5 dialogos', 14, 29);
+
+      // Tabla comparativa
+      doc.autoTable({
+        head: [['Indicador','Periodo Actual','Periodo Anterior','Variacion']],
+        body: [
+          ['Ingresos (Entro)', '$'+c.ingresosActual.toFixed(2), '$'+c.ingresosAnterior.toFixed(2), c.porcIngresos.toFixed(1)+'%'],
+          ['Egresos (Salio)', '$'+c.egresosActual.toFixed(2), '$'+c.egresosAnterior.toFixed(2), ''],
+          ['Total Neto', '$'+c.totalActual.toFixed(2), '$'+c.totalAnterior.toFixed(2), c.porcTotal.toFixed(1)+'%'],
+          ['Trabajos / Servicios', String(c.trabajosActual), String(c.trabajosAnterior), c.porcTrabajos.toFixed(1)+'%'],
+          ['Promedio por servicio', '$'+c.promedioActual.toFixed(2), '$'+c.promedioAnterior.toFixed(2), c.porcPromedio.toFixed(1)+'%'],
+          ['Clientes nuevos', String(c.clientesNuevos), '-', '-'],
+        ],
+        startY: 34, styles:{fontSize:9, cellPadding:3}, headStyles:{fillColor:[37,99,235], textColor:255}
+      });
+
+      let y = doc.lastAutoTable.finalY + 8;
+      doc.setFontSize(12); doc.setFont(undefined,'bold'); doc.text('Analisis del periodo', 14, y); y+=7;
+      res.dialogos.forEach(d=>{
+        let color = d.tipo==='exito' ? [22,163,74] : d.tipo==='alerta' ? [220,38,38] : [37,99,235];
+        let etiqueta = d.tipo==='exito' ? 'EXITO' : d.tipo==='alerta' ? 'ALERTA' : 'MEJORA';
+        if(y>175){ doc.addPage('landscape'); y=15; }
+        doc.setFillColor(color[0],color[1],color[2]); doc.rect(14, y-4, 3, 10, 'F');
+        doc.setFontSize(10); doc.setFont(undefined,'bold'); doc.setTextColor(color[0],color[1],color[2]);
+        doc.text(etiqueta+' - '+d.titulo, 20, y);
+        doc.setFont(undefined,'normal'); doc.setTextColor(0,0,0);
+        let lineas = doc.splitTextToSize(d.texto, 260);
+        doc.text(lineas, 20, y+5);
+        y += 5 + (lineas.length*5) + 4;
+      });
+      if(y>175){ doc.addPage('landscape'); y=15; }
+      doc.setFontSize(11); doc.setFont(undefined,'bold'); doc.text('Recomendacion final:', 14, y); y+=6;
+      doc.setFont(undefined,'normal'); doc.setFontSize(10);
+      doc.text(doc.splitTextToSize(res.recomendacion, 260), 14, y);
+    }
+  }catch(e){ console.log('Resumen ejecutivo error', e); }
 
   const nombreArchivo = `Reporte-Climaserv-${new Date().toISOString().slice(0,10)}.pdf`;
   try {
