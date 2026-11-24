@@ -347,7 +347,6 @@ async function pdfReportes() {
   const filasDOM = tabla.querySelectorAll('tr');
   if (filasDOM.length <= 1 || tabla.innerText.includes('Sin resultados')) { alert('No hay datos en la tabla para generar el PDF.'); return; }
 
-  // Sacar la tabla fila por fila para que sí salga en el PDF
   const head = [];
   const body = [];
   filasDOM.forEach((tr, i) => {
@@ -369,7 +368,7 @@ async function pdfReportes() {
   doc.setFont(undefined, 'bold');
   doc.text(`Entró: ${entro}   |   Salió: ${salio}   |   Total: ${total}`, 14, 29);
 
-  doc.autoTable({ head: head, body: body, startY: 34, styles: { fontSize: 8, cellPadding: 2 }, headStyles: { fillColor: [37, 99, 235] } });
+  doc.autoTable({ head: head, body: body, startY: 34, styles: { fontSize: 8, cellPadding: 2 }, headStyles: { fillColor: [37, 99, 235], textColor: 255 }, alternateRowStyles: { fillColor: [220, 240, 255] } });
 
   const nombreArchivo = `Reporte-Climaserv-${new Date().toISOString().slice(0,10)}.pdf`;
   try {
